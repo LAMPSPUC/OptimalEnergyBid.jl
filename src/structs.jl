@@ -1,4 +1,5 @@
 @kwdef mutable struct Options
+    optimizer::Union{DataType, Nothing} = nothing
 end
 
 @kwdef mutable struct RandomVariables
@@ -23,9 +24,16 @@ end
     problem_type::Dict{Int, ProblemType}
 end
 
+@kwdef mutable struct Data
+    V_max::Vector{Float64} # Storage max capacity
+    V_min::Vector{Float64} # Storage min capacity
+    V_0::Vector{Float64} # Storage inicial condition
+end
+
 @kwdef mutable struct Problem
     options::Options
     random_variables::RandomVariables
     numbers::Numbers
     cache::Cache
+    data::Data
 end
