@@ -43,6 +43,7 @@ answer = Dict(
     18 => []
     )
 
+@test keys(answer) == keys(graph.nodes)
 for key in keys(answer)
     @test answer[key] == graph.nodes[key]
 end
