@@ -10,6 +10,7 @@ end
 
 @kwdef mutable struct Numbers
     N::Int # Number of periods of time per day
+    n₀::Int # First period of time
     I::Int # Number of units
     U::Int # Periods of day ahead bid
     V::Int # Periods of day ahead commit

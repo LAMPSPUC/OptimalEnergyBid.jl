@@ -1,8 +1,9 @@
 @enum LastProblem begin
-    RTB = 1
-    RTC = 2
-    DAB = 3
-    DAC = 4
+    NOT = 1 # nothing
+    RTB = 2 # Real time bid
+    RTC = 3 # Real time commit
+    DAB = 4 # Day ahead bid
+    DAC = 5 # Day ahead commit
 end
 
 function build_graph(prb::Problem)
@@ -10,34 +11,31 @@ function build_graph(prb::Problem)
     numbers = prb.numbers
     random = prb.random_variables
 
-    # graph definition
     graph = SDDP.LinearGraph(0)
-    idx = 1
-    SDDP.add_node(graph, idx)
-    SDDP.add_edge(graph, 0 => idx, 1.0)
-    last_problem = RTB
+    idx = 0
     root = idx
-    for k in 1:numbers.Kᵦ
-        idx += 1
-        SDDP.add_node(graph, idx)
-        SDDP.add_edge(graph, root => idx, random.ωᵦ[k,1])
-    end
-    last_problem = RTC
-
-    for t in 2:numbers.T
-
-        if mod(t-1, numbers.N) == mod(numbers.U, numbers.N)
-            idx += 1
-            SDDP.add_node(graph, idx)
-            for k in 1:numbers.Kᵦ
-                SDDP.add_edge(graph, root+k => idx, 1.0)
+    last_problem = NOT
+    for t in 1:numbers.T
+        if mod(t - numbers.U + numbers.n₀ - 1, numbers.N) == 0
+            if last_problem == NOT
+                idx += 1
+                SDDP.add_node(graph, idx)
+                SDDP.add_edge(graph, root => idx, 1.0)
+                root = idx
+                last_problem = DAB
+            else
+                idx += 1
+                SDDP.add_node(graph, idx)
+                for k in 1:numbers.Kᵦ
+                    SDDP.add_edge(graph, root+k => idx, 1.0)
+                end
+                root = idx
+                last_problem = DAB
             end
-            root = idx
-            last_problem = DAB
         end
 
-        if mod(t-1, numbers.N) == mod(numbers.V, numbers.N)
-            if last_problem == DAB
+        if mod(t - numbers.V + numbers.n₀ - 1, numbers.N) == 0
+            if last_problem == DAB || last_problem == NOT
                 for k in 1:numbers.Kᵧ
                     idx += 1
                     SDDP.add_node(graph, idx)
@@ -51,7 +49,7 @@ function build_graph(prb::Problem)
                         SDDP.add_edge(graph, root+j => idx, random.ωᵧ[k,t])
                     end
                 end
-                root += numbers.Kᵦ # test
+                root += numbers.Kᵦ
             end
             last_problem = DAC
         end
@@ -80,4 +78,3 @@ function build_graph(prb::Problem)
 
     return graph
 end
-

@@ -1,4 +1,3 @@
-
 using MaxStorageRevenue, SDDP  
 prb = MaxStorageRevenue.Problem()
 
@@ -17,6 +16,7 @@ random.πᵧ = values
 random.ωᵧ = probabilities
 
 numbers.N = 2
+numbers.n₀ = 2
 numbers.I = 1
 numbers.T = 4
 numbers.Kᵦ = 4
