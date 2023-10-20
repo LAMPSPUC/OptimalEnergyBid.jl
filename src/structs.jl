@@ -19,8 +19,13 @@ end
     Kᵧ::Int # Number of prices in the day ahead curve
 end
 
+@kwdef mutable struct Cache
+    problem_type::Dict{Int, ProblemType}
+end
+
 @kwdef mutable struct Problem
     options::Options
     random_variables::RandomVariables
     numbers::Numbers
+    cache::Cache
 end
