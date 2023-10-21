@@ -2,13 +2,9 @@ using MaxStorageRevenue, SDDP
 prb = MaxStorageRevenue.Problem()
 numbers = prb.numbers
 random = prb.random_variables
-values = zeros(2,1,4)
 probabilities = zeros(2,4)
 probabilities[:,:] .= 0.5
-values[:,:,:] .= 10.0
-random.πᵦ = values
 random.ωᵦ = probabilities
-random.πᵧ = values
 random.ωᵧ = probabilities
 numbers.N = 2
 numbers.n₀ = 2

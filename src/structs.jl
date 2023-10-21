@@ -12,7 +12,7 @@ end
 @kwdef mutable struct RandomVariables
     πᵦ::Array{Float64,3} # Prices of real time (k,i,t)
     ωᵦ::Array{Float64,2} # Probabilities of real time (k,t)
-    πᵧ::Array{Float64,3} # Prices of day ahead (k,i,t)
+    πᵧ::Array{Float64,4} # Prices of day ahead (k,i,t,n)
     ωᵧ::Array{Float64,2} # Probabilities of day ahead (k,t)
 end
 

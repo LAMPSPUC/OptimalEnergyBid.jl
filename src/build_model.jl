@@ -98,4 +98,5 @@ function build_day_ahead_commit!(sp, prb::Problem, problem_info::ProblemInfo)
     constraint_add_day_ahead_commit!(sp, prb, problem_info.k)
 
     #add objective
+    set_day_ahead_commit_objective!(sp, prb, problem_info.t, problem_info.k)
 end

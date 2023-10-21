@@ -9,7 +9,8 @@ Match = "7eb4fadd-790c-5f42-8a69-bfa0b872bfbf"
 SDDP = "f4570300-c277-11e8-125c-4912f86ce65d"
 
 [extras]
+HiGHS = "87dc4568-4c63-4d18-b0c0-bb2238e4078b"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Test"]
+test = ["Test", "HiGHS"]

@@ -30,4 +30,8 @@ data.V_max = ones(2)
 data.V_min = zeros(2)
 data.V_0 = ones(2)
 
+options.optimizer = HiGHS.Optimizer
+
 model = MaxStorageRevenue.build_model(prb)
+
+SDDP.train(model)
