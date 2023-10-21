@@ -7,6 +7,15 @@ function constraint_copy_volume!(sp, prb::Problem)
     return nothing
 end
 
+function constraint_copy_day_ahead_bid!(sp, prb::Problem)
+    @constraint(
+        sp,
+        copy_day_ahead_bid[k=1:prb.numbers.Kᵦ, i=1:prb.numbers.I, n=1:prb.numbers.N],
+        sp[:day_ahead_bid][k,i,n].out == sp[:day_ahead_bid][k,i,n].in
+    )
+    return nothing
+end
+
 function constraint_add_inflow!(sp, prb::Problem)
     @constraint(
         sp,
