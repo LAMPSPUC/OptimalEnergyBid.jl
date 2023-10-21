@@ -17,6 +17,9 @@ random.πᵦ = values_beta
 random.ωᵦ = probabilities
 random.πᵧ = values_gamma
 random.ωᵧ = probabilities
+random.πᵪ = values_beta
+random.ωᵪ = probabilities
+
 numbers.N = 2
 numbers.n₀ = 2
 numbers.I = 1

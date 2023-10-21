@@ -17,6 +17,12 @@ random.πᵦ = values_beta
 random.ωᵦ = probabilities
 random.πᵧ = values_gamma
 random.ωᵧ = probabilities
+
+values_chi = zeros(1,1,1)
+values_chi[:,:,:] .= 1.0
+random.πᵪ = values_chi
+random.ωᵪ = probabilities
+
 numbers.N = 1
 numbers.n₀ = 1
 numbers.I = 1
@@ -28,7 +34,7 @@ numbers.V = 1
 
 data.V_max = ones(1)
 data.V_min = zeros(1)
-data.V_0 = ones(1)
+data.V_0 = zeros(1)
 
 options.optimizer = HiGHS.Optimizer
 

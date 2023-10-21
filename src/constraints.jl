@@ -1,3 +1,11 @@
+function constraint_inflow!(sp, prb::Problem, t::Int)
+    for i in 1:prb.numbers.I
+        SDDP.parameterize(sp, prb.random_variables.ωᵪ[:,t], prb.random_variables.πᵪ[:,i,t]) do ω
+            return JuMP.fix(sp[:inflow][i], ω)
+        end
+    end
+end
+
 function constraint_copy_volume!(sp, prb::Problem)
     @constraint(
         sp,

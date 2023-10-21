@@ -40,6 +40,7 @@ function build_real_time_bid!(sp, prb::Problem, problem_info::ProblemInfo)
     constraint_add_inflow!(sp, prb)
     constraint_real_time_bid_bound!(sp, prb)
     constraint_copy_day_ahead_commit!(sp, prb)
+    constraint_inflow!(sp, prb, problem_info.t)
     #if problem_info.between_day_ahead
         constraint_copy_day_ahead_bid!(sp, prb)
     #end

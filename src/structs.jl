@@ -14,6 +14,8 @@ end
     ωᵦ::Array{Float64,2} # Probabilities of real time (k,t)
     πᵧ::Array{Float64,4} # Prices of day ahead (k,i,t,n)
     ωᵧ::Array{Float64,2} # Probabilities of day ahead (k,t)
+    πᵪ::Array{Float64,3} # Inflow values (j,i,t)
+    ωᵪ::Array{Float64,2} # Probabilities of inflow (j,t)
 end
 
 @kwdef mutable struct Numbers
