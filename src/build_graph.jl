@@ -22,7 +22,7 @@ function add_day_ahead_bid!(graph::SDDP.Graph, prb::Problem, idx::Int, t::Int, r
     if mod(t - numbers.U + numbers.n₀ - 1, numbers.N) == 0
         idx += 1
         SDDP.add_node(graph, idx)
-        cache.problem_type[idx] = DAB
+        cache.problem_type[idx] = ProblemInfo(DAB, t, 1)
         if last_problem == NOT
             SDDP.add_edge(graph, root => idx, 1.0)
         else
@@ -45,7 +45,7 @@ function add_day_ahead_commit!(graph::SDDP.Graph, prb::Problem, idx::Int, t::Int
         for k in 1:numbers.Kᵧ
             idx += 1
             SDDP.add_node(graph, idx)
-            cache.problem_type[idx] = DAC
+            cache.problem_type[idx] = ProblemInfo(DAC, t, k)
             if last_problem == DAB || last_problem == NOT
                 SDDP.add_edge(graph, root => idx, random.ωᵧ[k,t])
             else
@@ -60,13 +60,13 @@ function add_day_ahead_commit!(graph::SDDP.Graph, prb::Problem, idx::Int, t::Int
     return idx, root, last_problem
 end
 
-function add_real_time_bid!(graph::SDDP.Graph, prb::Problem, idx::Int, _::Int, root::Int, last_problem::ProblemType)
+function add_real_time_bid!(graph::SDDP.Graph, prb::Problem, idx::Int, t::Int, root::Int, last_problem::ProblemType)
     numbers = prb.numbers
     cache = prb.cache
 
     idx += 1
     SDDP.add_node(graph, idx)
-    cache.problem_type[idx] = RTB
+    cache.problem_type[idx] = ProblemInfo(RTB, t, 1)
     if last_problem == DAB
         SDDP.add_edge(graph, root => idx, 1.0)
     else
@@ -86,7 +86,7 @@ function add_real_time_commit!(graph::SDDP.Graph, prb::Problem, idx::Int, t::Int
     for k in 1:numbers.Kᵦ
         idx += 1
         SDDP.add_node(graph, idx)
-        cache.problem_type[idx] = RTC
+        cache.problem_type[idx] = ProblemInfo(RTC, t, k)
         SDDP.add_edge(graph, root => idx, random.ωᵦ[k,t])
     end
     last_problem = RTC

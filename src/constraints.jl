@@ -33,3 +33,12 @@ function constraint_add_generation!(sp, prb::Problem)
     )
     return nothing
 end
+
+function constraint_real_time_accepted!(sp, prb::Problem, K::Int)
+    @constraint(
+        sp,
+        real_time_accepted[i=1:prb.numbers.I],
+        sp[:generation][i] == sum(real_time_bid[k,i] for k in 1:K)
+    )
+    return nothing
+end

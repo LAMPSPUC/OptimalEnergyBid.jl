@@ -1,3 +1,9 @@
+struct ProblemInfo
+    problem_type::ProblemType
+    t::Int
+    k::Int
+end
+
 @kwdef mutable struct Options
     optimizer::Union{DataType, Nothing} = nothing
 end
@@ -21,7 +27,7 @@ end
 end
 
 @kwdef mutable struct Cache
-    problem_type::Dict{Int, ProblemType}
+    problem_type::Dict{Int, ProblemInfo}
 end
 
 @kwdef mutable struct Data
