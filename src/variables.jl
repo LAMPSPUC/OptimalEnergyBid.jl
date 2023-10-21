@@ -31,7 +31,7 @@ end
 function variable_day_ahead_commit!(sp, prb::Problem)
     @variable(
         sp,
-        0.0 <= day_ahead_commit[1:prb.numbers.I, 1:(2*prb.numbers.N-prb.numbers.V)],
+        0.0 <= day_ahead_commit[1:prb.numbers.I, 1:(2*prb.numbers.N-prb.numbers.V+1)],
         SDDP.State,
         initial_value = 0.0
     )
