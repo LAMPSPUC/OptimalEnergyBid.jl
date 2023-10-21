@@ -3,9 +3,9 @@ function build_model(prb::Problem)
 
     model = SDDP.PolicyGraph(
         graph;
-        sense=:Min,
+        sense=:Max,
         optimizer=prb.options.optimizer,
-        lower_bound=0.0,
+        upper_bound=100.0,
         direct_mode=false,
     ) do sp, idx
         build_subproblem!(sp, idx, prb)
@@ -59,7 +59,6 @@ function build_real_time_commit!(sp, prb::Problem, problem_info::ProblemInfo)
     #end
 
     #add constraints
-    constraint_copy_volume!(sp, prb)
     constraint_add_generation!(sp, prb)
     constraint_real_time_accepted!(sp, prb, problem_info.k)
     constraint_shift_day_ahead_commit!(sp, prb)

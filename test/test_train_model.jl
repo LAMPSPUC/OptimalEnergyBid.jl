@@ -34,4 +34,5 @@ options.optimizer = HiGHS.Optimizer
 
 model = MaxStorageRevenue.build_model(prb)
 
-SDDP.train(model)
+SDDP.train(model, time_limit = 10.0)
+
