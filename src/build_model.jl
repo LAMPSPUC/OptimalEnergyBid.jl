@@ -28,20 +28,38 @@ end
 
 function build_real_time_bid!(sp, t::Int, prb::Problem)
     #add variables
-    add_variable_volume(sp, prb)
+    variable_volume!(sp, prb)
+    variable_inflow!(sp, prb)
+    variable_real_time_bid!(sp, prb)
+
+    #add constraints
+    constraint_add_inflow!(sp, prb)
+    constraint_real_time_bid_bound!(sp, prb::Problem)
 end
 
 function build_real_time_commit!(sp, t::Int, prb::Problem)
     #add variables
-    add_variable_volume(sp, prb)
+    variable_volume!(sp, prb)
+    variable_generation!(sp, prb)
+    variable_real_time_bid!(sp, prb)
+
+    #add constraints
+    constraint_copy_volume!(sp, prb)
+    constraint_add_generation!(sp, prb)
 end
 
 function build_day_ahead_bid!(sp, t::Int, prb::Problem)
     #add variables
-    add_variable_volume(sp, prb)
+    variable_volume!(sp, prb)
+
+    #add constraints
+    constraint_copy_volume!(sp, prb)
 end
 
 function build_day_ahead_commit!(sp, t::Int, prb::Problem)
     #add variables
-    add_variable_volume(sp, prb) 
+    variable_volume!(sp, prb)
+
+    #add constraints
+    constraint_copy_volume!(sp, prb)
 end
