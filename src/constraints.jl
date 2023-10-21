@@ -29,7 +29,7 @@ function constraint_real_time_bid_bound!(sp, prb::Problem)
     @constraint(
         sp,
         real_time_bid_bound[i=1:prb.numbers.I],
-        sp[:volume][i].out >= sum(real_time_bid[:,i])
+        sp[:volume][i].out >= sum(sp[:real_time_bid][k,i].out for k in 1:prb.numbers.Kᵦ)
     )
     return nothing
 end
@@ -47,7 +47,7 @@ function constraint_real_time_accepted!(sp, prb::Problem, K::Int)
     @constraint(
         sp,
         real_time_accepted[i=1:prb.numbers.I],
-        sp[:generation][i] == sum(real_time_bid[k,i] for k in 1:K)
+        sp[:generation][i] == sum(sp[:real_time_bid][k,i].in for k in 1:K)
     )
     return nothing
 end

@@ -22,7 +22,7 @@ switch(type) = @match type begin
 
 function build_subproblem!(sp, idx::Int, prb::Problem)
     problem_info = prb.cache.problem_type[idx]
-    constructor, t , k = switch(problem_info.problem_type)
+    constructor = switch(problem_info.problem_type)
     constructor(sp, prb, problem_info)
 end
 
@@ -31,16 +31,16 @@ function build_real_time_bid!(sp, prb::Problem, problem_info::ProblemInfo)
     variable_volume!(sp, prb)
     variable_inflow!(sp, prb)
     variable_real_time_bid!(sp, prb)
-    if problem_info.between_day_ahead
+    #if problem_info.between_day_ahead
         variable_day_ahead_bid!(sp, prb)
-    end
+    #end
 
     #add constraints
     constraint_add_inflow!(sp, prb)
     constraint_real_time_bid_bound!(sp, prb)
-    if problem_info.between_day_ahead
+    #if problem_info.between_day_ahead
         constraint_copy_day_ahead_bid!(sp, prb)
-    end
+    #end
 
     #add objective
     set_bid_objective(sp)
@@ -51,17 +51,17 @@ function build_real_time_commit!(sp, prb::Problem, problem_info::ProblemInfo)
     variable_volume!(sp, prb)
     variable_generation!(sp, prb)
     variable_real_time_bid!(sp, prb)
-    if problem_info.between_day_ahead
+    #if problem_info.between_day_ahead
         variable_day_ahead_bid!(sp, prb)
-    end
+    #end
 
     #add constraints
     constraint_copy_volume!(sp, prb)
     constraint_add_generation!(sp, prb)
     constraint_real_time_accepted!(sp, prb, problem_info.k)
-    if problem_info.between_day_ahead
+    #if problem_info.between_day_ahead
         constraint_copy_day_ahead_bid!(sp, prb)
-    end
+    #end
 
     #add objective
 end
@@ -70,6 +70,7 @@ function build_day_ahead_bid!(sp, prb::Problem, problem_info::ProblemInfo)
     #add variables
     variable_volume!(sp, prb)
     variable_day_ahead_bid!(sp, prb)
+    variable_real_time_bid!(sp, prb) # useless
 
     #add constraints
     constraint_copy_volume!(sp, prb)
@@ -82,6 +83,7 @@ function build_day_ahead_commit!(sp, prb::Problem, problem_info::ProblemInfo)
     #add variables
     variable_volume!(sp, prb)
     variable_day_ahead_bid!(sp, prb)
+    variable_real_time_bid!(sp, prb) # useless
 
     #add constraints
     constraint_copy_volume!(sp, prb)
