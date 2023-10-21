@@ -28,6 +28,16 @@ function variable_day_ahead_bid!(sp, prb::Problem)
     return nothing
 end
 
+function variable_day_ahead_commit!(sp, prb::Problem)
+    @variable(
+        sp,
+        0.0 <= day_ahead_commit[1:prb.numbers.I, 1:(2*prb.numbers.N-prb.numbers.V)],
+        SDDP.State,
+        initial_value = 0.0
+    )
+    return nothing
+end
+
 function variable_inflow!(sp, prb::Problem)
     @variable(sp, inflow[1:prb.numbers.I])
     return nothing

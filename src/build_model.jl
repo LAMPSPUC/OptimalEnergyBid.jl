@@ -31,6 +31,7 @@ function build_real_time_bid!(sp, prb::Problem, problem_info::ProblemInfo)
     variable_volume!(sp, prb)
     variable_inflow!(sp, prb)
     variable_real_time_bid!(sp, prb)
+    variable_day_ahead_commit!(sp, prb)
     #if problem_info.between_day_ahead
         variable_day_ahead_bid!(sp, prb)
     #end
@@ -38,12 +39,13 @@ function build_real_time_bid!(sp, prb::Problem, problem_info::ProblemInfo)
     #add constraints
     constraint_add_inflow!(sp, prb)
     constraint_real_time_bid_bound!(sp, prb)
+    constraint_copy_day_ahead_commit!(sp, prb)
     #if problem_info.between_day_ahead
         constraint_copy_day_ahead_bid!(sp, prb)
     #end
 
     #add objective
-    set_bid_objective(sp)
+    set_bid_objective!(sp)
 end
 
 function build_real_time_commit!(sp, prb::Problem, problem_info::ProblemInfo)
@@ -51,6 +53,7 @@ function build_real_time_commit!(sp, prb::Problem, problem_info::ProblemInfo)
     variable_volume!(sp, prb)
     variable_generation!(sp, prb)
     variable_real_time_bid!(sp, prb)
+    variable_day_ahead_commit!(sp, prb)
     #if problem_info.between_day_ahead
         variable_day_ahead_bid!(sp, prb)
     #end
@@ -59,34 +62,40 @@ function build_real_time_commit!(sp, prb::Problem, problem_info::ProblemInfo)
     constraint_copy_volume!(sp, prb)
     constraint_add_generation!(sp, prb)
     constraint_real_time_accepted!(sp, prb, problem_info.k)
+    constraint_shift_day_ahead_commit!(sp, prb)
     #if problem_info.between_day_ahead
         constraint_copy_day_ahead_bid!(sp, prb)
     #end
 
     #add objective
+    set_real_time_commit_objective!(sp, prb, problem_info.t, problem_info.k)
 end
 
 function build_day_ahead_bid!(sp, prb::Problem, problem_info::ProblemInfo)
     #add variables
     variable_volume!(sp, prb)
     variable_day_ahead_bid!(sp, prb)
+    variable_day_ahead_commit!(sp, prb)
     variable_real_time_bid!(sp, prb) # useless
 
     #add constraints
     constraint_copy_volume!(sp, prb)
+    constraint_copy_day_ahead_commit!(sp, prb)
 
     #add objective
-    set_bid_objective(sp)
+    set_bid_objective!(sp)
 end
 
 function build_day_ahead_commit!(sp, prb::Problem, problem_info::ProblemInfo)
     #add variables
     variable_volume!(sp, prb)
     variable_day_ahead_bid!(sp, prb)
+    variable_day_ahead_commit!(sp, prb)
     variable_real_time_bid!(sp, prb) # useless
 
     #add constraints
     constraint_copy_volume!(sp, prb)
+    constraint_add_day_ahead_commit!(sp, prb, problem_info.k)
 
     #add objective
 end

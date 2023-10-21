@@ -10,8 +10,40 @@ end
 function constraint_copy_day_ahead_bid!(sp, prb::Problem)
     @constraint(
         sp,
-        copy_day_ahead_bid[k=1:prb.numbers.Kᵦ, i=1:prb.numbers.I, n=1:prb.numbers.N],
+        copy_day_ahead_bid[k=1:prb.numbers.Kᵧ, i=1:prb.numbers.I, n=1:prb.numbers.N],
         sp[:day_ahead_bid][k,i,n].out == sp[:day_ahead_bid][k,i,n].in
+    )
+    return nothing
+end
+
+function constraint_copy_day_ahead_commit!(sp, prb::Problem)
+    @constraint(
+        sp,
+        copy_day_ahead_commit[i=1:prb.numbers.I, n=1:(2*prb.numbers.N-prb.numbers.V)],
+        sp[:day_ahead_commit][i,n].out == sp[:day_ahead_commit][i,n].in
+    )
+    return nothing
+end
+
+function constraint_shift_day_ahead_commit!(sp, prb::Problem)
+    @constraint(
+        sp,
+        shift_day_ahead_commit[i=1:prb.numbers.I, n=1:(2*prb.numbers.N-prb.numbers.V-1)],
+        sp[:day_ahead_commit][i,n].out == sp[:day_ahead_commit][i,n+1].in
+    )
+    return nothing
+end
+
+function constraint_add_day_ahead_commit!(sp, prb::Problem, K::Int)
+    @constraint(
+        sp,
+        keep_day_ahead_commit[i=1:prb.numbers.I, n=1:(prb.numbers.N-prb.numbers.V)],
+        sp[:day_ahead_commit][i,n].out == sp[:day_ahead_commit][i,n].in
+    )
+    @constraint(
+        sp,
+        add_shift_day_ahead_commit[i=1:prb.numbers.I, n=1:prb.numbers.N],
+        sp[:day_ahead_commit][i,n+prb.numbers.N-prb.numbers.V].out == sum(sp[:day_ahead_bid][k,i,n].in for k in 1:K)
     )
     return nothing
 end
