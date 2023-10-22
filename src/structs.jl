@@ -5,7 +5,7 @@ struct ProblemInfo
 end
 
 @kwdef mutable struct Options
-    optimizer::Union{DataType, Nothing} = nothing
+    optimizer::Union{DataType,Nothing} = nothing
 end
 
 @kwdef mutable struct RandomVariables
@@ -29,7 +29,7 @@ end
 end
 
 @kwdef mutable struct Cache
-    problem_type::Dict{Int, ProblemInfo}
+    problem_type::Dict{Int,ProblemInfo}
 end
 
 @kwdef mutable struct Data
@@ -44,5 +44,5 @@ end
     numbers::Numbers
     cache::Cache
     data::Data
-    model::Union{SDDP.PolicyGraph, Nothing} = nothing
+    model::Union{SDDP.PolicyGraph,Nothing} = nothing
 end

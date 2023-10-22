@@ -14,9 +14,6 @@ include("build_model.jl")
 include("train_model.jl")
 include("simulate_model.jl")
 
-export simulate,
-    build_model!,
-    train!,
-    Problem
+export simulate, build_model!, train!, Problem
 
 end # module MaxStorageRevenue

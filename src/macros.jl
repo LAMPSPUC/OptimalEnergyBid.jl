@@ -30,7 +30,7 @@ macro kwdef(expr)
     _kwdef!(expr.args[3], params_ex, call_ex)
     quote
         Base.@__doc__($(esc(expr)))
-        $(esc(Expr(:call,T,params_ex))) = $(esc(call_ex))
+        $(esc(Expr(:call, T, params_ex))) = $(esc(call_ex))
     end
 end
 
@@ -59,7 +59,7 @@ function _kwdef!(blk, params_ex, call_ex)
             _kwdef!(ei, params_ex, call_ex)
         end
     end
-    blk
+    return blk
 end
 
 """
@@ -82,12 +82,11 @@ kwdef_val(::Type{IOStream}) = IOStream("tmp")
 kwdef_val(::Type{T}) where {T<:Array{Array{Int32,1},1}} = [Int32[]]
 kwdef_val(::Type{Array{Array{Int32,1},1}}) = [Int32[]]
 
-
 kwdef_val(::Type{T}) where {T<:String} = ""
 kwdef_val(::Type{T}) where {T<:Symbol} = :NULL
 
 @static if VERSION >= v"0.7"
-    kwdef_val(::Type{Array{T,N}}) where {T,N} = Array{T}(undef, zeros(Int,N)...)
+    kwdef_val(::Type{Array{T,N}}) where {T,N} = Array{T}(undef, zeros(Int, N)...)
 else
-    kwdef_val{T,N}(::Type{Array{T,N}})::Array{T,N} = Array{T}(tuple(zeros(Int,N)...))
+    kwdef_val{T,N}(::Type{Array{T,N}})::Array{T,N} = Array{T}(tuple(zeros(Int, N)...))
 end

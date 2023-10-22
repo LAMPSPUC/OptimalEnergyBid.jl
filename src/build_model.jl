@@ -10,6 +10,7 @@ function build_model!(prb::Problem)
     ) do sp, idx
         build_subproblem!(sp, idx, prb)
     end
+    return nothing
 end
 
 switch(type::ProblemType) = @match type begin
@@ -17,12 +18,13 @@ switch(type::ProblemType) = @match type begin
     $RTC => build_real_time_commit!
     $DAB => build_day_ahead_bid!
     $DAC => build_day_ahead_commit!
- end
+end
 
 function build_subproblem!(sp::Model, idx::Int, prb::Problem)
     problem_info = prb.cache.problem_type[idx]
-    constructor = switch(problem_info.problem_type)
-    constructor(sp, prb, problem_info)
+    constructor! = switch(problem_info.problem_type)
+    constructor!(sp, prb, problem_info)
+    return nothing
 end
 
 function build_real_time_bid!(sp::Model, prb::Problem, problem_info::ProblemInfo)
@@ -42,6 +44,7 @@ function build_real_time_bid!(sp::Model, prb::Problem, problem_info::ProblemInfo
 
     #add objective
     set_bid_objective!(sp)
+    return nothing
 end
 
 function build_real_time_commit!(sp::Model, prb::Problem, problem_info::ProblemInfo)
@@ -60,6 +63,7 @@ function build_real_time_commit!(sp::Model, prb::Problem, problem_info::ProblemI
 
     #add objective
     set_real_time_commit_objective!(sp, prb, problem_info.t, problem_info.k)
+    return nothing
 end
 
 function build_day_ahead_bid!(sp, prb::Problem, _::ProblemInfo)
@@ -75,6 +79,7 @@ function build_day_ahead_bid!(sp, prb::Problem, _::ProblemInfo)
 
     #add objective
     set_bid_objective!(sp)
+    return nothing
 end
 
 function build_day_ahead_commit!(sp::Model, prb::Problem, problem_info::ProblemInfo)
@@ -90,4 +95,5 @@ function build_day_ahead_commit!(sp::Model, prb::Problem, problem_info::ProblemI
 
     #add objective
     set_day_ahead_commit_objective!(sp, prb, problem_info.t, problem_info.k)
+    return nothing
 end

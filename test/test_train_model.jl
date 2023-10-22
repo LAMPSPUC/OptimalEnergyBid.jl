@@ -5,19 +5,19 @@ random = prb.random_variables
 data = prb.data
 options = prb.options
 
-values_beta = zeros(1,1,1)
-values_gamma = zeros(1,1,1,1)
-probabilities = zeros(1,1)
-probabilities[:,:] .= 1.0
-values_beta[:,:,:] .= 10.0
-values_gamma[:,:,:,:] .= 9.0
+values_beta = zeros(1, 1, 1)
+values_gamma = zeros(1, 1, 1, 1)
+probabilities = zeros(1, 1)
+probabilities[:, :] .= 1.0
+values_beta[:, :, :] .= 10.0
+values_gamma[:, :, :, :] .= 9.0
 random.πᵦ = values_beta
 random.ωᵦ = probabilities
 random.πᵧ = values_gamma
 random.ωᵧ = probabilities
 
-values_chi = zeros(1,1,1)
-values_chi[:,:,:] .= 1.0
+values_chi = zeros(1, 1, 1)
+values_chi[:, :, :] .= 1.0
 random.πᵪ = values_chi
 random.ωᵪ = probabilities
 
@@ -37,6 +37,5 @@ data.V_0 = zeros(1)
 options.optimizer = HiGHS.Optimizer
 
 build_model!(prb)
-train!(prb, time_limit = 10.0)
-simulate(prb, 100)
-
+train!(prb)
+simulate(prb)
