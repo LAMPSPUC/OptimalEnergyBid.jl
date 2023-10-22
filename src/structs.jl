@@ -2,7 +2,6 @@ struct ProblemInfo
     problem_type::ProblemType
     t::Int
     k::Int
-    between_day_ahead::Bool
 end
 
 @kwdef mutable struct Options
