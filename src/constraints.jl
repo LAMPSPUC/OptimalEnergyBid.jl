@@ -1,4 +1,4 @@
-function constraint_inflow!(sp, prb::Problem, t::Int)
+function constraint_inflow!(sp::Model, prb::Problem, t::Int)
     for i in 1:prb.numbers.I
         SDDP.parameterize(sp, prb.random_variables.ωᵪ[:,t], prb.random_variables.πᵪ[:,i,t]) do ω
             return JuMP.fix(sp[:inflow][i], ω)
@@ -6,7 +6,7 @@ function constraint_inflow!(sp, prb::Problem, t::Int)
     end
 end
 
-function constraint_copy_volume!(sp, prb::Problem)
+function constraint_copy_volume!(sp::Model, prb::Problem)
     @constraint(
         sp,
         copy_volume[i=1:prb.numbers.I],
@@ -15,7 +15,7 @@ function constraint_copy_volume!(sp, prb::Problem)
     return nothing
 end
 
-function constraint_copy_day_ahead_bid!(sp, prb::Problem)
+function constraint_copy_day_ahead_bid!(sp::Model, prb::Problem)
     @constraint(
         sp,
         copy_day_ahead_bid[k=1:prb.numbers.Kᵧ, i=1:prb.numbers.I, n=1:prb.numbers.N],
@@ -24,7 +24,7 @@ function constraint_copy_day_ahead_bid!(sp, prb::Problem)
     return nothing
 end
 
-function constraint_copy_day_ahead_commit!(sp, prb::Problem)
+function constraint_copy_day_ahead_commit!(sp::Model, prb::Problem)
     @constraint(
         sp,
         copy_day_ahead_commit[i=1:prb.numbers.I, n=1:(2*prb.numbers.N-prb.numbers.V+1)],
@@ -33,7 +33,7 @@ function constraint_copy_day_ahead_commit!(sp, prb::Problem)
     return nothing
 end
 
-function constraint_shift_day_ahead_commit!(sp, prb::Problem)
+function constraint_shift_day_ahead_commit!(sp::Model, prb::Problem)
     @constraint(
         sp,
         shift_day_ahead_commit[i=1:prb.numbers.I, n=1:(2*prb.numbers.N-prb.numbers.V)],
@@ -42,7 +42,7 @@ function constraint_shift_day_ahead_commit!(sp, prb::Problem)
     return nothing
 end
 
-function constraint_add_day_ahead_commit!(sp, prb::Problem, K::Int)
+function constraint_add_day_ahead_commit!(sp::Model, prb::Problem, K::Int)
     @constraint(
         sp,
         keep_day_ahead_commit[i=1:prb.numbers.I, n=1:(prb.numbers.N-prb.numbers.V+1)],
@@ -56,7 +56,7 @@ function constraint_add_day_ahead_commit!(sp, prb::Problem, K::Int)
     return nothing
 end
 
-function constraint_add_inflow!(sp, prb::Problem)
+function constraint_add_inflow!(sp::Model, prb::Problem)
     @constraint(
         sp,
         add_inflow[i=1:prb.numbers.I],
@@ -65,7 +65,7 @@ function constraint_add_inflow!(sp, prb::Problem)
     return nothing
 end
 
-function constraint_real_time_bid_bound!(sp, prb::Problem)
+function constraint_real_time_bid_bound!(sp::Model, prb::Problem)
     @constraint(
         sp,
         real_time_bid_bound[i=1:prb.numbers.I],
@@ -74,7 +74,7 @@ function constraint_real_time_bid_bound!(sp, prb::Problem)
     return nothing
 end
 
-function constraint_add_generation!(sp, prb::Problem)
+function constraint_add_generation!(sp::Model, prb::Problem)
     @constraint(
         sp,
         constraint_add_generation![i=1:prb.numbers.I],
@@ -83,7 +83,7 @@ function constraint_add_generation!(sp, prb::Problem)
     return nothing
 end
 
-function constraint_real_time_accepted!(sp, prb::Problem, K::Int)
+function constraint_real_time_accepted!(sp::Model, prb::Problem, K::Int)
     @constraint(
         sp,
         real_time_accepted[i=1:prb.numbers.I],

@@ -1,4 +1,4 @@
-function variable_volume!(sp, prb::Problem)
+function variable_volume!(sp::Model, prb::Problem)
     @variable(
         sp,
         prb.data.V_min[i] <= volume[i=1:prb.numbers.I] <= prb.data.V_max[i],
@@ -8,7 +8,7 @@ function variable_volume!(sp, prb::Problem)
     return nothing
 end
 
-function variable_real_time_bid!(sp, prb::Problem)
+function variable_real_time_bid!(sp::Model, prb::Problem)
     @variable(
         sp,
         0.0 <= real_time_bid[1:prb.numbers.Kᵦ, 1:prb.numbers.I],
@@ -18,7 +18,7 @@ function variable_real_time_bid!(sp, prb::Problem)
     return nothing
 end
 
-function variable_day_ahead_bid!(sp, prb::Problem)
+function variable_day_ahead_bid!(sp::Model, prb::Problem)
     @variable(
         sp,
         0.0 <= day_ahead_bid[1:prb.numbers.Kᵦ, 1:prb.numbers.I, 1:prb.numbers.N],
@@ -28,7 +28,7 @@ function variable_day_ahead_bid!(sp, prb::Problem)
     return nothing
 end
 
-function variable_day_ahead_commit!(sp, prb::Problem)
+function variable_day_ahead_commit!(sp::Model, prb::Problem)
     @variable(
         sp,
         0.0 <= day_ahead_commit[1:prb.numbers.I, 1:(2*prb.numbers.N-prb.numbers.V+1)],
@@ -38,12 +38,12 @@ function variable_day_ahead_commit!(sp, prb::Problem)
     return nothing
 end
 
-function variable_inflow!(sp, prb::Problem)
+function variable_inflow!(sp::Model, prb::Problem)
     @variable(sp, inflow[1:prb.numbers.I])
     return nothing
 end
 
-function variable_generation!(sp, prb::Problem)
+function variable_generation!(sp::Model, prb::Problem)
     @variable(sp, prb.data.V_min[i] <= generation[i=1:prb.numbers.I] <= prb.data.V_max[i])
     return nothing
 end
