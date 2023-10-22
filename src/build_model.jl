@@ -1,7 +1,7 @@
-function build_model(prb::Problem)
+function build_model!(prb::Problem)
     graph = build_graph(prb)
 
-    model = SDDP.PolicyGraph(
+    prb.model = SDDP.PolicyGraph(
         graph;
         sense=:Max,
         optimizer=prb.options.optimizer,
@@ -10,7 +10,6 @@ function build_model(prb::Problem)
     ) do sp, idx
         build_subproblem!(sp, idx, prb)
     end
-    return model
 end
 
 switch(type::ProblemType) = @match type begin

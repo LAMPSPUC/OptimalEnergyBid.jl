@@ -1,5 +1,4 @@
-using MaxStorageRevenue, SDDP  
-prb = MaxStorageRevenue.Problem()
+prb = Problem()
 numbers = prb.numbers
 random = prb.random_variables
 probabilities = zeros(2,4)

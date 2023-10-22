@@ -1,6 +1,4 @@
-using MaxStorageRevenue, SDDP, HiGHS  
-
-prb = MaxStorageRevenue.Problem()
+prb = Problem()
 
 numbers = prb.numbers
 random = prb.random_variables
@@ -33,4 +31,4 @@ data.V_max = ones(2)
 data.V_min = zeros(2)
 data.V_0 = ones(2)
 
-model = MaxStorageRevenue.build_model(prb)
+build_model!(prb)

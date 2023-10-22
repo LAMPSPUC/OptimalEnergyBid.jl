@@ -1,6 +1,4 @@
-using MaxStorageRevenue, SDDP, HiGHS  
-
-prb = MaxStorageRevenue.Problem()
+prb = Problem()
 
 numbers = prb.numbers
 random = prb.random_variables
@@ -38,7 +36,7 @@ data.V_0 = zeros(1)
 
 options.optimizer = HiGHS.Optimizer
 
-model = MaxStorageRevenue.build_model(prb)
-
-SDDP.train(model, time_limit = 10.0)
+build_model!(prb)
+train!(prb, time_limit = 10.0)
+simulate(prb, 100)
 

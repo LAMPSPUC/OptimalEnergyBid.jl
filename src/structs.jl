@@ -44,4 +44,5 @@ end
     numbers::Numbers
     cache::Cache
     data::Data
+    model::Union{SDDP.PolicyGraph, Nothing} = nothing
 end
