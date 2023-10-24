@@ -1,11 +1,14 @@
 module MaxStorageRevenue
 
+using JSON
+using JSONSchema
 using SDDP
 using Match
 
 include("macros.jl")
 include("enums.jl")
 include("structs.jl")
+include("input_data.jl")
 include("build_graph.jl")
 include("variables.jl")
 include("constraints.jl")
@@ -14,6 +17,6 @@ include("build_model.jl")
 include("train_model.jl")
 include("simulate_model.jl")
 
-export simulate, build_model!, train!, Problem
+export create_problem, simulate, build_model!, train!, Problem
 
 end # module MaxStorageRevenue

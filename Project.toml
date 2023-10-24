@@ -4,7 +4,10 @@ authors = ["Thiago Novaes <thiagonovaesb@poli.ufrj.br>"]
 version = "0.1.0"
 
 [deps]
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+JSONSchema = "7d188eb4-7ad8-530c-ae41-71a32a6d4692"
 Match = "7eb4fadd-790c-5f42-8a69-bfa0b872bfbf"
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
 SDDP = "f4570300-c277-11e8-125c-4912f86ce65d"
 
 [extras]

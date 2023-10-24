@@ -1,0 +1,160 @@
+{
+    "type": "object",
+    "required": [
+        "numbers",
+        "data",
+        "random"
+    ],
+    "properties": {
+        "numbers": {
+            "type": "object",
+            "required": [
+                "periods_per_day",
+                "first_period",
+                "units",
+                "period_of_day_ahead_bid",
+                "period_of_day_ahead_commit",
+                "duration",
+                "prices_day_ahead_curve",
+                "prices_real_time_curve",
+                "inflows_scenarios"
+            ],
+            "properties": {
+                "periods_per_day": {
+                    "type": "integer"
+                },
+                "first_period": {
+                    "type": "integer"
+                },
+                "units": {
+                    "type": "integer"
+                },
+                "period_of_day_ahead_bid": {
+                    "type": "integer"
+                },
+                "period_of_day_ahead_commit": {
+                    "type": "integer"
+                },
+                "duration": {
+                    "type": "integer"
+                },
+                "prices_day_ahead_curve": {
+                    "type": "integer"
+                },
+                "prices_real_time_curve": {
+                    "type": "integer"
+                },
+                "inflows_scenarios": {
+                    "type": "integer"
+                }
+            }
+        },
+        "data": {
+            "type": "object",
+            "required": [
+                "storage_max_capacity",
+                "storage_min_capacity",
+                "storage_inicial_condition"
+            ],
+            "properties": {
+                "storage_max_capacity": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "storage_min_capacity": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "storage_inicial_condition": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                }
+            }
+        },
+        "random": {
+            "type": "object",
+            "required": [
+                "prices_real_time",
+                "prob_real_time",
+                "prices_day_ahead",
+                "prob_day_ahead",
+                "inflow_values",
+                "prob_inflow"
+            ],
+            "properties": {
+                "prices_real_time": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                },
+                "prob_real_time": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "prices_day_ahead": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    }
+                },
+                "prob_day_ahead": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "inflow_values": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                },
+                "prob_inflow": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

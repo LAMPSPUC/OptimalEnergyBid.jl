@@ -26,6 +26,7 @@ end
     T::Int # Number of periods of time in the horizon
     Kᵦ::Int # Number of prices in the real time curve
     Kᵧ::Int # Number of prices in the day ahead curve
+    Kᵪ::Int # Number of inflow scenarios
 end
 
 @kwdef mutable struct Cache
