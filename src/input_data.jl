@@ -38,8 +38,8 @@ end
 function write_data!(prb::Problem, dict::Dict)
     data = prb.data
 
-    data.V_max = dict["data"]["storage_min_capacity"]
-    data.V_min = dict["data"]["storage_max_capacity"]
+    data.V_max = dict["data"]["storage_max_capacity"]
+    data.V_min = dict["data"]["storage_min_capacity"]
     data.V_0 = dict["data"]["storage_inicial_condition"]
 
     return nothing

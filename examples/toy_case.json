@@ -1,0 +1,26 @@
+{
+    "numbers": {
+        "periods_per_day": 1,
+        "first_period": 1,
+        "units": 1,
+        "period_of_day_ahead_bid": 1,
+        "period_of_day_ahead_commit": 1,
+        "duration": 1,
+        "prices_day_ahead_curve": 1,
+        "prices_real_time_curve": 1,
+        "inflows_scenarios": 1
+    },
+    "data": {
+        "storage_max_capacity": [1.0],
+        "storage_min_capacity": [0.0],
+        "storage_inicial_condition": [0.0]
+    },
+    "random": {
+        "prices_real_time": [[[10.0]]],
+        "prob_real_time": [[1.0]],
+        "prices_day_ahead": [[[[9.0]]]],
+        "prob_day_ahead": [[1.0]],
+        "inflow_values": [[[1.0]]],
+        "prob_inflow": [[1.0]]
+    }
+}
