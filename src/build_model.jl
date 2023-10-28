@@ -1,4 +1,5 @@
 function build_model!(prb::Problem)
+    preprocess!(prb)
     graph = build_graph(prb)
 
     prb.model = SDDP.PolicyGraph(
@@ -57,7 +58,7 @@ function build_real_time_commit!(sp::Model, prb::Problem, problem_info::ProblemI
 
     #add constraints
     constraint_add_generation!(sp, prb)
-    constraint_real_time_accepted!(sp, prb, problem_info.k)
+    constraint_real_time_accepted!(sp, prb, problem_info.k, problem_info.t)
     constraint_shift_day_ahead_commit!(sp, prb)
     constraint_copy_day_ahead_bid!(sp, prb)
 
@@ -91,7 +92,7 @@ function build_day_ahead_commit!(sp::Model, prb::Problem, problem_info::ProblemI
 
     #add constraints
     constraint_copy_volume!(sp, prb)
-    constraint_add_day_ahead_commit!(sp, prb, problem_info.k)
+    constraint_add_day_ahead_commit!(sp, prb, problem_info.k, problem_info.t)
 
     #add objective
     set_day_ahead_commit_objective!(sp, prb, problem_info.t, problem_info.k)

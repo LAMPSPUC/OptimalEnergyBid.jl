@@ -46,7 +46,8 @@ function constraint_shift_day_ahead_commit!(sp::Model, prb::Problem)
     return nothing
 end
 
-function constraint_add_day_ahead_commit!(sp::Model, prb::Problem, K::Int)
+function constraint_add_day_ahead_commit!(sp::Model, prb::Problem, K::Int, T::Int)
+    temp = div(T - 1, prb.numbers.N) + 1
     @constraint(
         sp,
         keep_day_ahead_commit[i=1:(prb.numbers.I), n=1:(prb.numbers.N - prb.numbers.V + 1)],
@@ -56,7 +57,7 @@ function constraint_add_day_ahead_commit!(sp::Model, prb::Problem, K::Int)
         sp,
         add_shift_day_ahead_commit[i=1:(prb.numbers.I), n=1:(prb.numbers.N)],
         sp[:day_ahead_commit][i, n + prb.numbers.N - prb.numbers.V + 1].out ==
-            sum(sp[:day_ahead_bid][k, i, n].in for k in 1:K)
+            sum(sp[:day_ahead_bid][k, i, n].in for k in 1:prb.numbers.Kᵧ if prb.cache.acceptance_day_ahead[K,k,i,temp,n])
     )
     return nothing
 end
@@ -88,11 +89,11 @@ function constraint_add_generation!(sp::Model, prb::Problem)
     return nothing
 end
 
-function constraint_real_time_accepted!(sp::Model, prb::Problem, K::Int)
+function constraint_real_time_accepted!(sp::Model, prb::Problem, K::Int, T::Int)
     @constraint(
         sp,
         real_time_accepted[i=1:(prb.numbers.I)],
-        sp[:generation][i] == sum(sp[:real_time_bid][k, i].in for k in 1:K)
+        sp[:generation][i] == sum(sp[:real_time_bid][k, i].in for k in 1:prb.numbers.Kᵦ if prb.cache.acceptance_real_time[K,k,i,T])
     )
     return nothing
 end
