@@ -21,7 +21,7 @@ end
 function variable_day_ahead_bid!(sp::Model, prb::Problem)
     @variable(
         sp,
-        0.0 <= day_ahead_bid[1:(prb.numbers.Kᵦ), 1:(prb.numbers.I), 1:(prb.numbers.N)],
+        0.0 <= day_ahead_bid[1:(prb.numbers.Kᵧ), 1:(prb.numbers.I), 1:(prb.numbers.N)],
         SDDP.State,
         initial_value = 0.0
     )

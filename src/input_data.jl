@@ -74,11 +74,11 @@ function write_random!(prb::Problem, dict::Dict)
         end
     end
 
-    for d in 1:numbers.D, n in 1:numbers.N, i in 1:numbers.I, k in 1:numbers.Kᵦ
+    for d in 1:numbers.D, n in 1:numbers.N, i in 1:numbers.I, k in 1:numbers.Kᵧ
         random_variables.πᵧ[k,i,n,d] = dict["random"]["prices_day_ahead"][d][n][i][k]
     end
 
-    for d in 1:numbers.D, k in 1:numbers.Kᵦ
+    for d in 1:numbers.D, k in 1:numbers.Kᵧ
         random_variables.ωᵧ[k,d] = dict["random"]["prob_day_ahead"][d][k]
     end
 

@@ -15,14 +15,14 @@ end
 function write_day_ahead_bid!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     numbers = prb.numbers
     S = length(simul)
-    day_ahead_bid = zeros(numbers.Kᵦ, numbers.I, numbers.N, numbers.D, S)
+    day_ahead_bid = zeros(numbers.Kᵧ, numbers.I, numbers.N, numbers.D, S)
 
     for s in 1:S
         L = length(simul[s])
         d = 1
         for l in 1:L
             if prb.cache.problem_info[simul[s][l][:node_index]].problem_type == DAB
-                for n in 1:numbers.N, i in 1:numbers.I, k in 1:numbers.Kᵦ
+                for n in 1:numbers.N, i in 1:numbers.I, k in 1:numbers.Kᵧ
                     day_ahead_bid[k,i,n,d,s] = simul[s][l][:day_ahead_bid][k,i,n].out
                 end
                 d += 1;

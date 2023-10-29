@@ -54,15 +54,15 @@ function add_day_ahead_clear!(
             SDDP.add_node(graph, idx)
             cache.problem_info[idx] = ProblemInfo(DAC, t, k)
             temp = div(t - 1, prb.numbers.N) + 1
-            if last_problem == DAB || last_problem == NOT
-                SDDP.add_edge(graph, root => idx, random.ωᵧ[k, temp])
-            else
+            if last_problem == RTC
                 for j in 1:(numbers.Kᵦ)
                     SDDP.add_edge(graph, root + j => idx, random.ωᵧ[k, temp])
                 end
+            else
+                SDDP.add_edge(graph, root => idx, random.ωᵧ[k, temp])
             end
         end
-        root += (last_problem == DAB || last_problem == NOT) ? 0 : numbers.Kᵦ
+        root += (last_problem == RTC) ? numbers.Kᵦ : 0
         last_problem = DAC
     end
     return idx, root, last_problem
