@@ -11,7 +11,7 @@ end
 @kwdef mutable struct RandomVariables
     πᵦ::Array{Float64,3} # Prices of real time (k,i,t)
     ωᵦ::Array{Float64,2} # Probabilities of real time (k,t)
-    πᵧ::Array{Float64,4} # Prices of day ahead (k,i,t,n)
+    πᵧ::Array{Float64,4} # Prices of day ahead (k,i,n,t)
     ωᵧ::Array{Float64,2} # Probabilities of day ahead (k,t)
     πᵪ::Array{Float64,3} # Inflow values (j,i,t)
     ωᵪ::Array{Float64,2} # Probabilities of inflow (j,t)
@@ -22,7 +22,8 @@ end
     n₀::Int # First period of time
     I::Int # Number of units
     U::Int # Periods of day ahead bid
-    V::Int # Periods of day ahead commit
+    V::Int # Periods of day ahead clear
+    D::Int # Number of days 
     T::Int # Number of periods of time in the horizon
     Kᵦ::Int # Number of prices in the real time curve
     Kᵧ::Int # Number of prices in the day ahead curve

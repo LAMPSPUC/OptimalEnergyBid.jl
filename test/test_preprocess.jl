@@ -6,17 +6,17 @@ data = prb.data
 options = prb.options
 
 values_beta = zeros(2, 1, 2)
-values_gamma = zeros(2, 1, 1, 2)
+values_gamma = zeros(2, 1, 2, 1)
 probabilities = zeros(2, 2)
 probabilities[:, :] .= 0.5
 values_beta[1, :, 1] .= 10.0
 values_beta[1, :, 2] .= 9.0
 values_beta[2, :, 1] .= 9.0
 values_beta[2, :, 2] .= 10.0
-values_gamma[1, :, :, 1] .= 10.0
-values_gamma[1, :, :, 2] .= 9.0
-values_gamma[2, :, :, 1] .= 9.0
-values_gamma[2, :, :, 2] .= 10.0
+values_gamma[1, :, 1, :] .= 10.0
+values_gamma[1, :, 2, :] .= 9.0
+values_gamma[2, :, 1, :] .= 9.0
+values_gamma[2, :, 2, :] .= 10.0
 random.πᵦ = values_beta
 random.ωᵦ = probabilities
 random.πᵧ = values_gamma
@@ -37,5 +37,3 @@ MaxStorageRevenue.evaluate_acceptance_real_time!(prb)
 
 @test prb.cache.acceptance_real_time[:,:,1,1] == [1 1; 0 1]
 @test prb.cache.acceptance_real_time[:,:,1,2] == [1 0; 1 1]
-
-

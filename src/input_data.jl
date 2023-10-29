@@ -26,11 +26,12 @@ function write_numbers!(prb::Problem, dict::Dict)
     numbers.n₀ = dict["numbers"]["first_period"]
     numbers.I = dict["numbers"]["units"]
     numbers.U = dict["numbers"]["period_of_day_ahead_bid"]
-    numbers.V = dict["numbers"]["period_of_day_ahead_commit"]
+    numbers.V = dict["numbers"]["period_of_day_ahead_clear"]
     numbers.T = dict["numbers"]["duration"]
     numbers.Kᵦ = dict["numbers"]["prices_day_ahead_curve"]
     numbers.Kᵧ = dict["numbers"]["prices_real_time_curve"]
     numbers.Kᵪ = dict["numbers"]["inflows_scenarios"]
+    numbers.D = Int(ceil(numbers.T / numbers.N))
 
     return nothing
 end
@@ -49,12 +50,10 @@ function write_random!(prb::Problem, dict::Dict)
     random_variables = prb.random_variables
     numbers = prb.numbers
 
-    temp = Int(ceil(numbers.T / numbers.N))
-
     random_variables.πᵦ = zeros(numbers.Kᵦ, numbers.I, numbers.T)
     random_variables.ωᵦ = zeros(numbers.Kᵦ, numbers.T)
-    random_variables.πᵧ = zeros(numbers.Kᵧ, numbers.I, temp, numbers.N)
-    random_variables.ωᵧ = zeros(numbers.Kᵧ, temp)
+    random_variables.πᵧ = zeros(numbers.Kᵧ, numbers.I, numbers.N, numbers.D)
+    random_variables.ωᵧ = zeros(numbers.Kᵧ, numbers.D)
     random_variables.πᵪ = zeros(numbers.Kᵪ, numbers.I, numbers.T)
     random_variables.ωᵪ = zeros(numbers.Kᵪ, numbers.T)
 
@@ -75,12 +74,12 @@ function write_random!(prb::Problem, dict::Dict)
         end
     end
 
-    for n in 1:numbers.N, t in 1:temp, i in 1:numbers.I, k in 1:numbers.Kᵦ
-        random_variables.πᵧ[k,i,t,n] = dict["random"]["prices_day_ahead"][n][t][i][k]
+    for d in 1:numbers.D, n in 1:numbers.N, i in 1:numbers.I, k in 1:numbers.Kᵦ
+        random_variables.πᵧ[k,i,n,d] = dict["random"]["prices_day_ahead"][d][n][i][k]
     end
 
-    for t in 1:temp, k in 1:numbers.Kᵦ
-        random_variables.ωᵧ[k,t] = dict["random"]["prob_day_ahead"][t][k]
+    for d in 1:numbers.D, k in 1:numbers.Kᵦ
+        random_variables.ωᵧ[k,d] = dict["random"]["prob_day_ahead"][d][k]
     end
 
     return nothing

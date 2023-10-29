@@ -4,7 +4,7 @@
         "first_period": 1,
         "units": 1,
         "period_of_day_ahead_bid": 1,
-        "period_of_day_ahead_commit": 1,
+        "period_of_day_ahead_clear": 1,
         "duration": 1,
         "prices_day_ahead_curve": 1,
         "prices_real_time_curve": 1,

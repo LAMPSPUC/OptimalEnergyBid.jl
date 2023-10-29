@@ -22,12 +22,10 @@ function evaluate_acceptance_day_ahead!(prb::Problem)
     numbers = prb.numbers
     random = prb.random_variables
 
-    temp = Int(ceil(numbers.T / numbers.N))
+    day_ahead = Array{Bool, 5}(undef, numbers.Kᵧ, numbers.Kᵧ, numbers.I, numbers.N, numbers.D)
 
-    day_ahead = Array{Bool, 5}(undef, numbers.Kᵧ, numbers.Kᵧ, numbers.I, temp, numbers.N)
-
-    for n in 1:numbers.N, t in 1:temp, i in 1:numbers.I, k in 1:numbers.Kᵧ, kk in 1:numbers.Kᵧ
-        day_ahead[kk,k,i,t,n] = random.πᵧ[k,i,t,n] <= random.πᵧ[kk,i,t,n]
+    for d in 1:numbers.D, n in 1:numbers.N, i in 1:numbers.I, k in 1:numbers.Kᵧ, kk in 1:numbers.Kᵧ
+        day_ahead[kk,k,i,n,d] = random.πᵧ[k,i,n,d] <= random.πᵧ[kk,i,n,d]
     end
     prb.cache.acceptance_day_ahead = day_ahead
     return nothing

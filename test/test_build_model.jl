@@ -26,6 +26,7 @@ numbers.Kᵦ = 2
 numbers.Kᵧ = 2
 numbers.U = 1
 numbers.V = 2
+numbers.D = 2
 
 data.V_max = ones(2)
 data.V_min = zeros(2)

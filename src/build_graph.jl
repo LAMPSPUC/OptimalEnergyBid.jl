@@ -6,11 +6,11 @@ function build_graph(prb::Problem)::SDDP.Graph
     last_problem = NOT
     for t in 1:(numbers.T)
         idx, root, last_problem = add_day_ahead_bid!(graph, prb, idx, t, root, last_problem)
-        idx, root, last_problem = add_day_ahead_commit!(
+        idx, root, last_problem = add_day_ahead_clear!(
             graph, prb, idx, t, root, last_problem
         )
         idx, root, last_problem = add_real_time_bid!(graph, prb, idx, t, root, last_problem)
-        idx, root, last_problem = add_real_time_commit!(
+        idx, root, last_problem = add_real_time_clear!(
             graph, prb, idx, t, root, last_problem
         )
     end
@@ -41,7 +41,7 @@ function add_day_ahead_bid!(
     return idx, root, last_problem
 end
 
-function add_day_ahead_commit!(
+function add_day_ahead_clear!(
     graph::SDDP.Graph, prb::Problem, idx::Int, t::Int, root::Int, last_problem::ProblemType
 )
     numbers = prb.numbers
@@ -87,7 +87,7 @@ function add_real_time_bid!(
     return idx, root, last_problem
 end
 
-function add_real_time_commit!(
+function add_real_time_clear!(
     graph::SDDP.Graph, prb::Problem, idx::Int, t::Int, root::Int, _::ProblemType
 )
     numbers = prb.numbers

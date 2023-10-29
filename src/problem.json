@@ -13,7 +13,7 @@
                 "first_period",
                 "units",
                 "period_of_day_ahead_bid",
-                "period_of_day_ahead_commit",
+                "period_of_day_ahead_clear",
                 "duration",
                 "prices_day_ahead_curve",
                 "prices_real_time_curve",
@@ -32,7 +32,7 @@
                 "period_of_day_ahead_bid": {
                     "type": "integer"
                 },
-                "period_of_day_ahead_commit": {
+                "period_of_day_ahead_clear": {
                     "type": "integer"
                 },
                 "duration": {

@@ -29,6 +29,7 @@ numbers.Kᵦ = 1
 numbers.Kᵧ = 1
 numbers.U = 1
 numbers.V = 1
+numbers.D = 1
 
 data.V_max = ones(1)
 data.V_min = zeros(1)

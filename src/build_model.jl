@@ -16,9 +16,9 @@ end
 
 switch(type::ProblemType) = @match type begin
     $RTB => build_real_time_bid!
-    $RTC => build_real_time_commit!
+    $RTC => build_real_time_clear!
     $DAB => build_day_ahead_bid!
-    $DAC => build_day_ahead_commit!
+    $DAC => build_day_ahead_clear!
 end
 
 function build_subproblem!(sp::Model, idx::Int, prb::Problem)
@@ -33,13 +33,13 @@ function build_real_time_bid!(sp::Model, prb::Problem, problem_info::ProblemInfo
     variable_volume!(sp, prb)
     variable_inflow!(sp, prb)
     variable_real_time_bid!(sp, prb)
-    variable_day_ahead_commit!(sp, prb)
+    variable_day_ahead_clear!(sp, prb)
     variable_day_ahead_bid!(sp, prb)
 
     #add constraints
     constraint_add_inflow!(sp, prb)
     constraint_real_time_bid_bound!(sp, prb)
-    constraint_copy_day_ahead_commit!(sp, prb)
+    constraint_copy_day_ahead_clear!(sp, prb)
     constraint_inflow!(sp, prb, problem_info.t)
     constraint_copy_day_ahead_bid!(sp, prb)
 
@@ -48,22 +48,22 @@ function build_real_time_bid!(sp::Model, prb::Problem, problem_info::ProblemInfo
     return nothing
 end
 
-function build_real_time_commit!(sp::Model, prb::Problem, problem_info::ProblemInfo)
+function build_real_time_clear!(sp::Model, prb::Problem, problem_info::ProblemInfo)
     #add variables
     variable_volume!(sp, prb)
     variable_generation!(sp, prb)
     variable_real_time_bid!(sp, prb)
-    variable_day_ahead_commit!(sp, prb)
+    variable_day_ahead_clear!(sp, prb)
     variable_day_ahead_bid!(sp, prb)
 
     #add constraints
     constraint_add_generation!(sp, prb)
     constraint_real_time_accepted!(sp, prb, problem_info.k, problem_info.t)
-    constraint_shift_day_ahead_commit!(sp, prb)
+    constraint_shift_day_ahead_clear!(sp, prb)
     constraint_copy_day_ahead_bid!(sp, prb)
 
     #add objective
-    set_real_time_commit_objective!(sp, prb, problem_info.t, problem_info.k)
+    set_real_time_clear_objective!(sp, prb, problem_info.t, problem_info.k)
     return nothing
 end
 
@@ -71,30 +71,30 @@ function build_day_ahead_bid!(sp, prb::Problem, _::ProblemInfo)
     #add variables
     variable_volume!(sp, prb)
     variable_day_ahead_bid!(sp, prb)
-    variable_day_ahead_commit!(sp, prb)
+    variable_day_ahead_clear!(sp, prb)
     variable_real_time_bid!(sp, prb)
 
     #add constraints
     constraint_copy_volume!(sp, prb)
-    constraint_copy_day_ahead_commit!(sp, prb)
+    constraint_copy_day_ahead_clear!(sp, prb)
 
     #add objective
     set_bid_objective!(sp)
     return nothing
 end
 
-function build_day_ahead_commit!(sp::Model, prb::Problem, problem_info::ProblemInfo)
+function build_day_ahead_clear!(sp::Model, prb::Problem, problem_info::ProblemInfo)
     #add variables
     variable_volume!(sp, prb)
     variable_day_ahead_bid!(sp, prb)
-    variable_day_ahead_commit!(sp, prb)
+    variable_day_ahead_clear!(sp, prb)
     variable_real_time_bid!(sp, prb)
 
     #add constraints
     constraint_copy_volume!(sp, prb)
-    constraint_add_day_ahead_commit!(sp, prb, problem_info.k, problem_info.t)
+    constraint_add_day_ahead_clear!(sp, prb, problem_info.k, problem_info.t)
 
     #add objective
-    set_day_ahead_commit_objective!(sp, prb, problem_info.t, problem_info.k)
+    set_day_ahead_clear_objective!(sp, prb, problem_info.t, problem_info.k)
     return nothing
 end
