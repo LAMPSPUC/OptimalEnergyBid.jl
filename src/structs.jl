@@ -31,7 +31,7 @@ end
 end
 
 @kwdef mutable struct Cache
-    problem_type::Dict{Int,ProblemInfo}
+    problem_info::Dict{Int,ProblemInfo}
     acceptance_real_time::Array{Bool,4}
     acceptance_day_ahead::Array{Bool,5}
 end
@@ -42,11 +42,23 @@ end
     V_0::Vector{Float64} # Storage inicial condition
 end
 
+@kwdef mutable struct Output
+    objective::Array{Float64,1}
+    volume::Array{Float64,3}
+    real_time_bid::Array{Float64,4}
+    day_ahead_bid::Array{Float64,5}
+    day_ahead_clear::Array{Float64,4}
+    inflow::Array{Float64,3}
+    generation::Array{Float64,3}
+    spillage::Array{Float64,3}
+end
+
 @kwdef mutable struct Problem
     options::Options
     random_variables::RandomVariables
     numbers::Numbers
     cache::Cache
     data::Data
+    output::Output
     model::Union{SDDP.PolicyGraph,Nothing} = nothing
 end

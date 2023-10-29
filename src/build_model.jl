@@ -22,7 +22,7 @@ switch(type::ProblemType) = @match type begin
 end
 
 function build_subproblem!(sp::Model, idx::Int, prb::Problem)
-    problem_info = prb.cache.problem_type[idx]
+    problem_info = prb.cache.problem_info[idx]
     constructor! = switch(problem_info.problem_type)
     constructor!(sp, prb, problem_info)
     return nothing

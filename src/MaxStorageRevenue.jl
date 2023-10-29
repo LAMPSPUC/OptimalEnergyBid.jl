@@ -2,6 +2,7 @@ module MaxStorageRevenue
 
 using JSON
 using JSONSchema
+using JuMP
 using SDDP
 using Match
 
@@ -16,8 +17,9 @@ include("constraints.jl")
 include("objective.jl")
 include("build_model.jl")
 include("train_model.jl")
+include("output.jl")
 include("simulate_model.jl")
 
-export validate_json, create_problem, simulate, build_model!, train!, Problem
+export validate_json, create_problem, simulate!, build_model!, train!, Problem
 
 end # module MaxStorageRevenue

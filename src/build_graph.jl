@@ -27,7 +27,7 @@ function add_day_ahead_bid!(
     if mod(t - numbers.U + numbers.n₀ - 1, numbers.N) == 0
         idx += 1
         SDDP.add_node(graph, idx)
-        cache.problem_type[idx] = ProblemInfo(DAB, t, 1)
+        cache.problem_info[idx] = ProblemInfo(DAB, t, 1)
         if last_problem == NOT
             SDDP.add_edge(graph, root => idx, 1.0)
         else
@@ -52,7 +52,7 @@ function add_day_ahead_clear!(
         for k in 1:(numbers.Kᵧ)
             idx += 1
             SDDP.add_node(graph, idx)
-            cache.problem_type[idx] = ProblemInfo(DAC, t, k)
+            cache.problem_info[idx] = ProblemInfo(DAC, t, k)
             temp = div(t - 1, prb.numbers.N) + 1
             if last_problem == DAB || last_problem == NOT
                 SDDP.add_edge(graph, root => idx, random.ωᵧ[k, temp])
@@ -76,7 +76,7 @@ function add_real_time_bid!(
 
     idx += 1
     SDDP.add_node(graph, idx)
-    cache.problem_type[idx] = ProblemInfo(RTB, t, 1)
+    cache.problem_info[idx] = ProblemInfo(RTB, t, 1)
     if last_problem == DAB
         SDDP.add_edge(graph, root => idx, 1.0)
     else
@@ -98,7 +98,7 @@ function add_real_time_clear!(
     for k in 1:(numbers.Kᵦ)
         idx += 1
         SDDP.add_node(graph, idx)
-        cache.problem_type[idx] = ProblemInfo(RTC, t, k)
+        cache.problem_info[idx] = ProblemInfo(RTC, t, k)
         SDDP.add_edge(graph, root => idx, random.ωᵦ[k, t])
     end
     last_problem = RTC
