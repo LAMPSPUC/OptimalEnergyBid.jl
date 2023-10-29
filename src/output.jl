@@ -1,6 +1,4 @@
-variable_list = [:real_time_bid, :day_ahead_bid, :day_ahead_clear]
 variable_list = [:volume, :real_time_bid, :day_ahead_bid, :day_ahead_clear, :inflow, :generation, :spillage]
-
 
 function write_output!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     
@@ -12,11 +10,53 @@ function write_output!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     return nothing
 end
 
+function write_day_ahead_bid!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
+    numbers = prb.numbers
+    S = length(simul)
+    day_ahead_bid = zeros(numbers.Kᵦ, numbers.I, numbers.T, S)
+
+    for s in 1:S
+        L = length(simul[s])
+        t = 1
+        for l in 1:L
+            if prb.cache.problem_info[simul[s][l][:node_index]].problem_type == RTB
+                for k in 1:numbers.Kᵦ, i in 1:numbers.I
+                    day_ahead_bid[k,i,t,s] = simul[s][l][:day_ahead_bid][k,i].out
+                end
+                t += 1;
+            end
+        end
+    end
+    prb.output.day_ahead_bid = day_ahead_bid
+    return nothing
+end
+
+function write_day_ahead_clear!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
+    numbers = prb.numbers
+    S = length(simul)
+    day_ahead_clear = zeros(numbers.Kᵦ, numbers.I, numbers.T, S)
+
+    for s in 1:S
+        L = length(simul[s])
+        t = 1
+        for l in 1:L
+            if prb.cache.problem_info[simul[s][l][:node_index]].problem_type == RTB
+                for k in 1:numbers.Kᵦ, i in 1:numbers.I
+                    day_ahead_clear[k,i,t,s] = simul[s][l][:day_ahead_clear][k,i].out
+                end
+                t += 1;
+            end
+        end
+    end
+    prb.output.day_ahead_clear = day_ahead_clear
+    return nothing
+end
+
 function write_real_time_bid!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     numbers = prb.numbers
     S = length(simul)
     real_time_bid = zeros(numbers.Kᵦ, numbers.I, numbers.T, S)
-    
+
     for s in 1:S
         L = length(simul[s])
         t = 1
