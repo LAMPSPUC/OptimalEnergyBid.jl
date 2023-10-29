@@ -39,4 +39,4 @@ options.optimizer = HiGHS.Optimizer
 
 build_model!(prb)
 train!(prb)
-simulate(prb)
+simulate!(prb)
