@@ -1,5 +1,5 @@
 function constraint_inflow!(sp::Model, prb::Problem, t::Int)
-    temp = [prb.random_variables.πᵪ[:, :, t][i,:] for i in 1:size(prb.random_variables.πᵪ[:, :, t],2)]
+    temp = [prb.random_variables.πᵪ[:, :, t][:,i] for i in 1:size(prb.random_variables.πᵪ[:, :, t],2)]
     SDDP.parameterize(
         sp, temp, prb.random_variables.ωᵪ[:, t]
     ) do ω
