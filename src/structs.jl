@@ -31,6 +31,8 @@ end
 
 @kwdef mutable struct Cache
     problem_type::Dict{Int,ProblemInfo}
+    acceptance_real_time::Array{Bool,4}
+    acceptance_day_ahead::Array{Bool,5}
 end
 
 @kwdef mutable struct Data
