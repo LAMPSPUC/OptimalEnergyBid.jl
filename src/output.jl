@@ -16,7 +16,6 @@ function write_day_ahead_bid!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any
     numbers = prb.numbers
     S = length(simul)
     day_ahead_bid = zeros(numbers.Kᵦ, numbers.I, numbers.N, numbers.D, S)
-    day_ahead_bid .+= 999
 
     for s in 1:S
         L = length(simul[s])
