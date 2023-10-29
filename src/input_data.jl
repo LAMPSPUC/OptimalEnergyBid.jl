@@ -1,4 +1,4 @@
-const schema_path = joinpath(dirname(@__FILE__), "problem.json")
+const schema_path = joinpath(dirname(@__FILE__), "schemas", "problem.json")
 
 function parse_file_json(file::String)
     return JSON.parse(String(read(file)))

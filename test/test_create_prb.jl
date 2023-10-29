@@ -35,7 +35,7 @@ data.V_max = ones(1)
 data.V_min = zeros(1)
 data.V_0 = zeros(1)
 
-prb2 = create_problem(joinpath(dirname(dirname(@__FILE__)), "examples", "toy_case.json"))
+prb2 = create_problem(joinpath(dirname(dirname(@__FILE__)), "cases", "toy_case.json"))
 
 @test random.πᵦ == prb2.random_variables.πᵦ
 @test random.ωᵦ == prb2.random_variables.ωᵦ
