@@ -2,6 +2,8 @@ variable_list = [:volume, :real_time_bid, :day_ahead_bid, :day_ahead_clear, :inf
 
 function write_output!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     
+    write_day_ahead_bid!(prb, simul)
+    write_day_ahead_clear!(prb, simul)
     write_real_time_bid!(prb, simul)
     write_volume!(prb, simul)
     write_generation!(prb, simul)
@@ -13,17 +15,18 @@ end
 function write_day_ahead_bid!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     numbers = prb.numbers
     S = length(simul)
-    day_ahead_bid = zeros(numbers.Kᵦ, numbers.I, numbers.T, S)
+    day_ahead_bid = zeros(numbers.Kᵦ, numbers.I, numbers.N, numbers.D, S)
+    day_ahead_bid .+= 999
 
     for s in 1:S
         L = length(simul[s])
-        t = 1
+        d = 1
         for l in 1:L
-            if prb.cache.problem_info[simul[s][l][:node_index]].problem_type == RTB
-                for k in 1:numbers.Kᵦ, i in 1:numbers.I
-                    day_ahead_bid[k,i,t,s] = simul[s][l][:day_ahead_bid][k,i].out
+            if prb.cache.problem_info[simul[s][l][:node_index]].problem_type == DAB
+                for n in 1:numbers.N, i in 1:numbers.I, k in 1:numbers.Kᵦ
+                    day_ahead_bid[k,i,n,d,s] = simul[s][l][:day_ahead_bid][k,i,n].out
                 end
-                t += 1;
+                d += 1;
             end
         end
     end
@@ -34,17 +37,17 @@ end
 function write_day_ahead_clear!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     numbers = prb.numbers
     S = length(simul)
-    day_ahead_clear = zeros(numbers.Kᵦ, numbers.I, numbers.T, S)
+    day_ahead_clear = zeros(numbers.I, numbers.N, numbers.D, S)
 
     for s in 1:S
         L = length(simul[s])
-        t = 1
+        d = 1
         for l in 1:L
-            if prb.cache.problem_info[simul[s][l][:node_index]].problem_type == RTB
-                for k in 1:numbers.Kᵦ, i in 1:numbers.I
-                    day_ahead_clear[k,i,t,s] = simul[s][l][:day_ahead_clear][k,i].out
+            if prb.cache.problem_info[simul[s][l][:node_index]].problem_type == DAC
+                for i in 1:numbers.I, n in 1:numbers.N 
+                    day_ahead_clear[i,n,d,s] = simul[s][l][:day_ahead_clear][i, n + prb.numbers.N - prb.numbers.V + 1].out
                 end
-                t += 1;
+                d += 1;
             end
         end
     end
@@ -62,7 +65,7 @@ function write_real_time_bid!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any
         t = 1
         for l in 1:L
             if prb.cache.problem_info[simul[s][l][:node_index]].problem_type == RTB
-                for k in 1:numbers.Kᵦ, i in 1:numbers.I
+                for i in 1:numbers.I, k in 1:numbers.Kᵦ
                     real_time_bid[k,i,t,s] = simul[s][l][:real_time_bid][k,i].out
                 end
                 t += 1;
