@@ -35,6 +35,7 @@ function build_real_time_bid!(sp::Model, prb::Problem, problem_info::ProblemInfo
     variable_real_time_bid!(sp, prb)
     variable_day_ahead_clear!(sp, prb)
     variable_day_ahead_bid!(sp, prb)
+    variable_spillage!(sp, prb)
 
     #add constraints
     constraint_add_inflow!(sp, prb)

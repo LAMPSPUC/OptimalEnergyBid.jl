@@ -1,10 +1,9 @@
 function constraint_inflow!(sp::Model, prb::Problem, t::Int)
-    for i in 1:(prb.numbers.I)
-        SDDP.parameterize(
-            sp, prb.random_variables.ωᵪ[:, t], prb.random_variables.πᵪ[:, i, t]
-        ) do ω
-            return JuMP.fix(sp[:inflow][i], ω)
-        end
+    temp = [prb.random_variables.πᵪ[:, :, t][i,:] for i in 1:size(prb.random_variables.πᵪ[:, :, t],2)]
+    SDDP.parameterize(
+        sp, temp, prb.random_variables.ωᵪ[:, t]
+    ) do ω
+        return JuMP.fix.(sp[:inflow], ω)
     end
 end
 
@@ -57,7 +56,7 @@ function constraint_add_day_ahead_clear!(sp::Model, prb::Problem, K::Int, T::Int
         sp,
         add_shift_day_ahead_clear[i=1:(prb.numbers.I), n=1:(prb.numbers.N)],
         sp[:day_ahead_clear][i, n + prb.numbers.N - prb.numbers.V + 1].out ==
-            sum(sp[:day_ahead_bid][k, i, n].in for k in 1:prb.numbers.Kᵧ if prb.cache.acceptance_day_ahead[K,k,i,temp,n])
+            sum(sp[:day_ahead_bid][k, i, n].in for k in 1:prb.numbers.Kᵧ if prb.cache.acceptance_day_ahead[K,k,i,n,temp])
     )
     return nothing
 end
@@ -66,7 +65,7 @@ function constraint_add_inflow!(sp::Model, prb::Problem)
     @constraint(
         sp,
         add_inflow[i=1:(prb.numbers.I)],
-        sp[:volume][i].out == sp[:volume][i].in + sp[:inflow][i]
+        sp[:volume][i].out == sp[:volume][i].in + sp[:inflow][i] - sp[:spillage][i]
     )
     return nothing
 end

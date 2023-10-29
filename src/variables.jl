@@ -48,3 +48,8 @@ function variable_generation!(sp::Model, prb::Problem)
     @variable(sp, prb.data.V_min[i] <= generation[i=1:(prb.numbers.I)] <= prb.data.V_max[i])
     return nothing
 end
+
+function variable_spillage!(sp::Model, prb::Problem)
+    @variable(sp, 0.0 <= spillage[i=1:(prb.numbers.I)])
+    return nothing
+end
