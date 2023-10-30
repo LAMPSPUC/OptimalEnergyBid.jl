@@ -5,6 +5,7 @@ using JSONSchema
 using JuMP
 using SDDP
 using Match
+using Plots
 
 include("macros.jl")
 include("structs.jl")
@@ -18,7 +19,8 @@ include("build_model.jl")
 include("train_model.jl")
 include("output.jl")
 include("simulate_model.jl")
+include("graph.jl")
 
-export validate_json, create_problem, simulate!, build_model!, train!, Problem
+export validate_json, create_problem, simulate!, build_model!, train!, Problem, plot_volumes, plot_spillages, plot_generations, plot_inflows
 
 end # module MaxStorageRevenue

@@ -16,13 +16,17 @@ end
 
 function set_day_ahead_clear_objective!(sp::Model, prb::Problem, t::Int, k::Int)
     temp = div(t - 1, prb.numbers.N) + 1
-    @stageobjective(
-        sp,
-        sum(
-            prb.random_variables.πᵧ[k, i, n, temp] *
-            (sp[:day_ahead_clear][i, n + prb.numbers.N - prb.numbers.V + 1].out) for
-            i in 1:(prb.numbers.I), n in 1:(prb.numbers.N)
+    if temp != prb.numbers.D
+        @stageobjective(
+            sp,
+            sum(
+                prb.random_variables.πᵧ[k, i, n, temp] *
+                (sp[:day_ahead_clear][i, n + prb.numbers.N - prb.numbers.V + 1].out) for
+                i in 1:(prb.numbers.I), n in 1:(prb.numbers.N)
+            )
         )
-    )
+    else
+        @stageobjective(sp, 0.0)
+    end
     return nothing
 end
