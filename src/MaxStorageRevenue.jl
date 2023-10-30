@@ -7,7 +7,6 @@ using SDDP
 using Match
 
 include("macros.jl")
-include("enums.jl")
 include("structs.jl")
 include("input_data.jl")
 include("preprocess.jl")
