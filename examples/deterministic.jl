@@ -5,3 +5,5 @@ prb.options.optimizer = HiGHS.Optimizer
 build_model!(prb)
 train!(prb)
 simul = simulate!(prb, 1)
+
+plot_all(prb, 1, "")
