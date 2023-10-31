@@ -4,5 +4,6 @@ Debug/
 *.log
 *.lp
 *.mps
+*.png
 .DS_Store
 Manifest.toml

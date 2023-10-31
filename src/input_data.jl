@@ -42,6 +42,15 @@ function write_data!(prb::Problem, dict::Dict)
     data.V_max = dict["data"]["storage_max_capacity"]
     data.V_min = dict["data"]["storage_min_capacity"]
     data.V_0 = dict["data"]["storage_inicial_condition"]
+    if haskey(dict["data"], "names")
+        data.names = reshape(dict["data"]["names"], 1, prb.numbers.I)
+    else
+        temp = []
+        for i in 1:prb.numbers.I
+            push!(temp, "$i")
+        end
+        data.names = reshape(temp, 1, prb.numbers.I)
+    end
 
     return nothing
 end

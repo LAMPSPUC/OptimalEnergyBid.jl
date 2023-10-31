@@ -48,6 +48,7 @@ end
     V_max::Vector{Float64} # Storage max capacity
     V_min::Vector{Float64} # Storage min capacity
     V_0::Vector{Float64} # Storage inicial condition
+    names::Matrix{String} # Storage names
 end
 
 @kwdef mutable struct Output
