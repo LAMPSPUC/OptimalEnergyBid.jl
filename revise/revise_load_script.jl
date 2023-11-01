@@ -1,4 +1,4 @@
-import Pkg
+using Pkg
 Pkg.instantiate()
 
 using Revise

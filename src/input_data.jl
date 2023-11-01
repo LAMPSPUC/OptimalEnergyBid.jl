@@ -46,7 +46,7 @@ function write_data!(prb::Problem, dict::Dict)
         data.names = reshape(dict["data"]["names"], 1, prb.numbers.I)
     else
         temp = []
-        for i in 1:prb.numbers.I
+        for i in 1:(prb.numbers.I)
             push!(temp, "$i")
         end
         data.names = reshape(temp, 1, prb.numbers.I)
@@ -66,29 +66,29 @@ function write_random!(prb::Problem, dict::Dict)
     random_variables.πᵪ = zeros(numbers.Kᵪ, numbers.I, numbers.T)
     random_variables.ωᵪ = zeros(numbers.Kᵪ, numbers.T)
 
-    for t in 1:numbers.T
-        for i in 1:numbers.I
-            for k in 1:numbers.Kᵦ
-                random_variables.πᵦ[k,i,t] = dict["random"]["prices_real_time"][t][i][k]
+    for t in 1:(numbers.T)
+        for i in 1:(numbers.I)
+            for k in 1:(numbers.Kᵦ)
+                random_variables.πᵦ[k, i, t] = dict["random"]["prices_real_time"][t][i][k]
             end
-            for k in 1:numbers.Kᵪ
-                random_variables.πᵪ[k,i,t] = dict["random"]["inflow_values"][t][i][k]
+            for k in 1:(numbers.Kᵪ)
+                random_variables.πᵪ[k, i, t] = dict["random"]["inflow_values"][t][i][k]
             end
         end
-        for k in 1:numbers.Kᵦ
-            random_variables.ωᵦ[k,t] = dict["random"]["prob_real_time"][t][k]
+        for k in 1:(numbers.Kᵦ)
+            random_variables.ωᵦ[k, t] = dict["random"]["prob_real_time"][t][k]
         end
-        for k in 1:numbers.Kᵪ
-            random_variables.ωᵪ[k,t] = dict["random"]["prob_inflow"][t][k]
+        for k in 1:(numbers.Kᵪ)
+            random_variables.ωᵪ[k, t] = dict["random"]["prob_inflow"][t][k]
         end
     end
 
-    for d in 1:numbers.D, n in 1:numbers.N, i in 1:numbers.I, k in 1:numbers.Kᵧ
-        random_variables.πᵧ[k,i,n,d] = dict["random"]["prices_day_ahead"][d][n][i][k]
+    for d in 1:(numbers.D), n in 1:(numbers.N), i in 1:(numbers.I), k in 1:(numbers.Kᵧ)
+        random_variables.πᵧ[k, i, n, d] = dict["random"]["prices_day_ahead"][d][n][i][k]
     end
 
-    for d in 1:numbers.D, k in 1:numbers.Kᵧ
-        random_variables.ωᵧ[k,d] = dict["random"]["prob_day_ahead"][d][k]
+    for d in 1:(numbers.D), k in 1:(numbers.Kᵧ)
+        random_variables.ωᵧ[k, d] = dict["random"]["prob_day_ahead"][d][k]
     end
 
     return nothing

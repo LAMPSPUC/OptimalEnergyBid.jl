@@ -21,6 +21,19 @@ include("output.jl")
 include("simulate_model.jl")
 include("graph.jl")
 
-export validate_json, create_problem, simulate!, build_model!, train!, Problem, plot_volumes, plot_spillages, plot_generations, plot_inflows, plot_real_time_bids, plot_day_ahead_clears, plot_day_ahead_bids, plot_all
+export validate_json,
+    create_problem,
+    simulate!,
+    build_model!,
+    train!,
+    Problem,
+    plot_volumes,
+    plot_spillages,
+    plot_generations,
+    plot_inflows,
+    plot_real_time_bids,
+    plot_day_ahead_clears,
+    plot_day_ahead_bids,
+    plot_all
 
 end # module MaxStorageRevenue

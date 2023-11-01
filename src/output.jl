@@ -1,7 +1,14 @@
-variable_list = [:volume, :real_time_bid, :day_ahead_bid, :day_ahead_clear, :inflow, :generation, :spillage]
+variable_list = [
+    :volume,
+    :real_time_bid,
+    :day_ahead_bid,
+    :day_ahead_clear,
+    :inflow,
+    :generation,
+    :spillage,
+]
 
 function write_output!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
-    
     write_day_ahead_bid!(prb, simul)
     write_day_ahead_clear!(prb, simul)
     write_real_time_bid!(prb, simul)
@@ -22,10 +29,10 @@ function write_day_ahead_bid!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any
         d = 1
         for l in 1:L
             if prb.cache.problem_info[simul[s][l][:node_index]].problem_type == DAB
-                for n in 1:numbers.N, i in 1:numbers.I, k in 1:numbers.Kᵧ
-                    day_ahead_bid[k,i,n,d,s] = simul[s][l][:day_ahead_bid][k,i,n].out
+                for n in 1:(numbers.N), i in 1:(numbers.I), k in 1:(numbers.Kᵧ)
+                    day_ahead_bid[k, i, n, d, s] = simul[s][l][:day_ahead_bid][k, i, n].out
                 end
-                d += 1;
+                d += 1
             end
         end
     end
@@ -43,10 +50,13 @@ function write_day_ahead_clear!(prb::Problem, simul::Vector{Vector{Dict{Symbol,A
         d = 1
         for l in 1:L
             if prb.cache.problem_info[simul[s][l][:node_index]].problem_type == DAC
-                for i in 1:numbers.I, n in 1:numbers.N 
-                    day_ahead_clear[i,n,d,s] = simul[s][l][:day_ahead_clear][i, n + prb.numbers.N - prb.numbers.V + 1].out
+                for i in 1:(numbers.I), n in 1:(numbers.N)
+                    day_ahead_clear[i, n, d, s] =
+                        simul[s][l][:day_ahead_clear][
+                            i, n + prb.numbers.N - prb.numbers.V + 1
+                        ].out
                 end
-                d += 1;
+                d += 1
             end
         end
     end
@@ -64,10 +74,10 @@ function write_real_time_bid!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any
         t = 1
         for l in 1:L
             if prb.cache.problem_info[simul[s][l][:node_index]].problem_type == RTB
-                for i in 1:numbers.I, k in 1:numbers.Kᵦ
-                    real_time_bid[k,i,t,s] = simul[s][l][:real_time_bid][k,i].out
+                for i in 1:(numbers.I), k in 1:(numbers.Kᵦ)
+                    real_time_bid[k, i, t, s] = simul[s][l][:real_time_bid][k, i].out
                 end
-                t += 1;
+                t += 1
             end
         end
     end
@@ -85,10 +95,10 @@ function write_volume!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
         t = 1
         for l in 1:L
             if prb.cache.problem_info[simul[s][l][:node_index]].problem_type == RTC
-                for i in 1:numbers.I
-                    volume[i,t,s] = simul[s][l][:volume][i].out
+                for i in 1:(numbers.I)
+                    volume[i, t, s] = simul[s][l][:volume][i].out
                 end
-                t += 1;
+                t += 1
             end
         end
     end
@@ -106,8 +116,8 @@ function write_generation!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}}
         t = 1
         for l in 1:L
             if prb.cache.problem_info[simul[s][l][:node_index]].problem_type == RTC
-                generation[:,t,s] = simul[s][l][:generation]
-                t += 1;
+                generation[:, t, s] = simul[s][l][:generation]
+                t += 1
             end
         end
     end
@@ -125,8 +135,8 @@ function write_spillage!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
         t = 1
         for l in 1:L
             if prb.cache.problem_info[simul[s][l][:node_index]].problem_type == RTB
-                spillage[:,t,s] = simul[s][l][:spillage]
-                t += 1;
+                spillage[:, t, s] = simul[s][l][:spillage]
+                t += 1
             end
         end
     end
@@ -144,8 +154,8 @@ function write_inflow!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
         t = 1
         for l in 1:L
             if prb.cache.problem_info[simul[s][l][:node_index]].problem_type == RTB
-                inflow[:,t,s] = simul[s][l][:inflow]
-                t += 1;
+                inflow[:, t, s] = simul[s][l][:inflow]
+                t += 1
             end
         end
     end

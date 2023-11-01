@@ -57,4 +57,3 @@ prb2 = create_problem(joinpath(dirname(dirname(@__FILE__)), "cases", "toy_case.j
 @test data.V_max == prb2.data.V_max
 @test data.V_min == prb2.data.V_min
 @test data.V_0 == prb2.data.V_0
-

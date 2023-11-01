@@ -1,8 +1,9 @@
 function constraint_inflow!(sp::Model, prb::Problem, t::Int)
-    temp = [prb.random_variables.πᵪ[:, :, t][:,i] for i in 1:size(prb.random_variables.πᵪ[:, :, t],2)]
-    SDDP.parameterize(
-        sp, temp, prb.random_variables.ωᵪ[:, t]
-    ) do ω
+    temp = [
+        prb.random_variables.πᵪ[:, :, t][:, i] for
+        i in 1:size(prb.random_variables.πᵪ[:, :, t], 2)
+    ]
+    SDDP.parameterize(sp, temp, prb.random_variables.ωᵪ[:, t]) do ω
         return JuMP.fix.(sp[:inflow], ω)
     end
 end
@@ -37,9 +38,7 @@ end
 function constraint_shift_day_ahead_clear!(sp::Model, prb::Problem)
     @constraint(
         sp,
-        shift_day_ahead_clear[
-            i=1:(prb.numbers.I), n=1:(2 * prb.numbers.N - prb.numbers.V)
-        ],
+        shift_day_ahead_clear[i=1:(prb.numbers.I), n=1:(2 * prb.numbers.N - prb.numbers.V)],
         sp[:day_ahead_clear][i, n].out == sp[:day_ahead_clear][i, n + 1].in
     )
     return nothing
@@ -55,8 +54,10 @@ function constraint_add_day_ahead_clear!(sp::Model, prb::Problem, K::Int, T::Int
     @constraint(
         sp,
         add_shift_day_ahead_clear[i=1:(prb.numbers.I), n=1:(prb.numbers.N)],
-        sp[:day_ahead_clear][i, n + prb.numbers.N - prb.numbers.V + 1].out ==
-            sum(sp[:day_ahead_bid][k, i, n].in for k in 1:prb.numbers.Kᵧ if prb.cache.acceptance_day_ahead[K,k,i,n,temp])
+        sp[:day_ahead_clear][i, n + prb.numbers.N - prb.numbers.V + 1].out == sum(
+            sp[:day_ahead_bid][k, i, n].in for
+            k in 1:(prb.numbers.Kᵧ) if prb.cache.acceptance_day_ahead[K, k, i, n, temp]
+        )
     )
     return nothing
 end
@@ -92,7 +93,10 @@ function constraint_real_time_accepted!(sp::Model, prb::Problem, K::Int, T::Int)
     @constraint(
         sp,
         real_time_accepted[i=1:(prb.numbers.I)],
-        sp[:generation][i] == sum(sp[:real_time_bid][k, i].in for k in 1:prb.numbers.Kᵦ if prb.cache.acceptance_real_time[K,k,i,T])
+        sp[:generation][i] == sum(
+            sp[:real_time_bid][k, i].in for
+            k in 1:(prb.numbers.Kᵦ) if prb.cache.acceptance_real_time[K, k, i, T]
+        )
     )
     return nothing
 end
