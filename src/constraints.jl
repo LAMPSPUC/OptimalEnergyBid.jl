@@ -1,3 +1,4 @@
+"""Adds the inflow random variable constraint"""
 function constraint_inflow!(sp::Model, prb::Problem, t::Int)
     temp = [
         prb.random_variables.πᵪ[:, :, t][:, i] for
@@ -8,6 +9,7 @@ function constraint_inflow!(sp::Model, prb::Problem, t::Int)
     end
 end
 
+"""Adds the copy volume constraint"""
 function constraint_copy_volume!(sp::Model, prb::Problem)
     @constraint(
         sp, copy_volume[i=1:(prb.numbers.I)], sp[:volume][i].out == sp[:volume][i].in
@@ -15,6 +17,7 @@ function constraint_copy_volume!(sp::Model, prb::Problem)
     return nothing
 end
 
+"""Adds the copy generation constraint"""
 function constraint_copy_generation!(sp::Model, prb::Problem)
     @constraint(
         sp, copy_generation[i=1:(prb.numbers.I)], sp[:generation][i].out == sp[:generation][i].in
@@ -22,6 +25,7 @@ function constraint_copy_generation!(sp::Model, prb::Problem)
     return nothing
 end
 
+"""Adds the generation ramp up constraint"""
 function constraint_generation_ramp_up!(sp::Model, prb::Problem)
     @constraint(
         sp, generation_ramp_up[i=1:(prb.numbers.I)], sp[:ramp_up_violation][i]  >=  sp[:generation][i].out - sp[:generation][i].in - prb.data.ramp_up[i]
@@ -29,6 +33,7 @@ function constraint_generation_ramp_up!(sp::Model, prb::Problem)
     return nothing
 end
 
+"""Adds the generation ramp down constraint"""
 function constraint_generation_ramp_down!(sp::Model, prb::Problem)
     @constraint(
         sp, generation_ramp_down[i=1:(prb.numbers.I)], sp[:ramp_down_violation][i]  >= sp[:generation][i].in - sp[:generation][i].out - prb.data.ramp_down[i]
@@ -36,6 +41,7 @@ function constraint_generation_ramp_down!(sp::Model, prb::Problem)
     return nothing
 end
 
+"""Adds the copy day ahead bid constraint"""
 function constraint_copy_day_ahead_bid!(sp::Model, prb::Problem)
     @constraint(
         sp,
@@ -45,6 +51,7 @@ function constraint_copy_day_ahead_bid!(sp::Model, prb::Problem)
     return nothing
 end
 
+"""Adds the copy day ahead clear constraint"""
 function constraint_copy_day_ahead_clear!(sp::Model, prb::Problem)
     @constraint(
         sp,
@@ -56,6 +63,7 @@ function constraint_copy_day_ahead_clear!(sp::Model, prb::Problem)
     return nothing
 end
 
+"""Adds the shift day ahead clear constraint"""
 function constraint_shift_day_ahead_clear!(sp::Model, prb::Problem)
     @constraint(
         sp,
@@ -65,6 +73,7 @@ function constraint_shift_day_ahead_clear!(sp::Model, prb::Problem)
     return nothing
 end
 
+"""Adds the day ahead clear constraint"""
 function constraint_add_day_ahead_clear!(sp::Model, prb::Problem, K::Int, T::Int)
     temp = div(T - 1, prb.numbers.N) + 1
     @constraint(
@@ -83,6 +92,7 @@ function constraint_add_day_ahead_clear!(sp::Model, prb::Problem, K::Int, T::Int
     return nothing
 end
 
+"""Adds the inflow constraint"""
 function constraint_add_inflow!(sp::Model, prb::Problem)
     @constraint(
         sp,
@@ -92,6 +102,7 @@ function constraint_add_inflow!(sp::Model, prb::Problem)
     return nothing
 end
 
+"""Adds the real time offer bound constraint"""
 function constraint_real_time_bid_bound!(sp::Model, prb::Problem)
     @constraint(
         sp,
@@ -101,6 +112,7 @@ function constraint_real_time_bid_bound!(sp::Model, prb::Problem)
     return nothing
 end
 
+"""Adds the generatarion constraint using generatarion as a control variable"""
 function constraint_add_generation!(sp::Model, prb::Problem)
     @constraint(
         sp,
@@ -110,6 +122,7 @@ function constraint_add_generation!(sp::Model, prb::Problem)
     return nothing
 end
 
+"""Adds the real time accepted constraint using generatarion as a control variable"""
 function constraint_real_time_accepted!(sp::Model, prb::Problem, K::Int, T::Int)
     @constraint(
         sp,
@@ -122,6 +135,7 @@ function constraint_real_time_accepted!(sp::Model, prb::Problem, K::Int, T::Int)
     return nothing
 end
 
+"""Adds the generatarion constraint using generatarion as a state variable"""
 function constraint_add_generation_state!(sp::Model, prb::Problem)
     @constraint(
         sp,
@@ -131,6 +145,7 @@ function constraint_add_generation_state!(sp::Model, prb::Problem)
     return nothing
 end
 
+"""Adds the real time accepted constraint using generatarion as a state variable"""
 function constraint_real_time_accepted_state!(sp::Model, prb::Problem, K::Int, T::Int)
     @constraint(
         sp,

@@ -1,3 +1,4 @@
+"""Creates the SDDP graph"""
 function build_graph(prb::Problem)::SDDP.Graph
     numbers = prb.numbers
     graph = SDDP.LinearGraph(0)
@@ -18,6 +19,7 @@ function build_graph(prb::Problem)::SDDP.Graph
     return graph
 end
 
+"""Adds the day ahead offer node"""
 function add_day_ahead_bid!(
     graph::SDDP.Graph, prb::Problem, idx::Int, t::Int, root::Int, last_problem::ProblemType
 )
@@ -41,6 +43,7 @@ function add_day_ahead_bid!(
     return idx, root, last_problem
 end
 
+"""Adds the day ahead clear nodes"""
 function add_day_ahead_clear!(
     graph::SDDP.Graph, prb::Problem, idx::Int, t::Int, root::Int, last_problem::ProblemType
 )
@@ -68,6 +71,7 @@ function add_day_ahead_clear!(
     return idx, root, last_problem
 end
 
+"""Adds the real time offer node"""
 function add_real_time_bid!(
     graph::SDDP.Graph, prb::Problem, idx::Int, t::Int, root::Int, last_problem::ProblemType
 )
@@ -88,6 +92,7 @@ function add_real_time_bid!(
     return idx, root, last_problem
 end
 
+"""Adds the real time clear nodes"""
 function add_real_time_clear!(
     graph::SDDP.Graph, prb::Problem, idx::Int, t::Int, root::Int, _::ProblemType
 )

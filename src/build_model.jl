@@ -1,3 +1,4 @@
+"""Build the model"""
 function build_model!(prb::Problem)
     preprocess!(prb)
     evaluate_flags!(prb)
@@ -15,6 +16,7 @@ function build_model!(prb::Problem)
     return nothing
 end
 
+"""Find the good constructor"""
 switch(type::ProblemType) = @match type begin
     $RTB => build_real_time_bid!
     $RTC => build_real_time_clear!
@@ -22,6 +24,7 @@ switch(type::ProblemType) = @match type begin
     $DAC => build_day_ahead_clear!
 end
 
+"""Creates the subproblem"""
 function build_subproblem!(sp::Model, idx::Int, prb::Problem)
     problem_info = prb.cache.problem_info[idx]
     constructor! = switch(problem_info.problem_type)
@@ -29,6 +32,7 @@ function build_subproblem!(sp::Model, idx::Int, prb::Problem)
     return nothing
 end
 
+"""Creates the real time offer subproblem"""
 function build_real_time_bid!(sp::Model, prb::Problem, problem_info::ProblemInfo)
 
     variable_volume!(sp, prb)
@@ -54,6 +58,7 @@ function build_real_time_bid!(sp::Model, prb::Problem, problem_info::ProblemInfo
     return nothing
 end
 
+"""Creates the real time clear subproblem"""
 function build_real_time_clear!(sp::Model, prb::Problem, problem_info::ProblemInfo)
 
     variable_volume!(sp, prb)
@@ -95,6 +100,7 @@ function build_real_time_clear!(sp::Model, prb::Problem, problem_info::ProblemIn
     return nothing
 end
 
+"""Creates the day ahead offer subproblem"""
 function build_day_ahead_bid!(sp, prb::Problem, _::ProblemInfo)
 
     variable_volume!(sp, prb)
@@ -114,6 +120,7 @@ function build_day_ahead_bid!(sp, prb::Problem, _::ProblemInfo)
     return nothing
 end
 
+"""Creates the day ahead clear subproblem"""
 function build_day_ahead_clear!(sp::Model, prb::Problem, problem_info::ProblemInfo)
 
     variable_volume!(sp, prb)

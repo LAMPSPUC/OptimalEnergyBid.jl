@@ -1,3 +1,4 @@
+"""Contains all possibles types of the problem"""
 @enum ProblemType begin
     NOT = 1 # nothing
     RTB = 2 # Real time bid
@@ -6,12 +7,14 @@
     DAC = 5 # Day ahead clear
 end
 
+"""Information about position and type of each subproblem"""
 struct ProblemInfo
     problem_type::ProblemType
     t::Int
     k::Int
 end
 
+"""Contains all user options"""
 @kwdef mutable struct Options
     optimizer::Union{DataType,Nothing} = nothing
     use_ramp_up::Bool = false
@@ -20,10 +23,12 @@ end
     penalty_ramp_down::Float64
 end
 
+"""Contains all flags, evaluated using options"""
 @kwdef mutable struct Flags
     generation_as_state::Bool = false
 end
 
+"""Contains all random variables"""
 @kwdef mutable struct RandomVariables
     πᵦ::Array{Float64,3} # Prices of real time (k,i,t)
     ωᵦ::Array{Float64,2} # Probabilities of real time (k,t)
@@ -33,6 +38,7 @@ end
     ωᵪ::Array{Float64,2} # Probabilities of inflow (j,t)
 end
 
+"""Contains all sizes and indices"""
 @kwdef mutable struct Numbers
     N::Int # Number of periods of time per day
     n₀::Int # First period of time
@@ -46,12 +52,14 @@ end
     Kᵪ::Int # Number of inflow scenarios
 end
 
+"""Contains the cache data"""
 @kwdef mutable struct Cache
     problem_info::Dict{Int,ProblemInfo}
     acceptance_real_time::Array{Bool,4}
     acceptance_day_ahead::Array{Bool,5}
 end
 
+"""Contains the storages and generators data"""
 @kwdef mutable struct Data
     volume_max::Vector{Float64} # Storage max capacity
     volume_min::Vector{Float64} # Storage min capacity
@@ -62,6 +70,7 @@ end
     names::Matrix{String} # Storage names (optional)
 end
 
+"""Contains all outputs"""
 @kwdef mutable struct Output
     objective::Array{Float64,1}
     volume::Array{Float64,3}
@@ -73,6 +82,7 @@ end
     spillage::Array{Float64,3}
 end
 
+"""Contains all the problem description"""
 @kwdef mutable struct Problem
     options::Options
     flags::Flags

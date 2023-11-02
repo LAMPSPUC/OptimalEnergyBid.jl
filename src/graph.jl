@@ -1,3 +1,4 @@
+"""Plots all output"""
 function plot_all(prb::Problem, s::Int, folder::String=nothing)
     plot_volumes(prb, s, folder)
     plot_spillages(prb, s, folder)
@@ -10,6 +11,7 @@ function plot_all(prb::Problem, s::Int, folder::String=nothing)
     return nothing
 end
 
+"""Plots the day ahead clear output"""
 function plot_day_ahead_bids(prb::Problem, s::Int, folder::String=nothing)
     day_ahead_bid = prb.output.day_ahead_bid[:, :, :, :, s]
 
@@ -40,6 +42,7 @@ function plot_day_ahead_bids(prb::Problem, s::Int, folder::String=nothing)
     return nothing
 end
 
+"""Plots the day ahead clear output"""
 function plot_day_ahead_clears(prb::Problem, s::Int, folder::String=nothing)
     day_ahead_clear = prb.output.day_ahead_clear[:, :, :, s]
 
@@ -58,6 +61,7 @@ function plot_day_ahead_clears(prb::Problem, s::Int, folder::String=nothing)
     return nothing
 end
 
+"""Plots the real time offer output"""
 function plot_real_time_bids(prb::Problem, s::Int, folder::String=nothing)
     real_time_bid = prb.output.real_time_bid[:, :, :, s]
 
@@ -88,6 +92,7 @@ function plot_real_time_bids(prb::Problem, s::Int, folder::String=nothing)
     return nothing
 end
 
+"""Plots the volume output"""
 function plot_volumes(prb::Problem, s::Int, folder::String=nothing)
     volume = prb.output.volume[:, :, s]
     vectors = [volume[i, :] for i in 1:(prb.numbers.I)]
@@ -101,6 +106,7 @@ function plot_volumes(prb::Problem, s::Int, folder::String=nothing)
     return p
 end
 
+"""Plots the spillage output"""
 function plot_spillages(prb::Problem, s::Int, folder::String=nothing)
     spillage = prb.output.spillage[:, :, s]
     vectors = [spillage[i, :] for i in 1:(prb.numbers.I)]
@@ -114,6 +120,7 @@ function plot_spillages(prb::Problem, s::Int, folder::String=nothing)
     return p
 end
 
+"""Plots the generation output"""
 function plot_generations(prb::Problem, s::Int, folder::String=nothing)
     generation = prb.output.generation[:, :, s]
     vectors = [generation[i, :] for i in 1:(prb.numbers.I)]
@@ -127,6 +134,7 @@ function plot_generations(prb::Problem, s::Int, folder::String=nothing)
     return p
 end
 
+"""Plots the inflow output"""
 function plot_inflows(prb::Problem, s::Int, folder::String=nothing)
     inflow = prb.output.inflow[:, :, s]
     vectors = [inflow[i, :] for i in 1:(prb.numbers.I)]

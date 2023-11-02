@@ -1,3 +1,4 @@
+"""List of all variables"""
 variable_list = [
     :volume,
     :real_time_bid,
@@ -8,6 +9,7 @@ variable_list = [
     :spillage,
 ]
 
+"""Get all output data"""
 function write_output!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     write_day_ahead_bid!(prb, simul)
     write_day_ahead_clear!(prb, simul)
@@ -19,6 +21,7 @@ function write_output!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     return nothing
 end
 
+"""Get the day ahead offer"""
 function write_day_ahead_bid!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     numbers = prb.numbers
     S = length(simul)
@@ -40,6 +43,7 @@ function write_day_ahead_bid!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any
     return nothing
 end
 
+"""Get the day ahead clear"""
 function write_day_ahead_clear!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     numbers = prb.numbers
     S = length(simul)
@@ -64,6 +68,7 @@ function write_day_ahead_clear!(prb::Problem, simul::Vector{Vector{Dict{Symbol,A
     return nothing
 end
 
+"""Get the real time offer"""
 function write_real_time_bid!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     numbers = prb.numbers
     S = length(simul)
@@ -85,6 +90,7 @@ function write_real_time_bid!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any
     return nothing
 end
 
+"""Get the volume"""
 function write_volume!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     numbers = prb.numbers
     S = length(simul)
@@ -106,6 +112,7 @@ function write_volume!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     return nothing
 end
 
+"""Get the generation"""
 function write_generation!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     numbers = prb.numbers
     S = length(simul)
@@ -131,6 +138,7 @@ function write_generation!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}}
     return nothing
 end
 
+"""Get the spillage"""
 function write_spillage!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     numbers = prb.numbers
     S = length(simul)
@@ -150,6 +158,7 @@ function write_spillage!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     return nothing
 end
 
+"""Get the inflow"""
 function write_inflow!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     numbers = prb.numbers
     S = length(simul)

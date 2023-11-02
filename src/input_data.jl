@@ -1,13 +1,17 @@
+"""The json schema of the problem"""
 const schema_path = joinpath(dirname(dirname(@__FILE__)), "schemas", "problem.json")
 
+"""json file to dict"""
 function parse_file_json(file::String)
     return JSON.parse(String(read(file)))
 end
 
+"""Validates a json file"""
 function validate_json(file_path::String)
     return validate(Schema(parse_file_json(schema_path)), parse_file_json(file_path))
 end
 
+"""Creates a problem using json information"""
 function create_problem(file::String)::Problem
     dict = parse_file_json(file)
     prb = Problem()
@@ -19,6 +23,7 @@ function create_problem(file::String)::Problem
     return prb
 end
 
+"""Reads size and indeces information"""
 function write_numbers!(prb::Problem, dict::Dict)
     numbers = prb.numbers
 
@@ -36,6 +41,7 @@ function write_numbers!(prb::Problem, dict::Dict)
     return nothing
 end
 
+"""Reads storage/generators data information"""
 function write_data!(prb::Problem, dict::Dict)
     data = prb.data
 
@@ -64,6 +70,7 @@ function write_data!(prb::Problem, dict::Dict)
     return nothing
 end
 
+"""Reads random variables information"""
 function write_random!(prb::Problem, dict::Dict)
     random_variables = prb.random_variables
     numbers = prb.numbers
