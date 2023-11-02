@@ -20,7 +20,9 @@ end
 """Adds the copy generation constraint"""
 function constraint_copy_generation!(sp::Model, prb::Problem)
     @constraint(
-        sp, copy_generation[i=1:(prb.numbers.I)], sp[:generation][i].out == sp[:generation][i].in
+        sp,
+        copy_generation[i=1:(prb.numbers.I)],
+        sp[:generation][i].out == sp[:generation][i].in
     )
     return nothing
 end
@@ -28,7 +30,10 @@ end
 """Adds the generation ramp up constraint"""
 function constraint_generation_ramp_up!(sp::Model, prb::Problem)
     @constraint(
-        sp, generation_ramp_up[i=1:(prb.numbers.I)], sp[:ramp_up_violation][i]  >=  sp[:generation][i].out - sp[:generation][i].in - prb.data.ramp_up[i]
+        sp,
+        generation_ramp_up[i=1:(prb.numbers.I)],
+        sp[:ramp_up_violation][i] >=
+            sp[:generation][i].out - sp[:generation][i].in - prb.data.ramp_up[i]
     )
     return nothing
 end
@@ -36,7 +41,10 @@ end
 """Adds the generation ramp down constraint"""
 function constraint_generation_ramp_down!(sp::Model, prb::Problem)
     @constraint(
-        sp, generation_ramp_down[i=1:(prb.numbers.I)], sp[:ramp_down_violation][i]  >= sp[:generation][i].in - sp[:generation][i].out - prb.data.ramp_down[i]
+        sp,
+        generation_ramp_down[i=1:(prb.numbers.I)],
+        sp[:ramp_down_violation][i] >=
+            sp[:generation][i].in - sp[:generation][i].out - prb.data.ramp_down[i]
     )
     return nothing
 end

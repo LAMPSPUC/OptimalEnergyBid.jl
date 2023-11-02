@@ -45,8 +45,12 @@ end
 
 """Creates the generation as a state variable"""
 function variable_generation_state!(sp::Model, prb::Problem)
-    @variable(sp, prb.data.volume_min[i] <= generation[i=1:(prb.numbers.I)] <= prb.data.volume_max[i],
-    SDDP.State, initial_value = prb.data.generation_initial[i])
+    @variable(
+        sp,
+        prb.data.volume_min[i] <= generation[i=1:(prb.numbers.I)] <= prb.data.volume_max[i],
+        SDDP.State,
+        initial_value = prb.data.generation_initial[i]
+    )
     return nothing
 end
 
@@ -58,7 +62,10 @@ end
 
 """Creates the generation as a control variable"""
 function variable_generation!(sp::Model, prb::Problem)
-    @variable(sp, prb.data.volume_min[i] <= generation[i=1:(prb.numbers.I)] <= prb.data.volume_max[i])
+    @variable(
+        sp,
+        prb.data.volume_min[i] <= generation[i=1:(prb.numbers.I)] <= prb.data.volume_max[i]
+    )
     return nothing
 end
 

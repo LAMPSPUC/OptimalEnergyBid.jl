@@ -34,7 +34,6 @@ end
 
 """Creates the real time offer subproblem"""
 function build_real_time_bid!(sp::Model, prb::Problem, problem_info::ProblemInfo)
-
     variable_volume!(sp, prb)
     variable_inflow!(sp, prb)
     variable_real_time_bid!(sp, prb)
@@ -54,13 +53,12 @@ function build_real_time_bid!(sp::Model, prb::Problem, problem_info::ProblemInfo
 
     create_objective_expression!(sp)
     set_objective_expression!(sp)
-    
+
     return nothing
 end
 
 """Creates the real time clear subproblem"""
 function build_real_time_clear!(sp::Model, prb::Problem, problem_info::ProblemInfo)
-
     variable_volume!(sp, prb)
     variable_real_time_bid!(sp, prb)
     variable_day_ahead_clear!(sp, prb)
@@ -102,7 +100,6 @@ end
 
 """Creates the day ahead offer subproblem"""
 function build_day_ahead_bid!(sp, prb::Problem, _::ProblemInfo)
-
     variable_volume!(sp, prb)
     variable_day_ahead_bid!(sp, prb)
     variable_day_ahead_clear!(sp, prb)
@@ -122,7 +119,6 @@ end
 
 """Creates the day ahead clear subproblem"""
 function build_day_ahead_clear!(sp::Model, prb::Problem, problem_info::ProblemInfo)
-
     variable_volume!(sp, prb)
     variable_day_ahead_bid!(sp, prb)
     variable_day_ahead_clear!(sp, prb)
