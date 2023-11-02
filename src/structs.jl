@@ -14,6 +14,14 @@ end
 
 @kwdef mutable struct Options
     optimizer::Union{DataType,Nothing} = nothing
+    use_ramp_up::Bool = false
+    use_ramp_down::Bool = false
+    penalty_ramp_up::Float64
+    penalty_ramp_down::Float64
+end
+
+@kwdef mutable struct Flags
+    generation_as_state::Bool = false
 end
 
 @kwdef mutable struct RandomVariables
@@ -45,10 +53,13 @@ end
 end
 
 @kwdef mutable struct Data
-    V_max::Vector{Float64} # Storage max capacity
-    V_min::Vector{Float64} # Storage min capacity
-    V_0::Vector{Float64} # Storage inicial condition
-    names::Matrix{String} # Storage names
+    volume_max::Vector{Float64} # Storage max capacity
+    volume_min::Vector{Float64} # Storage min capacity
+    volume_initial::Vector{Float64} # Storage inicial condition
+    ramp_up::Vector{Float64} # ramp up generation (optional)
+    ramp_down::Vector{Float64} # ramp down generation (optional)
+    generation_initial::Vector{Float64} # initial generation (optional)
+    names::Matrix{String} # Storage names (optional)
 end
 
 @kwdef mutable struct Output
@@ -64,6 +75,7 @@ end
 
 @kwdef mutable struct Problem
     options::Options
+    flags::Flags
     random_variables::RandomVariables
     numbers::Numbers
     cache::Cache

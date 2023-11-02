@@ -1,9 +1,9 @@
 function variable_volume!(sp::Model, prb::Problem)
     @variable(
         sp,
-        prb.data.V_min[i] <= volume[i=1:(prb.numbers.I)] <= prb.data.V_max[i],
+        prb.data.volume_min[i] <= volume[i=1:(prb.numbers.I)] <= prb.data.volume_max[i],
         SDDP.State,
-        initial_value = prb.data.V_0[i]
+        initial_value = prb.data.volume_initial[i]
     )
     return nothing
 end
@@ -39,17 +39,33 @@ function variable_day_ahead_clear!(sp::Model, prb::Problem)
     return nothing
 end
 
+function variable_generation_state!(sp::Model, prb::Problem)
+    @variable(sp, prb.data.volume_min[i] <= generation[i=1:(prb.numbers.I)] <= prb.data.volume_max[i],
+    SDDP.State, initial_value = prb.data.generation_initial[i])
+    return nothing
+end
+
 function variable_inflow!(sp::Model, prb::Problem)
     @variable(sp, inflow[1:(prb.numbers.I)])
     return nothing
 end
 
 function variable_generation!(sp::Model, prb::Problem)
-    @variable(sp, prb.data.V_min[i] <= generation[i=1:(prb.numbers.I)] <= prb.data.V_max[i])
+    @variable(sp, prb.data.volume_min[i] <= generation[i=1:(prb.numbers.I)] <= prb.data.volume_max[i])
     return nothing
 end
 
 function variable_spillage!(sp::Model, prb::Problem)
     @variable(sp, 0.0 <= spillage[i=1:(prb.numbers.I)])
+    return nothing
+end
+
+function variable_ramp_up_violation!(sp::Model, prb::Problem)
+    @variable(sp, 0.0 <= ramp_up_violation[i=1:(prb.numbers.I)])
+    return nothing
+end
+
+function variable_ramp_down_violation!(sp::Model, prb::Problem)
+    @variable(sp, 0.0 <= ramp_down_violation[i=1:(prb.numbers.I)])
     return nothing
 end

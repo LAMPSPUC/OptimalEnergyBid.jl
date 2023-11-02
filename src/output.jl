@@ -116,7 +116,13 @@ function write_generation!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}}
         t = 1
         for l in 1:L
             if prb.cache.problem_info[simul[s][l][:node_index]].problem_type == RTC
-                generation[:, t, s] = simul[s][l][:generation]
+                if prb.flags.generation_as_state
+                    for i in prb.numbers.I
+                        generation[i, t, s] = simul[s][l][:generation][i].out
+                    end
+                else
+                    generation[:, t, s] = simul[s][l][:generation]
+                end
                 t += 1
             end
         end

@@ -15,6 +15,27 @@ function constraint_copy_volume!(sp::Model, prb::Problem)
     return nothing
 end
 
+function constraint_copy_generation!(sp::Model, prb::Problem)
+    @constraint(
+        sp, copy_generation[i=1:(prb.numbers.I)], sp[:generation][i].out == sp[:generation][i].in
+    )
+    return nothing
+end
+
+function constraint_generation_ramp_up!(sp::Model, prb::Problem)
+    @constraint(
+        sp, generation_ramp_up[i=1:(prb.numbers.I)], sp[:ramp_up_violation][i]  >=  sp[:generation][i].out - sp[:generation][i].in - prb.data.ramp_up[i]
+    )
+    return nothing
+end
+
+function constraint_generation_ramp_down!(sp::Model, prb::Problem)
+    @constraint(
+        sp, generation_ramp_down[i=1:(prb.numbers.I)], sp[:ramp_down_violation][i]  >= sp[:generation][i].in - sp[:generation][i].out - prb.data.ramp_down[i]
+    )
+    return nothing
+end
+
 function constraint_copy_day_ahead_bid!(sp::Model, prb::Problem)
     @constraint(
         sp,
@@ -83,7 +104,7 @@ end
 function constraint_add_generation!(sp::Model, prb::Problem)
     @constraint(
         sp,
-        constraint_add_generation![i=1:(prb.numbers.I)],
+        constraint_add_generation[i=1:(prb.numbers.I)],
         sp[:volume][i].out == sp[:volume][i].in - sp[:generation][i]
     )
     return nothing
@@ -94,6 +115,27 @@ function constraint_real_time_accepted!(sp::Model, prb::Problem, K::Int, T::Int)
         sp,
         real_time_accepted[i=1:(prb.numbers.I)],
         sp[:generation][i] == sum(
+            sp[:real_time_bid][k, i].in for
+            k in 1:(prb.numbers.Kᵦ) if prb.cache.acceptance_real_time[K, k, i, T]
+        )
+    )
+    return nothing
+end
+
+function constraint_add_generation_state!(sp::Model, prb::Problem)
+    @constraint(
+        sp,
+        constraint_add_generation_state[i=1:(prb.numbers.I)],
+        sp[:volume][i].out == sp[:volume][i].in - sp[:generation][i].out
+    )
+    return nothing
+end
+
+function constraint_real_time_accepted_state!(sp::Model, prb::Problem, K::Int, T::Int)
+    @constraint(
+        sp,
+        real_time_accepted_state[i=1:(prb.numbers.I)],
+        sp[:generation][i].out == sum(
             sp[:real_time_bid][k, i].in for
             k in 1:(prb.numbers.Kᵦ) if prb.cache.acceptance_real_time[K, k, i, T]
         )

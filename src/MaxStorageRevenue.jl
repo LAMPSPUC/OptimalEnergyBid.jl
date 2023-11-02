@@ -9,6 +9,7 @@ using Plots
 
 include("macros.jl")
 include("structs.jl")
+include("options.jl")
 include("input_data.jl")
 include("preprocess.jl")
 include("build_graph.jl")
@@ -34,6 +35,8 @@ export validate_json,
     plot_real_time_bids,
     plot_day_ahead_clears,
     plot_day_ahead_bids,
-    plot_all
+    plot_all,
+    set_optimizer!,
+    set_operational_constraints!
 
 end # module MaxStorageRevenue

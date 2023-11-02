@@ -28,8 +28,8 @@ numbers.U = 1
 numbers.V = 2
 numbers.D = 2
 
-data.V_max = ones(2)
-data.V_min = zeros(2)
-data.V_0 = ones(2)
+data.volume_max = ones(2)
+data.volume_min = zeros(2)
+data.volume_initial = ones(2)
 
 build_model!(prb)

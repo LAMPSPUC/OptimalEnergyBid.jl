@@ -39,9 +39,9 @@ end
 function write_data!(prb::Problem, dict::Dict)
     data = prb.data
 
-    data.V_max = dict["data"]["storage_max_capacity"]
-    data.V_min = dict["data"]["storage_min_capacity"]
-    data.V_0 = dict["data"]["storage_inicial_condition"]
+    data.volume_max = dict["data"]["storage_max_capacity"]
+    data.volume_min = dict["data"]["storage_min_capacity"]
+    data.volume_initial = dict["data"]["storage_inicial_condition"]
     if haskey(dict["data"], "names")
         data.names = reshape(dict["data"]["names"], 1, prb.numbers.I)
     else
@@ -50,6 +50,15 @@ function write_data!(prb::Problem, dict::Dict)
             push!(temp, "$i")
         end
         data.names = reshape(temp, 1, prb.numbers.I)
+    end
+    if haskey(dict["data"], "ramp_up")
+        data.ramp_up = dict["data"]["ramp_up"]
+    end
+    if haskey(dict["data"], "ramp_down")
+        data.ramp_up = dict["data"]["ramp_down"]
+    end
+    if haskey(dict["data"], "generation_initial")
+        data.ramp_up = dict["data"]["generation_initial"]
     end
 
     return nothing

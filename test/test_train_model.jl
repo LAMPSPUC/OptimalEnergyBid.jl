@@ -31,11 +31,11 @@ numbers.U = 1
 numbers.V = 1
 numbers.D = 1
 
-data.V_max = ones(1)
-data.V_min = zeros(1)
-data.V_0 = zeros(1)
+data.volume_max = ones(1)
+data.volume_min = zeros(1)
+data.volume_initial = zeros(1)
 
-options.optimizer = HiGHS.Optimizer
+set_optimizer!(prb, HiGHS.Optimizer)
 
 build_model!(prb)
 train!(prb)
