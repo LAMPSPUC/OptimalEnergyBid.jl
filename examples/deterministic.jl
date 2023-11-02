@@ -20,3 +20,12 @@ build_model!(prb)
 train!(prb)
 simul = simulate!(prb, 1)
 plot_all(prb, 1, "")
+
+set_use_ramp_up!(prb, true)
+set_use_ramp_down!(prb, true)
+set_penalty_ramp_up!(prb, 100.0)
+set_penalty_ramp_down!(prb, 100.0)
+
+prb.data.ramp_up = [0.1, 0.1]
+prb.data.ramp_down = [0.1, 0.1]
+prb.data.generation_initial = [0.1, 0.1]

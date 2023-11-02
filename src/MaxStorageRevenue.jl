@@ -37,6 +37,9 @@ export validate_json,
     plot_day_ahead_bids,
     plot_all,
     set_optimizer!,
-    set_operational_constraints!
+    set_use_ramp_up!,
+    set_use_ramp_down!,
+    set_penalty_ramp_up!,
+    set_penalty_ramp_down!
 
 end # module MaxStorageRevenue

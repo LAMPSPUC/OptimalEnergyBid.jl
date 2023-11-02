@@ -30,7 +30,7 @@ function build_subproblem!(sp::Model, idx::Int, prb::Problem)
 end
 
 function build_real_time_bid!(sp::Model, prb::Problem, problem_info::ProblemInfo)
-    #add variables
+
     variable_volume!(sp, prb)
     variable_inflow!(sp, prb)
     variable_real_time_bid!(sp, prb)
@@ -39,114 +39,98 @@ function build_real_time_bid!(sp::Model, prb::Problem, problem_info::ProblemInfo
     variable_spillage!(sp, prb)
     if prb.flags.generation_as_state
         variable_generation_state!(sp, prb)
+        constraint_copy_generation!(sp, prb)
     end
 
-    #add constraints
     constraint_add_inflow!(sp, prb)
     constraint_real_time_bid_bound!(sp, prb)
     constraint_copy_day_ahead_clear!(sp, prb)
     constraint_inflow!(sp, prb, problem_info.t)
     constraint_copy_day_ahead_bid!(sp, prb)
-    if prb.flags.generation_as_state
-        constraint_copy_generation!(sp, prb)
-    end
 
-    #add objective
-    set_bid_objective!(sp)
+    create_objective_expression!(sp)
+    set_objective_expression!(sp)
+    
     return nothing
 end
 
 function build_real_time_clear!(sp::Model, prb::Problem, problem_info::ProblemInfo)
-    #add variables
+
     variable_volume!(sp, prb)
     variable_real_time_bid!(sp, prb)
     variable_day_ahead_clear!(sp, prb)
     variable_day_ahead_bid!(sp, prb)
+
+    create_objective_expression!(sp)
+
     if prb.flags.generation_as_state
         variable_generation_state!(sp, prb)
-    else
-        variable_generation!(sp, prb)
-    end
-    if prb.options.use_ramp_up
-        variable_ramp_up_violation!(sp, prb)
-    end
-    if prb.options.use_ramp_down
-        variable_ramp_down_violation!(sp, prb)
-    end
-
-    #add constraints
-    constraint_shift_day_ahead_clear!(sp, prb)
-    constraint_copy_day_ahead_bid!(sp, prb)
-    if prb.flags.generation_as_state
         constraint_add_generation_state!(sp, prb)
         constraint_real_time_accepted_state!(sp, prb, problem_info.k, problem_info.t)
+        add_real_time_clear_objective_state!(sp, prb, problem_info.t, problem_info.k)
     else
+        variable_generation!(sp, prb)
         constraint_add_generation!(sp, prb)
         constraint_real_time_accepted!(sp, prb, problem_info.k, problem_info.t)
+        add_real_time_clear_objective!(sp, prb, problem_info.t, problem_info.k)
     end
+
     if prb.options.use_ramp_up
+        variable_ramp_up_violation!(sp, prb)
         constraint_generation_ramp_up!(sp, prb)
+        add_ramp_up_objective!(sp, prb)
     end
+
     if prb.options.use_ramp_down
+        variable_ramp_down_violation!(sp, prb)
         constraint_generation_ramp_down!(sp, prb)
+        add_ramp_down_objective!(sp, prb)
     end
 
+    constraint_shift_day_ahead_clear!(sp, prb)
+    constraint_copy_day_ahead_bid!(sp, prb)
 
-    #add objective
-    if prb.flags.generation_as_state
-        set_real_time_clear_objective_state!(sp, prb, problem_info.t, problem_info.k)
-    else
-        set_real_time_clear_objective!(sp, prb, problem_info.t, problem_info.k)
-    end
-    if prb.options.use_ramp_up
-        add_ramp_up_objective!(sp, prb)
-    end
-    if prb.options.use_ramp_down
-        add_ramp_up_objective!(sp, prb)
-    end
+    set_objective_expression!(sp)
+
     return nothing
 end
 
 function build_day_ahead_bid!(sp, prb::Problem, _::ProblemInfo)
-    #add variables
+
     variable_volume!(sp, prb)
     variable_day_ahead_bid!(sp, prb)
     variable_day_ahead_clear!(sp, prb)
     variable_real_time_bid!(sp, prb)
     if prb.flags.generation_as_state
         variable_generation_state!(sp, prb)
-    end
-
-    #add constraints
-    constraint_copy_volume!(sp, prb)
-    constraint_copy_day_ahead_clear!(sp, prb)
-    if prb.flags.generation_as_state
         constraint_copy_generation!(sp, prb)
     end
 
-    #add objective
-    set_bid_objective!(sp)
+    constraint_copy_volume!(sp, prb)
+    constraint_copy_day_ahead_clear!(sp, prb)
+
+    create_objective_expression!(sp)
+    set_objective_expression!(sp)
     return nothing
 end
 
 function build_day_ahead_clear!(sp::Model, prb::Problem, problem_info::ProblemInfo)
-    #add variables
+
     variable_volume!(sp, prb)
     variable_day_ahead_bid!(sp, prb)
     variable_day_ahead_clear!(sp, prb)
     variable_real_time_bid!(sp, prb)
+
     if prb.flags.generation_as_state
         variable_generation_state!(sp, prb)
-    end
-
-    #add constraints
-    constraint_copy_volume!(sp, prb)
-    constraint_add_day_ahead_clear!(sp, prb, problem_info.k, problem_info.t)
-    if prb.flags.generation_as_state
         constraint_copy_generation!(sp, prb)
     end
 
-    #add objective
-    set_day_ahead_clear_objective!(sp, prb, problem_info.t, problem_info.k)
+    constraint_copy_volume!(sp, prb)
+    constraint_add_day_ahead_clear!(sp, prb, problem_info.k, problem_info.t)
+
+    create_objective_expression!(sp)
+    add_day_ahead_clear_objective!(sp, prb, problem_info.t, problem_info.k)
+    set_objective_expression!(sp)
     return nothing
 end

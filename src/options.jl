@@ -18,8 +18,8 @@ function set_penalty_ramp_up!(prb::Problem, penalty_ramp_up::Float64)
     return nothing
 end
 
-function set_penalty_ramp_down!(prb::Problem, set_penalty_ramp_down!::Float64)
-    prb.options.set_penalty_ramp_down! = set_penalty_ramp_down!
+function set_penalty_ramp_down!(prb::Problem, penalty_ramp_down::Float64)
+    prb.options.penalty_ramp_down = penalty_ramp_down
     return nothing
 end
 
