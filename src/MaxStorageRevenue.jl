@@ -29,18 +29,13 @@ export validate_json,
     build_model!,
     train!,
     Problem,
-    plot_volumes,
-    plot_spillages,
-    plot_generations,
-    plot_inflows,
-    plot_real_time_bids,
-    plot_day_ahead_clears,
-    plot_day_ahead_bids,
+    plot_output,
     plot_all,
     set_optimizer!,
-    set_bool_parameter,
-    set_float_parameter,
+    set_bool_parameter!,
+    set_float_parameter!,
     ParameterBool,
-    ParameterFloat
+    ParameterFloat,
+    OutputType
 
 end # module MaxStorageRevenue

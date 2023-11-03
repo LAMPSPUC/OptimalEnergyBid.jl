@@ -6,7 +6,7 @@
 end
 
 """Set a bool parameter"""
-set_bool_parameter(prb::Problem, type::ParameterBool.T, value::Bool) = @match type begin
+set_bool_parameter!(prb::Problem, type::ParameterBool.T, value::Bool) = @match type begin
     $(ParameterBool.UseRampUp) => _set_use_ramp_up!(prb, value)
     $(ParameterBool.UseRampDown) => _set_use_ramp_down!(prb, value)
     $(ParameterBool.UseDayAheadBidBound) => _set_day_ahead_bid_bound!(prb, value)
@@ -19,7 +19,7 @@ end
 end
 
 """Set a float parameter"""
-set_float_parameter(prb::Problem, type::ParameterFloat.T, value::Float64) = @match type begin
+set_float_parameter!(prb::Problem, type::ParameterFloat.T, value::Float64) = @match type begin
     $(ParameterFloat.PenaltyRampUp) => _set_penalty_ramp_up!(prb, value)
     $(ParameterFloat.PenaltyRampDown) => _set_penalty_ramp_down!(prb, value)
 end
