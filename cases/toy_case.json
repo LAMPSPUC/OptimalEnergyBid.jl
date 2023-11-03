@@ -1,4 +1,11 @@
 {
+    "options": {
+        "use_ramp_up": false,
+        "use_ramp_down": false,
+        "use_day_ahead_bid_bound": false,
+        "penalty_ramp_up": 0.0,
+        "penalty_ramp_down": 0.0
+    },
     "numbers": {
         "periods_per_day": 1,
         "first_period": 1,
@@ -11,9 +18,9 @@
         "inflows_scenarios": 1
     },
     "data": {
-        "storage_max_capacity": [1.0],
-        "storage_min_capacity": [0.0],
-        "storage_inicial_condition": [0.0]
+        "volume_max": [1.0],
+        "volume_min": [0.0],
+        "volume_initial": [0.0]
     },
     "random": {
         "prices_real_time": [[[10.0]]],

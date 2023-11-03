@@ -1,17 +1,17 @@
 """Creates the SDDP graph"""
-function build_graph(prb::Problem)::SDDP.Graph
+function _build_graph(prb::Problem)::SDDP.Graph
     numbers = prb.numbers
     graph = SDDP.LinearGraph(0)
     idx = 0
     root = idx
-    last_problem = NOT
+    last_problem = ProblemType.NOT
     for t in 1:(numbers.T)
-        idx, root, last_problem = add_day_ahead_bid!(graph, prb, idx, t, root, last_problem)
-        idx, root, last_problem = add_day_ahead_clear!(
+        idx, root, last_problem = _add_day_ahead_bid!(graph, prb, idx, t, root, last_problem)
+        idx, root, last_problem = _add_day_ahead_clear!(
             graph, prb, idx, t, root, last_problem
         )
-        idx, root, last_problem = add_real_time_bid!(graph, prb, idx, t, root, last_problem)
-        idx, root, last_problem = add_real_time_clear!(
+        idx, root, last_problem = _add_real_time_bid!(graph, prb, idx, t, root, last_problem)
+        idx, root, last_problem = _add_real_time_clear!(
             graph, prb, idx, t, root, last_problem
         )
     end
@@ -20,8 +20,8 @@ function build_graph(prb::Problem)::SDDP.Graph
 end
 
 """Adds the day ahead offer node"""
-function add_day_ahead_bid!(
-    graph::SDDP.Graph, prb::Problem, idx::Int, t::Int, root::Int, last_problem::ProblemType
+function _add_day_ahead_bid!(
+    graph::SDDP.Graph, prb::Problem, idx::Int, t::Int, root::Int, last_problem::ProblemType.T
 )
     numbers = prb.numbers
     cache = prb.cache
@@ -29,8 +29,8 @@ function add_day_ahead_bid!(
     if mod(t - numbers.U + numbers.n₀ - 1, numbers.N) == 0
         idx += 1
         SDDP.add_node(graph, idx)
-        cache.problem_info[idx] = ProblemInfo(DAB, t, 1)
-        if last_problem == NOT
+        cache.problem_info[idx] = ProblemInfo(ProblemType.DAB, t, 1)
+        if last_problem == ProblemType.NOT
             SDDP.add_edge(graph, root => idx, 1.0)
         else
             for k in 1:(numbers.Kᵦ)
@@ -38,14 +38,14 @@ function add_day_ahead_bid!(
             end
         end
         root = idx
-        last_problem = DAB
+        last_problem = ProblemType.DAB
     end
     return idx, root, last_problem
 end
 
 """Adds the day ahead clear nodes"""
-function add_day_ahead_clear!(
-    graph::SDDP.Graph, prb::Problem, idx::Int, t::Int, root::Int, last_problem::ProblemType
+function _add_day_ahead_clear!(
+    graph::SDDP.Graph, prb::Problem, idx::Int, t::Int, root::Int, last_problem::ProblemType.T
 )
     numbers = prb.numbers
     random = prb.random_variables
@@ -55,9 +55,9 @@ function add_day_ahead_clear!(
         for k in 1:(numbers.Kᵧ)
             idx += 1
             SDDP.add_node(graph, idx)
-            cache.problem_info[idx] = ProblemInfo(DAC, t, k)
+            cache.problem_info[idx] = ProblemInfo(ProblemType.DAC, t, k)
             temp = div(t - 1, prb.numbers.N) + 1
-            if last_problem == RTC
+            if last_problem == ProblemType.RTC
                 for j in 1:(numbers.Kᵦ)
                     SDDP.add_edge(graph, root + j => idx, random.ωᵧ[k, temp])
                 end
@@ -65,23 +65,23 @@ function add_day_ahead_clear!(
                 SDDP.add_edge(graph, root => idx, random.ωᵧ[k, temp])
             end
         end
-        root += (last_problem == RTC) ? numbers.Kᵦ : 0
-        last_problem = DAC
+        root += (last_problem == ProblemType.RTC) ? numbers.Kᵦ : 0
+        last_problem = ProblemType.DAC
     end
     return idx, root, last_problem
 end
 
 """Adds the real time offer node"""
-function add_real_time_bid!(
-    graph::SDDP.Graph, prb::Problem, idx::Int, t::Int, root::Int, last_problem::ProblemType
+function _add_real_time_bid!(
+    graph::SDDP.Graph, prb::Problem, idx::Int, t::Int, root::Int, last_problem::ProblemType.T
 )
     numbers = prb.numbers
     cache = prb.cache
 
     idx += 1
     SDDP.add_node(graph, idx)
-    cache.problem_info[idx] = ProblemInfo(RTB, t, 1)
-    if last_problem == DAB
+    cache.problem_info[idx] = ProblemInfo(ProblemType.RTB, t, 1)
+    if last_problem == ProblemType.DAB
         SDDP.add_edge(graph, root => idx, 1.0)
     else
         for k in 1:(numbers.Kᵦ)
@@ -93,8 +93,8 @@ function add_real_time_bid!(
 end
 
 """Adds the real time clear nodes"""
-function add_real_time_clear!(
-    graph::SDDP.Graph, prb::Problem, idx::Int, t::Int, root::Int, _::ProblemType
+function _add_real_time_clear!(
+    graph::SDDP.Graph, prb::Problem, idx::Int, t::Int, root::Int, _::ProblemType.T
 )
     numbers = prb.numbers
     random = prb.random_variables
@@ -103,9 +103,9 @@ function add_real_time_clear!(
     for k in 1:(numbers.Kᵦ)
         idx += 1
         SDDP.add_node(graph, idx)
-        cache.problem_info[idx] = ProblemInfo(RTC, t, k)
+        cache.problem_info[idx] = ProblemInfo(ProblemType.RTC, t, k)
         SDDP.add_edge(graph, root => idx, random.ωᵦ[k, t])
     end
-    last_problem = RTC
+    last_problem = ProblemType.RTC
     return idx, root, last_problem
 end

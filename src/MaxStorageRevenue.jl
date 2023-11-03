@@ -1,5 +1,6 @@
 module MaxStorageRevenue
 
+using EnumX
 using JSON
 using JSONSchema
 using JuMP
@@ -37,9 +38,9 @@ export validate_json,
     plot_day_ahead_bids,
     plot_all,
     set_optimizer!,
-    set_use_ramp_up!,
-    set_use_ramp_down!,
-    set_penalty_ramp_up!,
-    set_penalty_ramp_down!
+    set_bool_parameter,
+    set_float_parameter,
+    ParameterBool,
+    ParameterFloat
 
 end # module MaxStorageRevenue

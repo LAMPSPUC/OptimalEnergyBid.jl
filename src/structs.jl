@@ -1,15 +1,15 @@
 """Contains all possibles types of the problem"""
-@enum ProblemType begin
-    NOT = 1 # nothing
-    RTB = 2 # Real time bid
-    RTC = 3 # Real time clear
-    DAB = 4 # Day ahead bid
-    DAC = 5 # Day ahead clear
+@enumx ProblemType begin
+    NOT # nothing
+    RTB # Real time bid
+    RTC # Real time clear
+    DAB # Day ahead bid
+    DAC # Day ahead clear
 end
 
 """Information about position and type of each subproblem"""
 struct ProblemInfo
-    problem_type::ProblemType
+    problem_type::ProblemType.T
     t::Int
     k::Int
 end
@@ -19,6 +19,7 @@ end
     optimizer::Union{DataType,Nothing} = nothing
     use_ramp_up::Bool = false
     use_ramp_down::Bool = false
+    use_day_ahead_bid_bound::Bool = false
     penalty_ramp_up::Float64
     penalty_ramp_down::Float64
 end

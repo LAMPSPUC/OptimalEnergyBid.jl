@@ -14,7 +14,7 @@ numbers.Kᵧ = 2
 numbers.U = 1
 numbers.V = 2
 
-graph = MaxStorageRevenue.build_graph(prb)
+graph = MaxStorageRevenue._build_graph(prb)
 
 answer = Dict(
     0 => [(1, 0.5), (2, 0.5)],

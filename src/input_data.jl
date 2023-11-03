@@ -2,29 +2,29 @@
 const schema_path = joinpath(dirname(dirname(@__FILE__)), "schemas", "problem.json")
 
 """json file to dict"""
-function parse_file_json(file::String)
+function _parse_file_json(file::String)
     return JSON.parse(String(read(file)))
 end
 
 """Validates a json file"""
 function validate_json(file_path::String)
-    return validate(Schema(parse_file_json(schema_path)), parse_file_json(file_path))
+    return validate(Schema(_parse_file_json(schema_path)), _parse_file_json(file_path))
 end
 
 """Creates a problem using json information"""
 function create_problem(file::String)::Problem
-    dict = parse_file_json(file)
+    dict = _parse_file_json(file)
     prb = Problem()
 
-    write_numbers!(prb, dict)
-    write_data!(prb, dict)
-    write_random!(prb, dict)
+    _write_numbers!(prb, dict)
+    _write_data!(prb, dict)
+    _write_random!(prb, dict)
 
     return prb
 end
 
 """Reads size and indeces information"""
-function write_numbers!(prb::Problem, dict::Dict)
+function _write_numbers!(prb::Problem, dict::Dict)
     numbers = prb.numbers
 
     numbers.N = dict["numbers"]["periods_per_day"]
@@ -42,12 +42,12 @@ function write_numbers!(prb::Problem, dict::Dict)
 end
 
 """Reads storage/generators data information"""
-function write_data!(prb::Problem, dict::Dict)
+function _write_data!(prb::Problem, dict::Dict)
     data = prb.data
 
-    data.volume_max = dict["data"]["storage_max_capacity"]
-    data.volume_min = dict["data"]["storage_min_capacity"]
-    data.volume_initial = dict["data"]["storage_inicial_condition"]
+    data.volume_max = dict["data"]["volume_max"]
+    data.volume_min = dict["data"]["volume_min"]
+    data.volume_initial = dict["data"]["volume_initial"]
     if haskey(dict["data"], "names")
         data.names = reshape(dict["data"]["names"], 1, prb.numbers.I)
     else
@@ -71,7 +71,7 @@ function write_data!(prb::Problem, dict::Dict)
 end
 
 """Reads random variables information"""
-function write_random!(prb::Problem, dict::Dict)
+function _write_random!(prb::Problem, dict::Dict)
     random_variables = prb.random_variables
     numbers = prb.numbers
 

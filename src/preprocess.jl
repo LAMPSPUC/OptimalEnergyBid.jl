@@ -1,12 +1,12 @@
 """Evaluate the preprocess information"""
-function preprocess!(prb::Problem)
-    evaluate_acceptance_real_time!(prb)
-    evaluate_acceptance_day_ahead!(prb)
+function _preprocess!(prb::Problem)
+    _evaluate_acceptance_real_time!(prb)
+    _evaluate_acceptance_day_ahead!(prb)
     return nothing
 end
 
 """Evaluate the acceptance matrix for real time prices"""
-function evaluate_acceptance_real_time!(prb::Problem)
+function _evaluate_acceptance_real_time!(prb::Problem)
     numbers = prb.numbers
     random = prb.random_variables
 
@@ -21,7 +21,7 @@ function evaluate_acceptance_real_time!(prb::Problem)
 end
 
 """Evaluate the acceptance matrix for day ahead prices"""
-function evaluate_acceptance_day_ahead!(prb::Problem)
+function _evaluate_acceptance_day_ahead!(prb::Problem)
     numbers = prb.numbers
     random = prb.random_variables
 

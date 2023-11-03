@@ -25,6 +25,6 @@ function simulate!(
         skip_undefined_variables=skip_undefined_variables,
         kwargs...,
     )
-    write_output!(prb, simul)
+    _write_output!(prb, simul)
     return simul
 end

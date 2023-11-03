@@ -1,11 +1,39 @@
 {
     "type": "object",
     "required": [
+        "options",
         "numbers",
         "data",
         "random"
     ],
     "properties": {
+        "options": {
+            "type": "object",
+            "required": [
+                "use_ramp_up",
+                "use_ramp_down",
+                "use_day_ahead_bid_bound",
+                "penalty_ramp_up",
+                "penalty_ramp_down"
+            ],
+            "properties": {
+                "use_ramp_up": {
+                    "type": "boolean"
+                },
+                "use_ramp_down": {
+                    "type": "boolean"
+                },
+                "use_day_ahead_bid_bound": {
+                    "type": "boolean"
+                },
+                "penalty_ramp_up": {
+                    "type": "number"
+                },
+                "penalty_ramp_down": {
+                    "type": "number"
+                }
+            }
+        },
         "numbers": {
             "type": "object",
             "required": [
@@ -52,27 +80,51 @@
         "data": {
             "type": "object",
             "required": [
-                "storage_max_capacity",
-                "storage_min_capacity",
-                "storage_inicial_condition"
+                "volume_max",
+                "volume_min",
+                "volume_initial"
             ],
             "properties": {
-                "storage_max_capacity": {
+                "volume_max": {
                     "type": "array",
                     "items": {
                         "type": "number"
                     }
                 },
-                "storage_min_capacity": {
+                "volume_min": {
                     "type": "array",
                     "items": {
                         "type": "number"
                     }
                 },
-                "storage_inicial_condition": {
+                "volume_initial": {
                     "type": "array",
                     "items": {
                         "type": "number"
+                    }
+                },
+                "ramp_up": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "ramp_down": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "generation_initial": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "names": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
                     }
                 }
             }
