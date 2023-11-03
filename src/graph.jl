@@ -22,14 +22,16 @@ end
 end
 
 """Plot the output"""
-plot_output(prb::Problem, type::OutputType.T, s::Int, folder::String) = @match type begin
-    $(OutputType.Volume) => _plot_volumes(prb, s, folder)
-    $(OutputType.Spillage) => _plot_spillages(prb, s, folder)
-    $(OutputType.Generation) => _plot_generations(prb, s, folder)
-    $(OutputType.Inflow) => _plot_inflows(prb, s, folder)
-    $(OutputType.RealTimeBid) => _plot_real_time_bids(prb, s, folder)
-    $(OutputType.DayAheadClear) => _plot_day_ahead_clears(prb, s, folder)
-    $(OutputType.DayAheadBid) => _plot_day_ahead_bids(prb, s, folder)
+function plot_output(prb::Problem, type::OutputType.T, s::Int, folder::String)
+    @match type begin
+        $(OutputType.Volume) => _plot_volumes(prb, s, folder)
+        $(OutputType.Spillage) => _plot_spillages(prb, s, folder)
+        $(OutputType.Generation) => _plot_generations(prb, s, folder)
+        $(OutputType.Inflow) => _plot_inflows(prb, s, folder)
+        $(OutputType.RealTimeBid) => _plot_real_time_bids(prb, s, folder)
+        $(OutputType.DayAheadClear) => _plot_day_ahead_clears(prb, s, folder)
+        $(OutputType.DayAheadBid) => _plot_day_ahead_bids(prb, s, folder)
+    end
 end
 
 """Plots the day ahead clear output"""

@@ -6,11 +6,15 @@ function _build_graph(prb::Problem)::SDDP.Graph
     root = idx
     last_problem = ProblemType.NOT
     for t in 1:(numbers.T)
-        idx, root, last_problem = _add_day_ahead_bid!(graph, prb, idx, t, root, last_problem)
+        idx, root, last_problem = _add_day_ahead_bid!(
+            graph, prb, idx, t, root, last_problem
+        )
         idx, root, last_problem = _add_day_ahead_clear!(
             graph, prb, idx, t, root, last_problem
         )
-        idx, root, last_problem = _add_real_time_bid!(graph, prb, idx, t, root, last_problem)
+        idx, root, last_problem = _add_real_time_bid!(
+            graph, prb, idx, t, root, last_problem
+        )
         idx, root, last_problem = _add_real_time_clear!(
             graph, prb, idx, t, root, last_problem
         )
@@ -21,7 +25,12 @@ end
 
 """Adds the day ahead offer node"""
 function _add_day_ahead_bid!(
-    graph::SDDP.Graph, prb::Problem, idx::Int, t::Int, root::Int, last_problem::ProblemType.T
+    graph::SDDP.Graph,
+    prb::Problem,
+    idx::Int,
+    t::Int,
+    root::Int,
+    last_problem::ProblemType.T,
 )
     numbers = prb.numbers
     cache = prb.cache
@@ -45,7 +54,12 @@ end
 
 """Adds the day ahead clear nodes"""
 function _add_day_ahead_clear!(
-    graph::SDDP.Graph, prb::Problem, idx::Int, t::Int, root::Int, last_problem::ProblemType.T
+    graph::SDDP.Graph,
+    prb::Problem,
+    idx::Int,
+    t::Int,
+    root::Int,
+    last_problem::ProblemType.T,
 )
     numbers = prb.numbers
     random = prb.random_variables
@@ -73,7 +87,12 @@ end
 
 """Adds the real time offer node"""
 function _add_real_time_bid!(
-    graph::SDDP.Graph, prb::Problem, idx::Int, t::Int, root::Int, last_problem::ProblemType.T
+    graph::SDDP.Graph,
+    prb::Problem,
+    idx::Int,
+    t::Int,
+    root::Int,
+    last_problem::ProblemType.T,
 )
     numbers = prb.numbers
     cache = prb.cache
