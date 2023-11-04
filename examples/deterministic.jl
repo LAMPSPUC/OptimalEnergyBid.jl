@@ -1,7 +1,7 @@
 using MaxStorageRevenue, HiGHS
 
 prb = create_problem(
-    joinpath(dirname(dirname(@__FILE__)), "cases", "deterministc_case.json")
+    joinpath(dirname(dirname(@__FILE__)), "cases", "deterministc.json")
 )
 set_optimizer!(prb, HiGHS.Optimizer)
 build_model!(prb)
@@ -22,7 +22,7 @@ simul = simulate!(prb, 1)
 plot_all(prb, 1, "")
 
 prb = create_problem(
-    joinpath(dirname(dirname(@__FILE__)), "cases", "deterministc_case.json")
+    joinpath(dirname(dirname(@__FILE__)), "cases", "deterministc.json")
 )
 set_optimizer!(prb, HiGHS.Optimizer)
 
