@@ -1,6 +1,6 @@
 using MaxStorageRevenue, HiGHS
 
-prb = create_problem(joinpath(dirname(dirname(@__FILE__)), "cases", "deterministc.json"))
+prb = create_problem(joinpath(dirname(@__DIR__), "cases", "deterministc.json"))
 set_optimizer!(prb, HiGHS.Optimizer)
 build_model!(prb)
 train!(prb)
