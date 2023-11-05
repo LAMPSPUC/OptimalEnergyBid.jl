@@ -35,7 +35,7 @@ data.volume_max = ones(1)
 data.volume_min = zeros(1)
 data.volume_initial = zeros(1)
 
-prb2 = create_problem(joinpath(dirname(dirname(@__FILE__)), "cases", "toy.json"))
+prb2 = create_problem(joinpath(dirname(@__DIR__), "cases", "toy.json"))
 
 @test random.πᵦ == prb2.random.πᵦ
 @test random.ωᵦ == prb2.random.ωᵦ

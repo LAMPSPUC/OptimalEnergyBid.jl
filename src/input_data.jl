@@ -1,5 +1,5 @@
 """The json schema of the problem"""
-const schema_path = joinpath(dirname(dirname(@__FILE__)), "schemas", "problem.json")
+const schema_path = joinpath(dirname(@__DIR__), "schemas", "problem.json")
 
 """json file to dict"""
 function _parse_file_json(file::String)
@@ -110,7 +110,8 @@ function _write_random!(prb::Problem, dict::Dict)
     return nothing
 end
 
-names_map = Dict(
+"""The map between the names in the struct and json"""
+_names_map = Dict(
     "\"πᵦ\":" => "\"prices_real_time\":",
     "\"ωᵦ\":" => "\"prob_real_time\":",
     "\"πᵧ\":" => "\"prices_day_ahead\":",
@@ -128,18 +129,26 @@ names_map = Dict(
     "\"Kᵪ\":" => "\"inflows_scenarios\":",
 )
 
-function write_json(prb::Problem, file::String, names_map::Dict{String,String}=names_map)
+"""
+    write_json(prb::Problem,
+        file::String,
+        )
+
+Write all the input data presents in "prb" to "file".
+"""
+function write_json(prb::Problem, file::String)
     prb_temp = _copy_only_input(prb)
     string_data = JSON.json(prb_temp)
     index = findfirst(",\"flags\":", string_data)[1]
     string_data = string_data[1:(index - 1)] * "}"
-    string_data = _replace_names(string_data, names_map)
+    string_data = _replace_names(string_data, _names_map)
     open(file, "w") do f
         write(f, string_data)
     end
     return nothing
 end
 
+"""Copy only the input"""
 function _copy_only_input(prb::Problem)::Problem
     prb_temp = Problem()
     prb_temp.options = prb.options
@@ -149,9 +158,10 @@ function _copy_only_input(prb::Problem)::Problem
     return prb_temp
 end
 
-function _replace_names(s::String, names_map::Dict{String,String})::String
-    for key in keys(names_map)
-        s = replace(s, key => names_map[key])
+"""Replace the names that are different in the json and structs"""
+function _replace_names(s::String, _names_map::Dict{String,String})::String
+    for key in keys(_names_map)
+        s = replace(s, key => _names_map[key])
     end
     return s
 end
