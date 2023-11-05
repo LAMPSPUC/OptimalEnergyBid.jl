@@ -62,7 +62,7 @@ function _add_day_ahead_clear!(
     last_problem::ProblemType.T,
 )
     numbers = prb.numbers
-    random = prb.random_variables
+    random = prb.random
     cache = prb.cache
 
     if mod(t - numbers.V + numbers.n₀ - 1, numbers.N) == 0
@@ -116,7 +116,7 @@ function _add_real_time_clear!(
     graph::SDDP.Graph, prb::Problem, idx::Int, t::Int, root::Int, _::ProblemType.T
 )
     numbers = prb.numbers
-    random = prb.random_variables
+    random = prb.random
     cache = prb.cache
 
     for k in 1:(numbers.Kᵦ)

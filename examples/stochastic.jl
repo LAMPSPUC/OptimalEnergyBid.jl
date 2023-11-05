@@ -8,7 +8,7 @@ simul = simulate!(prb, 2)
 
 plot_all(prb, 2, "")
 
-prb.random_variables.ωᵪ = [
+prb.random.ωᵪ = [
     0.5  0.5  0.5  0.5  0.5  0.5
     0.5  0.5  0.5  0.5  0.5  0.5
 ]

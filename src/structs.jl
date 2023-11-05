@@ -68,7 +68,7 @@ end
     ramp_up::Vector{Float64} # ramp up generation (optional)
     ramp_down::Vector{Float64} # ramp down generation (optional)
     generation_initial::Vector{Float64} # initial generation (optional)
-    names::Matrix{String} # Storage names (optional)
+    names::Vector{String} # Storage names (optional)
 end
 
 """Contains all outputs"""
@@ -86,11 +86,11 @@ end
 """Contains all the problem description"""
 @kwdef mutable struct Problem
     options::Options
-    flags::Flags
-    random_variables::RandomVariables
     numbers::Numbers
-    cache::Cache
     data::Data
+    random::RandomVariables
+    flags::Flags
+    cache::Cache
     output::Output
     model::Union{SDDP.PolicyGraph,Nothing} = nothing
 end

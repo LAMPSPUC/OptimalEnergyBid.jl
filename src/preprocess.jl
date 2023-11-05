@@ -8,7 +8,7 @@ end
 """Evaluate the acceptance matrix for real time prices"""
 function _evaluate_acceptance_real_time!(prb::Problem)
     numbers = prb.numbers
-    random = prb.random_variables
+    random = prb.random
 
     real_time = Array{Bool,4}(undef, numbers.Kᵦ, numbers.Kᵦ, numbers.I, numbers.T)
 
@@ -23,7 +23,7 @@ end
 """Evaluate the acceptance matrix for day ahead prices"""
 function _evaluate_acceptance_day_ahead!(prb::Problem)
     numbers = prb.numbers
-    random = prb.random_variables
+    random = prb.random
 
     day_ahead = Array{Bool,5}(
         undef, numbers.Kᵧ, numbers.Kᵧ, numbers.I, numbers.N, numbers.D

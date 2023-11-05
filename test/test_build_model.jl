@@ -1,7 +1,7 @@
 prb = Problem()
 
 numbers = prb.numbers
-random = prb.random_variables
+random = prb.random
 data = prb.data
 options = prb.options
 

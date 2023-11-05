@@ -1,7 +1,7 @@
 prb1 = Problem()
 
 numbers = prb1.numbers
-random = prb1.random_variables
+random = prb1.random
 data = prb1.data
 options = prb1.options
 
@@ -37,12 +37,12 @@ data.volume_initial = zeros(1)
 
 prb2 = create_problem(joinpath(dirname(dirname(@__FILE__)), "cases", "toy.json"))
 
-@test random.πᵦ == prb2.random_variables.πᵦ
-@test random.ωᵦ == prb2.random_variables.ωᵦ
-@test random.πᵧ == prb2.random_variables.πᵧ
-@test random.ωᵧ == prb2.random_variables.ωᵧ
-@test random.πᵪ == prb2.random_variables.πᵪ
-@test random.ωᵪ == prb2.random_variables.ωᵪ
+@test random.πᵦ == prb2.random.πᵦ
+@test random.ωᵦ == prb2.random.ωᵦ
+@test random.πᵧ == prb2.random.πᵧ
+@test random.ωᵧ == prb2.random.ωᵧ
+@test random.πᵪ == prb2.random.πᵪ
+@test random.ωᵪ == prb2.random.ωᵪ
 
 @test numbers.N == prb2.numbers.N
 @test numbers.n₀ == prb2.numbers.n₀
