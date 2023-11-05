@@ -19,7 +19,7 @@ end
     optimizer::Union{DataType,Nothing} = nothing
     use_ramp_up::Bool = false
     use_ramp_down::Bool = false
-    use_day_ahead_bid_bound::Bool = false
+    use_day_ahead_bid_bound::Bool = true
     penalty_ramp_up::Float64
     penalty_ramp_down::Float64
 end
