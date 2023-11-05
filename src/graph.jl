@@ -22,7 +22,9 @@ end
 end
 
 """Plot the output"""
-function plot_output(prb::Problem, type::OutputType.T, s::Int, folder::Union{String,Nothing}=nothing)
+function plot_output(
+    prb::Problem, type::OutputType.T, s::Int, folder::Union{String,Nothing}=nothing
+)
     @match type begin
         $(OutputType.Volume) => _plot_volumes(prb, s, folder)
         $(OutputType.Spillage) => _plot_spillages(prb, s, folder)

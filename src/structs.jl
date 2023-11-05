@@ -41,13 +41,13 @@ end
 
 """Contains all sizes and indices"""
 Base.@kwdef mutable struct Numbers
-    N::Int  = 0 # Number of periods of time per day
+    N::Int = 0 # Number of periods of time per day
     n₀::Int = 0 # First period of time
-    I::Int  = 0 # Number of units
-    U::Int  = 0 # Periods of day ahead bid
-    V::Int  = 0 # Periods of day ahead clear
-    D::Int  = 0 # Number of days 
-    T::Int  = 0 # Number of periods of time in the horizon
+    I::Int = 0 # Number of units
+    U::Int = 0 # Periods of day ahead bid
+    V::Int = 0 # Periods of day ahead clear
+    D::Int = 0 # Number of days 
+    T::Int = 0 # Number of periods of time in the horizon
     Kᵦ::Int = 0 # Number of prices in the real time curve
     Kᵧ::Int = 0 # Number of prices in the day ahead curve
     Kᵪ::Int = 0 # Number of inflow scenarios
@@ -62,25 +62,25 @@ end
 
 """Contains the storages and generators data"""
 Base.@kwdef mutable struct Data
-    volume_max::Vector{Float64}         = Array{Float64}(undef, zeros(Int, 1)...) # Storage max capacity
-    volume_min::Vector{Float64}         = Array{Float64}(undef, zeros(Int, 1)...) # Storage min capacity
-    volume_initial::Vector{Float64}     = Array{Float64}(undef, zeros(Int, 1)...) # Storage inicial condition
-    ramp_up::Vector{Float64}            = Array{Float64}(undef, zeros(Int, 1)...) # ramp up generation (optional)
-    ramp_down::Vector{Float64}          = Array{Float64}(undef, zeros(Int, 1)...) # ramp down generation (optional)
+    volume_max::Vector{Float64} = Array{Float64}(undef, zeros(Int, 1)...) # Storage max capacity
+    volume_min::Vector{Float64} = Array{Float64}(undef, zeros(Int, 1)...) # Storage min capacity
+    volume_initial::Vector{Float64} = Array{Float64}(undef, zeros(Int, 1)...) # Storage inicial condition
+    ramp_up::Vector{Float64} = Array{Float64}(undef, zeros(Int, 1)...) # ramp up generation (optional)
+    ramp_down::Vector{Float64} = Array{Float64}(undef, zeros(Int, 1)...) # ramp down generation (optional)
     generation_initial::Vector{Float64} = Array{Float64}(undef, zeros(Int, 1)...) # initial generation (optional)
-    names::Matrix{String}               = Array{String}(undef, zeros(Int, 2)...) # Storage names (optional)
+    names::Matrix{String} = Array{String}(undef, zeros(Int, 2)...) # Storage names (optional)
 end
 
 """Contains all outputs"""
 Base.@kwdef mutable struct Output
-    objective::Array{Float64,1}       = Array{Float64}(undef, zeros(Int, 1)...)
-    volume::Array{Float64,3}          = Array{Float64}(undef, zeros(Int, 3)...)
-    real_time_bid::Array{Float64,4}   = Array{Float64}(undef, zeros(Int, 4)...)
-    day_ahead_bid::Array{Float64,5}   = Array{Float64}(undef, zeros(Int, 5)...)
+    objective::Array{Float64,1} = Array{Float64}(undef, zeros(Int, 1)...)
+    volume::Array{Float64,3} = Array{Float64}(undef, zeros(Int, 3)...)
+    real_time_bid::Array{Float64,4} = Array{Float64}(undef, zeros(Int, 4)...)
+    day_ahead_bid::Array{Float64,5} = Array{Float64}(undef, zeros(Int, 5)...)
     day_ahead_clear::Array{Float64,4} = Array{Float64}(undef, zeros(Int, 4)...)
-    inflow::Array{Float64,3}          = Array{Float64}(undef, zeros(Int, 3)...)
-    generation::Array{Float64,3}      = Array{Float64}(undef, zeros(Int, 3)...)
-    spillage::Array{Float64,3}        = Array{Float64}(undef, zeros(Int, 3)...)
+    inflow::Array{Float64,3} = Array{Float64}(undef, zeros(Int, 3)...)
+    generation::Array{Float64,3} = Array{Float64}(undef, zeros(Int, 3)...)
+    spillage::Array{Float64,3} = Array{Float64}(undef, zeros(Int, 3)...)
 end
 
 """Contains all the problem description"""
