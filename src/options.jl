@@ -10,7 +10,7 @@ function set_bool_parameter!(prb::Problem, type::ParameterBool.T, value::Bool)
     @match type begin
         $(ParameterBool.UseRampUp) => _set_use_ramp_up!(prb, value)
         $(ParameterBool.UseRampDown) => _set_use_ramp_down!(prb, value)
-        $(ParameterBool.UseDayAheadBidBound) => _set_day_ahead_bid_bound!(prb, value)
+        $(ParameterBool.UseDayAheadBidBound) => _set_use_day_ahead_bid_bound!(prb, value)
     end
 end
 
@@ -59,8 +59,8 @@ function _set_penalty_ramp_down!(prb::Problem, penalty_ramp_down::Float64)
 end
 
 """Set the use of day ahead bid bound"""
-function _set_day_ahead_bid_bound!(prb::Problem, day_ahead_bid_bound::Bool)
-    prb.options.day_ahead_bid_bound = day_ahead_bid_bound
+function _set_use_day_ahead_bid_bound!(prb::Problem, use_day_ahead_bid_bound::Bool)
+    prb.options.use_day_ahead_bid_bound = use_day_ahead_bid_bound
     return nothing
 end
 
