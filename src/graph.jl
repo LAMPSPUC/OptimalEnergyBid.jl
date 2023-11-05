@@ -22,7 +22,9 @@ end
 end
 
 """Plot the output"""
-function plot_output(prb::Problem, type::OutputType.T, s::Int, folder::Union{String,Nothing}=nothing)
+function plot_output(
+    prb::Problem, type::OutputType.T, s::Int, folder::Union{String,Nothing}=nothing
+)
     @match type begin
         $(OutputType.Volume) => _plot_volumes(prb, s, folder)
         $(OutputType.Spillage) => _plot_spillages(prb, s, folder)
@@ -72,7 +74,10 @@ function _plot_day_ahead_clears(prb::Problem, s::Int, folder::Union{String,Nothi
     for d in 1:(prb.numbers.D)
         vectors = [day_ahead_clear[i, :, d] for i in 1:(prb.numbers.I)]
         plot(
-            vectors; title="Day Ahead Clear $(d)", label=reshape(reshape(prb.data.names, 1, prb.numbers.I), 1, prb.numbers.I), legend=:outerbottom
+            vectors;
+            title="Day Ahead Clear $(d)",
+            label=reshape(reshape(prb.data.names, 1, prb.numbers.I), 1, prb.numbers.I),
+            legend=:outerbottom,
         )
         ylims!(0, 1.1 * maximum(day_ahead_clear))
         xlabel!("Time")
@@ -119,7 +124,12 @@ end
 function _plot_volumes(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)
     volume = prb.output.volume[:, :, s]
     vectors = [volume[i, :] for i in 1:(prb.numbers.I)]
-    p = plot(vectors; title="Volumes", label=reshape(prb.data.names, 1, prb.numbers.I), legend=:outerbottom)
+    p = plot(
+        vectors;
+        title="Volumes",
+        label=reshape(prb.data.names, 1, prb.numbers.I),
+        legend=:outerbottom,
+    )
     ylims!(0, 1.1 * maximum(volume))
     xlabel!("Time")
     ylabel!("Volume")
@@ -133,7 +143,12 @@ end
 function _plot_spillages(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)
     spillage = prb.output.spillage[:, :, s]
     vectors = [spillage[i, :] for i in 1:(prb.numbers.I)]
-    p = plot(vectors; title="Spillages", label=reshape(prb.data.names, 1, prb.numbers.I), legend=:outerbottom)
+    p = plot(
+        vectors;
+        title="Spillages",
+        label=reshape(prb.data.names, 1, prb.numbers.I),
+        legend=:outerbottom,
+    )
     ylims!(0, 1.1 * maximum(spillage))
     xlabel!("Time")
     ylabel!("Spillage")
@@ -147,7 +162,12 @@ end
 function _plot_generations(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)
     generation = prb.output.generation[:, :, s]
     vectors = [generation[i, :] for i in 1:(prb.numbers.I)]
-    p = plot(vectors; title="Generations", label=reshape(prb.data.names, 1, prb.numbers.I), legend=:outerbottom)
+    p = plot(
+        vectors;
+        title="Generations",
+        label=reshape(prb.data.names, 1, prb.numbers.I),
+        legend=:outerbottom,
+    )
     ylims!(0, 1.1 * maximum(generation))
     xlabel!("Time")
     ylabel!("Generation")
@@ -161,7 +181,12 @@ end
 function _plot_inflows(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)
     inflow = prb.output.inflow[:, :, s]
     vectors = [inflow[i, :] for i in 1:(prb.numbers.I)]
-    p = plot(vectors; title="Inflows", label=reshape(prb.data.names, 1, prb.numbers.I), legend=:outerbottom)
+    p = plot(
+        vectors;
+        title="Inflows",
+        label=reshape(prb.data.names, 1, prb.numbers.I),
+        legend=:outerbottom,
+    )
     ylims!(0, 1.1 * maximum(inflow))
     xlabel!("Time")
     ylabel!("Inflow")

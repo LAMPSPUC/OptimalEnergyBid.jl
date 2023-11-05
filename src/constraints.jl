@@ -1,9 +1,6 @@
 """Adds the inflow random variable constraint"""
 function _constraint_inflow!(sp::Model, prb::Problem, t::Int)
-    temp = [
-        prb.random.πᵪ[:, :, t][:, i] for
-        i in 1:size(prb.random.πᵪ[:, :, t], 2)
-    ]
+    temp = [prb.random.πᵪ[:, :, t][:, i] for i in 1:size(prb.random.πᵪ[:, :, t], 2)]
     SDDP.parameterize(sp, temp, prb.random.ωᵪ[:, t]) do ω
         return JuMP.fix.(sp[:inflow], ω)
     end

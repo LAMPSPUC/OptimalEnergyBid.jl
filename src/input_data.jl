@@ -117,7 +117,6 @@ names_map = Dict(
     "\"ωᵧ\":" => "\"prob_day_ahead\":",
     "\"πᵪ\":" => "\"inflow_values\":",
     "\"ωᵪ\":" => "\"prob_inflow\":",
-    
     "\"N\":" => "\"periods_per_day\":",
     "\"n₀\":" => "\"first_period\":",
     "\"I\":" => "\"units\":",
@@ -126,14 +125,14 @@ names_map = Dict(
     "\"T\":" => "\"duration\":",
     "\"Kᵦ\":" => "\"prices_day_ahead_curve\":",
     "\"Kᵧ\":" => "\"prices_real_time_curve\":",
-    "\"Kᵪ\":" => "\"inflows_scenarios\":"
+    "\"Kᵪ\":" => "\"inflows_scenarios\":",
 )
 
 function write_json(prb::Problem, file::String, names_map::Dict{String,String}=names_map)
     prb_temp = _copy_only_input(prb)
     string_data = JSON.json(prb_temp)
     index = findfirst(",\"flags\":", string_data)[1]
-    string_data = string_data[1:index-1] * "}"
+    string_data = string_data[1:(index - 1)] * "}"
     string_data = _replace_names(string_data, names_map)
     open(file, "w") do f
         write(f, string_data)
