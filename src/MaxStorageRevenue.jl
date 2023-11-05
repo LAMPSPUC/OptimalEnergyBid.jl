@@ -8,7 +8,6 @@ using SDDP
 using Match
 using Plots
 
-include("macros.jl")
 include("structs.jl")
 include("options.jl")
 include("input_data.jl")
