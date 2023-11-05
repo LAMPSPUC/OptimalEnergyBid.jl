@@ -57,3 +57,30 @@ prb2 = create_problem(joinpath(dirname(@__DIR__), "cases", "toy.json"))
 @test data.volume_max == prb2.data.volume_max
 @test data.volume_min == prb2.data.volume_min
 @test data.volume_initial == prb2.data.volume_initial
+
+mktempdir() do path
+    file = joinpath(path, "test.json")
+    write_json(prb1, file)
+    prb3 = create_problem(file)
+
+    @test prb1.random.πᵦ == prb3.random.πᵦ
+    @test prb1.random.ωᵦ == prb3.random.ωᵦ
+    @test prb1.random.πᵧ == prb3.random.πᵧ
+    @test prb1.random.ωᵧ == prb3.random.ωᵧ
+    @test prb1.random.πᵪ == prb3.random.πᵪ
+    @test prb1.random.ωᵪ == prb3.random.ωᵪ
+
+    @test prb1.numbers.N == prb3.numbers.N
+    @test prb1.numbers.n₀ == prb3.numbers.n₀
+    @test prb1.numbers.I == prb3.numbers.I
+    @test prb1.numbers.T == prb3.numbers.T
+    @test prb1.numbers.Kᵦ == prb3.numbers.Kᵦ
+    @test prb1.numbers.Kᵧ == prb3.numbers.Kᵧ
+    @test prb1.numbers.Kᵪ == prb3.numbers.Kᵪ
+    @test prb1.numbers.U == prb3.numbers.U
+    @test prb1.numbers.V == prb3.numbers.V
+
+    @test prb1.data.volume_max == prb3.data.volume_max
+    @test prb1.data.volume_min == prb3.data.volume_min
+    @test prb1.data.volume_initial == prb3.data.volume_initial
+end
