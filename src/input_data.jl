@@ -134,7 +134,7 @@ _names_map = Dict(
         file::String,
         )
 
-Write all the input data presents in "prb" to "file".
+Write all the input data present in "prb" to "file".
 """
 function write_json(prb::Problem, file::String)
     prb_temp = _copy_only_input(prb)
