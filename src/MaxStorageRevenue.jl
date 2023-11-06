@@ -23,6 +23,7 @@ include("simulate_model.jl")
 include("graph.jl")
 
 export validate_json,
+    write_json,
     create_problem,
     simulate!,
     build_model!,

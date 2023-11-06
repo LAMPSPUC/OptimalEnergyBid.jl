@@ -1,6 +1,6 @@
 prb = Problem()
 numbers = prb.numbers
-random = prb.random_variables
+random = prb.random
 probabilities = zeros(2, 4)
 probabilities[:, :] .= 0.5
 random.ωᵦ = probabilities

@@ -68,7 +68,7 @@ Base.@kwdef mutable struct Data
     ramp_up::Vector{Float64} = Array{Float64}(undef, zeros(Int, 1)...) # ramp up generation (optional)
     ramp_down::Vector{Float64} = Array{Float64}(undef, zeros(Int, 1)...) # ramp down generation (optional)
     generation_initial::Vector{Float64} = Array{Float64}(undef, zeros(Int, 1)...) # initial generation (optional)
-    names::Matrix{String} = Array{String}(undef, zeros(Int, 2)...) # Storage names (optional)
+    names::Vector{String} = Array{String}(undef, zeros(Int, 1)...) # Storage names (optional)
 end
 
 """Contains all outputs"""
@@ -86,11 +86,11 @@ end
 """Contains all the problem description"""
 Base.@kwdef mutable struct Problem
     options::Options = Options()
-    flags::Flags = Flags()
-    random_variables::RandomVariables = RandomVariables()
     numbers::Numbers = Numbers()
-    cache::Cache = Cache()
     data::Data = Data()
+    random::RandomVariables = RandomVariables()
+    flags::Flags = Flags()
+    cache::Cache = Cache()
     output::Output = Output()
     model::Union{SDDP.PolicyGraph,Nothing} = nothing
 end

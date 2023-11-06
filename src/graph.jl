@@ -41,7 +41,7 @@ function _plot_day_ahead_bids(prb::Problem, s::Int, folder::Union{String,Nothing
     day_ahead_bid = prb.output.day_ahead_bid[:, :, :, :, s]
 
     for d in 1:(prb.numbers.D), n in 1:(prb.numbers.N), i in 1:(prb.numbers.I)
-        prices = prb.random_variables.πᵧ[:, i, n, d]
+        prices = prb.random.πᵧ[:, i, n, d]
         offer = day_ahead_bid[:, i, n, d]
         perm = sortperm(prices)
         prices = prices[perm]
@@ -74,7 +74,10 @@ function _plot_day_ahead_clears(prb::Problem, s::Int, folder::Union{String,Nothi
     for d in 1:(prb.numbers.D)
         vectors = [day_ahead_clear[i, :, d] for i in 1:(prb.numbers.I)]
         plot(
-            vectors; title="Day Ahead Clear $(d)", label=prb.data.names, legend=:outerbottom
+            vectors;
+            title="Day Ahead Clear $(d)",
+            label=reshape(reshape(prb.data.names, 1, prb.numbers.I), 1, prb.numbers.I),
+            legend=:outerbottom,
         )
         ylims!(0, 1.1 * maximum(day_ahead_clear))
         xlabel!("Time")
@@ -91,7 +94,7 @@ function _plot_real_time_bids(prb::Problem, s::Int, folder::Union{String,Nothing
     real_time_bid = prb.output.real_time_bid[:, :, :, s]
 
     for t in 1:(prb.numbers.T), i in 1:(prb.numbers.I)
-        prices = prb.random_variables.πᵦ[:, i, t]
+        prices = prb.random.πᵦ[:, i, t]
         offer = real_time_bid[:, i, t]
         perm = sortperm(prices)
         prices = prices[perm]
@@ -121,7 +124,12 @@ end
 function _plot_volumes(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)
     volume = prb.output.volume[:, :, s]
     vectors = [volume[i, :] for i in 1:(prb.numbers.I)]
-    p = plot(vectors; title="Volumes", label=prb.data.names, legend=:outerbottom)
+    p = plot(
+        vectors;
+        title="Volumes",
+        label=reshape(prb.data.names, 1, prb.numbers.I),
+        legend=:outerbottom,
+    )
     ylims!(0, 1.1 * maximum(volume))
     xlabel!("Time")
     ylabel!("Volume")
@@ -135,7 +143,12 @@ end
 function _plot_spillages(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)
     spillage = prb.output.spillage[:, :, s]
     vectors = [spillage[i, :] for i in 1:(prb.numbers.I)]
-    p = plot(vectors; title="Spillages", label=prb.data.names, legend=:outerbottom)
+    p = plot(
+        vectors;
+        title="Spillages",
+        label=reshape(prb.data.names, 1, prb.numbers.I),
+        legend=:outerbottom,
+    )
     ylims!(0, 1.1 * maximum(spillage))
     xlabel!("Time")
     ylabel!("Spillage")
@@ -149,7 +162,12 @@ end
 function _plot_generations(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)
     generation = prb.output.generation[:, :, s]
     vectors = [generation[i, :] for i in 1:(prb.numbers.I)]
-    p = plot(vectors; title="Generations", label=prb.data.names, legend=:outerbottom)
+    p = plot(
+        vectors;
+        title="Generations",
+        label=reshape(prb.data.names, 1, prb.numbers.I),
+        legend=:outerbottom,
+    )
     ylims!(0, 1.1 * maximum(generation))
     xlabel!("Time")
     ylabel!("Generation")
@@ -163,7 +181,12 @@ end
 function _plot_inflows(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)
     inflow = prb.output.inflow[:, :, s]
     vectors = [inflow[i, :] for i in 1:(prb.numbers.I)]
-    p = plot(vectors; title="Inflows", label=prb.data.names, legend=:outerbottom)
+    p = plot(
+        vectors;
+        title="Inflows",
+        label=reshape(prb.data.names, 1, prb.numbers.I),
+        legend=:outerbottom,
+    )
     ylims!(0, 1.1 * maximum(inflow))
     xlabel!("Time")
     ylabel!("Inflow")
