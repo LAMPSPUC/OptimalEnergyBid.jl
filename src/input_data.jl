@@ -16,15 +16,28 @@ function create_problem(file::String)::Problem
     dict = _parse_file_json(file)
     prb = Problem()
 
-    _write_numbers!(prb, dict)
-    _write_data!(prb, dict)
-    _write_random!(prb, dict)
+    _read_options!(prb, dict)
+    _read_numbers!(prb, dict)
+    _read_data!(prb, dict)
+    _read_random!(prb, dict)
 
     return prb
 end
 
 """Reads size and indeces information"""
-function _write_numbers!(prb::Problem, dict::Dict)
+function _read_options!(prb::Problem, dict::Dict)
+    options = prb.options
+
+    options.use_ramp_up = dict["options"]["use_ramp_up"]
+    options.use_ramp_down = dict["options"]["use_ramp_down"]
+    options.use_day_ahead_bid_bound = dict["options"]["use_day_ahead_bid_bound"]
+    options.penalty_ramp_down = dict["options"]["penalty_ramp_down"]
+
+    return nothing
+end
+
+"""Reads size and indeces information"""
+function _read_numbers!(prb::Problem, dict::Dict)
     numbers = prb.numbers
 
     numbers.N = dict["numbers"]["periods_per_day"]
@@ -42,7 +55,7 @@ function _write_numbers!(prb::Problem, dict::Dict)
 end
 
 """Reads storage/generators data information"""
-function _write_data!(prb::Problem, dict::Dict)
+function _read_data!(prb::Problem, dict::Dict)
     data = prb.data
 
     data.volume_max = dict["data"]["volume_max"]
@@ -61,17 +74,17 @@ function _write_data!(prb::Problem, dict::Dict)
         data.ramp_up = dict["data"]["ramp_up"]
     end
     if haskey(dict["data"], "ramp_down")
-        data.ramp_up = dict["data"]["ramp_down"]
+        data.ramp_down = dict["data"]["ramp_down"]
     end
     if haskey(dict["data"], "generation_initial")
-        data.ramp_up = dict["data"]["generation_initial"]
+        data.generation_initial = dict["data"]["generation_initial"]
     end
 
     return nothing
 end
 
 """Reads random variables information"""
-function _write_random!(prb::Problem, dict::Dict)
+function _read_random!(prb::Problem, dict::Dict)
     random = prb.random
     numbers = prb.numbers
 
