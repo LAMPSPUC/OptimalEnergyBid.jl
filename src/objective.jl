@@ -52,14 +52,6 @@ function _add_day_ahead_clear_objective!(sp::Model, prb::Problem, t::Int, k::Int
     return nothing
 end
 
-"""Add ramp up penalty objective function"""
-function _add_ramp_up_objective!(sp::Model, prb::Problem)
-    add_to_expression!(
-        sp[:objective], -prb.options.penalty_ramp_up * sum(sp[:ramp_up_violation])
-    )
-    return nothing
-end
-
 """Add ramp down penalty objective function"""
 function _add_ramp_down_objective!(sp::Model, prb::Problem)
     add_to_expression!(

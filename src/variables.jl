@@ -75,12 +75,6 @@ function _variable_spillage!(sp::Model, prb::Problem)
     return nothing
 end
 
-"""Creates the ramp up violation as a control variable"""
-function _variable_ramp_up_violation!(sp::Model, prb::Problem)
-    @variable(sp, 0.0 <= ramp_up_violation[i=1:(prb.numbers.I)])
-    return nothing
-end
-
 """Creates the ramp down violation as a control variable"""
 function _variable_ramp_down_violation!(sp::Model, prb::Problem)
     @variable(sp, 0.0 <= ramp_down_violation[i=1:(prb.numbers.I)])

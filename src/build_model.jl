@@ -51,6 +51,10 @@ function _build_real_time_bid!(sp::Model, prb::Problem, problem_info::ProblemInf
     _constraint_inflow!(sp, prb, problem_info.t)
     _constraint_copy_day_ahead_bid!(sp, prb)
 
+    if prb.options.use_ramp_up
+        _constraint_ramp_up_bound!(sp, prb)
+    end
+
     _create_objective_expression!(sp)
     _set_objective_expression!(sp)
 
@@ -76,12 +80,6 @@ function _build_real_time_clear!(sp::Model, prb::Problem, problem_info::ProblemI
         _constraint_add_generation!(sp, prb)
         _constraint_real_time_accepted!(sp, prb, problem_info.k, problem_info.t)
         _add_real_time_clear_objective!(sp, prb, problem_info.t, problem_info.k)
-    end
-
-    if prb.options.use_ramp_up
-        _variable_ramp_up_violation!(sp, prb)
-        _constraint_generation_ramp_up!(sp, prb)
-        _add_ramp_up_objective!(sp, prb)
     end
 
     if prb.options.use_ramp_down

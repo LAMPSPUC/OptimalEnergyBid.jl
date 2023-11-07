@@ -24,17 +24,6 @@ function _constraint_copy_generation!(sp::Model, prb::Problem)
     return nothing
 end
 
-"""Adds the generation ramp up constraint"""
-function _constraint_generation_ramp_up!(sp::Model, prb::Problem)
-    @constraint(
-        sp,
-        generation_ramp_up[i=1:(prb.numbers.I)],
-        sp[:ramp_up_violation][i] >=
-            sp[:generation][i].out - sp[:generation][i].in - prb.data.ramp_up[i]
-    )
-    return nothing
-end
-
 """Adds the generation ramp down constraint"""
 function _constraint_generation_ramp_down!(sp::Model, prb::Problem)
     @constraint(
@@ -124,6 +113,16 @@ function _constraint_real_time_bid_bound!(sp::Model, prb::Problem)
         sp,
         real_time_bid_bound[i=1:(prb.numbers.I)],
         sp[:volume][i].out >= sum(sp[:real_time_bid][k, i].out for k in 1:(prb.numbers.Kᵦ))
+    )
+    return nothing
+end
+
+"""Adds the ramp up offer bound constraint"""
+function _constraint_ramp_up_bound!(sp::Model, prb::Problem)
+    @constraint(
+        sp,
+        ramp_up_bound[i=1:(prb.numbers.I)],
+        prb.data.ramp_up[i] >= sum(sp[:real_time_bid][k, i].out for k in 1:(prb.numbers.Kᵦ)) - sp[:generation][i].in
     )
     return nothing
 end

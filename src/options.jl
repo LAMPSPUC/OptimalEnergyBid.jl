@@ -16,14 +16,12 @@ end
 
 """Float parameters enum"""
 @enumx ParameterFloat begin
-    PenaltyRampUp
     PenaltyRampDown
 end
 
 """Set a float parameter"""
 function set_float_parameter!(prb::Problem, type::ParameterFloat.T, value::Float64)
     @match type begin
-        $(ParameterFloat.PenaltyRampUp) => _set_penalty_ramp_up!(prb, value)
         $(ParameterFloat.PenaltyRampDown) => _set_penalty_ramp_down!(prb, value)
     end
 end
@@ -43,12 +41,6 @@ end
 """Set the use of ramp down"""
 function _set_use_ramp_down!(prb::Problem, use_ramp_down::Bool)
     prb.options.use_ramp_down = use_ramp_down
-    return nothing
-end
-
-"""Set the penalty of ramp up violation"""
-function _set_penalty_ramp_up!(prb::Problem, penalty_ramp_up::Float64)
-    prb.options.penalty_ramp_up = penalty_ramp_up
     return nothing
 end
 

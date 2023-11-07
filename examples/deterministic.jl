@@ -24,7 +24,6 @@ set_optimizer!(prb, HiGHS.Optimizer)
 
 set_bool_parameter!(prb, ParameterBool.UseRampUp, true)
 set_bool_parameter!(prb, ParameterBool.UseRampDown, true)
-set_float_parameter!(prb, ParameterFloat.PenaltyRampUp, 100.0)
 set_float_parameter!(prb, ParameterFloat.PenaltyRampDown, 100.0)
 
 prb.data.ramp_up = [0.1, 0.1]

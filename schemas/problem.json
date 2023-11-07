@@ -13,7 +13,6 @@
                 "use_ramp_up",
                 "use_ramp_down",
                 "use_day_ahead_bid_bound",
-                "penalty_ramp_up",
                 "penalty_ramp_down"
             ],
             "properties": {
@@ -25,9 +24,6 @@
                 },
                 "use_day_ahead_bid_bound": {
                     "type": "boolean"
-                },
-                "penalty_ramp_up": {
-                    "type": "number"
                 },
                 "penalty_ramp_down": {
                     "type": "number"
