@@ -1,4 +1,4 @@
-using MaxStorageRevenue
+using OptimalEnergyBid
 using SDDP, Test, HiGHS
 
 include("test_validate_json.jl")

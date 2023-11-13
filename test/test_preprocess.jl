@@ -33,7 +33,7 @@ numbers.Kᵧ = 2
 numbers.U = 1
 numbers.V = 2
 
-MaxStorageRevenue._evaluate_acceptance_real_time!(prb)
+OptimalEnergyBid._evaluate_acceptance_real_time!(prb)
 
 @test prb.cache.acceptance_real_time[:, :, 1, 1] == [1 1; 0 1]
 @test prb.cache.acceptance_real_time[:, :, 1, 2] == [1 0; 1 1]

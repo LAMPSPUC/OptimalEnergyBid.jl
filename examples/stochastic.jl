@@ -1,4 +1,4 @@
-using MaxStorageRevenue, HiGHS
+using OptimalEnergyBid, HiGHS
 
 prb = create_problem(joinpath(@__DIR__, "cases", "stochastic.json"))
 set_optimizer!(prb, HiGHS.Optimizer)

@@ -1,4 +1,4 @@
-module MaxStorageRevenue
+module OptimalEnergyBid
 
 using EnumX
 using JSON
@@ -38,4 +38,4 @@ export validate_json,
     ParameterFloat,
     OutputType
 
-end # module MaxStorageRevenue
+end # module OptimalEnergyBid

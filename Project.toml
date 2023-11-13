@@ -1,4 +1,4 @@
-name = "MaxStorageRevenue"
+name = "OptimalEnergyBid"
 uuid = "5f3b3270-98fc-473d-aa35-bc71ed6eae09"
 authors = ["Thiago Novaes <thiagonovaesb@poli.ufrj.br>"]
 version = "0.1.0"
