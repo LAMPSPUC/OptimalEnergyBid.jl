@@ -5,6 +5,11 @@
     UseDayAheadBidBound
 end
 
+"""Float parameters enum"""
+@enumx ParameterFloat begin
+    PenaltyRampDown
+end
+
 """Set a bool parameter"""
 function set_bool_parameter!(prb::Problem, type::ParameterBool.T, value::Bool)
     @match type begin
@@ -12,11 +17,6 @@ function set_bool_parameter!(prb::Problem, type::ParameterBool.T, value::Bool)
         $(ParameterBool.UseRampDown) => _set_use_ramp_down!(prb, value)
         $(ParameterBool.UseDayAheadBidBound) => _set_use_day_ahead_bid_bound!(prb, value)
     end
-end
-
-"""Float parameters enum"""
-@enumx ParameterFloat begin
-    PenaltyRampDown
 end
 
 """Set a float parameter"""

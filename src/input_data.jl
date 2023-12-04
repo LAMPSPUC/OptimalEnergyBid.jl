@@ -48,7 +48,6 @@ function _read_numbers!(prb::Problem, dict::Dict)
     numbers.T = dict["numbers"]["duration"]
     numbers.Kᵦ = dict["numbers"]["prices_day_ahead_curve"]
     numbers.Kᵧ = dict["numbers"]["prices_real_time_curve"]
-    numbers.Kᵪ = dict["numbers"]["inflows_scenarios"]
     numbers.D = Int(ceil(numbers.T / numbers.N))
 
     return nothing
@@ -61,6 +60,9 @@ function _read_data!(prb::Problem, dict::Dict)
     data.volume_max = dict["data"]["volume_max"]
     data.volume_min = dict["data"]["volume_min"]
     data.volume_initial = dict["data"]["volume_initial"]
+    data.pᵦ = dict["data"]["prices_real_time_curve"]
+    data.pᵧ = dict["data"]["prices_day_ahead_curve"]
+
     if haskey(dict["data"], "names")
         data.names = dict["data"]["names"]
     else
@@ -88,36 +90,21 @@ function _read_random!(prb::Problem, dict::Dict)
     random = prb.random
     numbers = prb.numbers
 
-    random.πᵦ = zeros(numbers.Kᵦ, numbers.I, numbers.T)
-    random.ωᵦ = zeros(numbers.Kᵦ, numbers.T)
-    random.πᵧ = zeros(numbers.Kᵧ, numbers.I, numbers.N, numbers.D)
-    random.ωᵧ = zeros(numbers.Kᵧ, numbers.D)
-    random.πᵪ = zeros(numbers.Kᵪ, numbers.I, numbers.T)
-    random.ωᵪ = zeros(numbers.Kᵪ, numbers.T)
+    random.πᵦ = dict["random"]["prices_real_time"]
+    random.πᵧ = dict["random"]["prices_day_ahead"]
+    random.πᵪ = dict["random"]["inflow_values"]
+    random.ωᵪ = dict["random"]["prob_inflow"]
 
+    random.P = []
+    
     for t in 1:(numbers.T)
-        for i in 1:(numbers.I)
-            for k in 1:(numbers.Kᵦ)
-                random.πᵦ[k, i, t] = dict["random"]["prices_real_time"][t][i][k]
-            end
-            for k in 1:(numbers.Kᵪ)
-                random.πᵪ[k, i, t] = dict["random"]["inflow_values"][t][i][k]
-            end
+        M = dict["random"]["markov_transitions"][t]
+        N = dict["random"]["markov_transitions"][t][1]
+        temp = zeros(M, N)
+        for m in 1:(M), n in 1:(N)
+            temp[m, n] = dict["random"]["markov_transitions"][t][m][n]
         end
-        for k in 1:(numbers.Kᵦ)
-            random.ωᵦ[k, t] = dict["random"]["prob_real_time"][t][k]
-        end
-        for k in 1:(numbers.Kᵪ)
-            random.ωᵪ[k, t] = dict["random"]["prob_inflow"][t][k]
-        end
-    end
-
-    for d in 1:(numbers.D), n in 1:(numbers.N), i in 1:(numbers.I), k in 1:(numbers.Kᵧ)
-        random.πᵧ[k, i, n, d] = dict["random"]["prices_day_ahead"][d][n][i][k]
-    end
-
-    for d in 1:(numbers.D), k in 1:(numbers.Kᵧ)
-        random.ωᵧ[k, d] = dict["random"]["prob_day_ahead"][d][k]
+        push!(random.P, temp)
     end
 
     return nothing
@@ -126,9 +113,7 @@ end
 """The map between the names in the struct and json"""
 _names_map = Dict(
     "\"πᵦ\":" => "\"prices_real_time\":",
-    "\"ωᵦ\":" => "\"prob_real_time\":",
     "\"πᵧ\":" => "\"prices_day_ahead\":",
-    "\"ωᵧ\":" => "\"prob_day_ahead\":",
     "\"πᵪ\":" => "\"inflow_values\":",
     "\"ωᵪ\":" => "\"prob_inflow\":",
     "\"N\":" => "\"periods_per_day\":",
@@ -137,9 +122,8 @@ _names_map = Dict(
     "\"U\":" => "\"period_of_day_ahead_bid\":",
     "\"V\":" => "\"period_of_day_ahead_clear\":",
     "\"T\":" => "\"duration\":",
-    "\"Kᵦ\":" => "\"prices_day_ahead_curve\":",
-    "\"Kᵧ\":" => "\"prices_real_time_curve\":",
-    "\"Kᵪ\":" => "\"inflows_scenarios\":",
+    "\"pᵦ\":" => "\"prices_real_time_curve\":",
+    "\"pᵧ\":" => "\"prices_day_ahead_curve\":",
 )
 
 """
