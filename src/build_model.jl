@@ -44,16 +44,14 @@ function _build_subproblem!(sp::Model, prb::Problem, t::Int, markov_state::Int)
         _add_real_time_clear_objective!(sp, prb, problem_info.t, problem_info.k)
     end
 
-
     _create_objective_expression!(sp)
-
 
     _set_objective_expression!(sp)
     return nothing
 end
 
 """Creates the real time offer subproblem"""
-function _build_real_time_bid!(sp::Model, prb::Problem, problem_info::ProblemInfo)
+function _build_real_time_bid!(sp::Model, prb::Problem)
     _constraint_add_inflow!(sp, prb)
     _constraint_real_time_bid_bound!(sp, prb)
     _constraint_copy_day_ahead_clear!(sp, prb)
@@ -66,18 +64,18 @@ function _build_real_time_bid!(sp::Model, prb::Problem, problem_info::ProblemInf
 end
 
 """Creates the real time clear subproblem"""
-function _build_real_time_clear!(sp::Model, prb::Problem, problem_info::ProblemInfo)
+function _build_real_time_clear!(sp::Model, prb::Problem)
     if prb.options.use_ramp_down
         _variable_ramp_down_violation!(sp, prb)
         _constraint_generation_ramp_down!(sp, prb)
         _add_ramp_down_objective!(sp, prb)
     end
     _constraint_shift_day_ahead_clear!(sp, prb)
-    _constraint_copy_day_ahead_bid!(sp, prb)
+    return _constraint_copy_day_ahead_bid!(sp, prb)
 end
 
 """Creates the day ahead offer subproblem"""
-function _build_day_ahead_bid!(sp, prb::Problem, _::ProblemInfo)
+function _build_day_ahead_bid!(sp, prb::Problem)
     _constraint_copy_volume!(sp, prb)
     _constraint_copy_day_ahead_clear!(sp, prb)
     if prb.options.use_day_ahead_bid_bound
@@ -86,8 +84,8 @@ function _build_day_ahead_bid!(sp, prb::Problem, _::ProblemInfo)
 end
 
 """Creates the day ahead clear subproblem"""
-function _build_day_ahead_clear!(sp::Model, prb::Problem, problem_info::ProblemInfo)
+function _build_day_ahead_clear!(sp::Model, prb::Problem)
     _constraint_copy_volume!(sp, prb)
     _constraint_add_day_ahead_clear!(sp, prb, problem_info.k, problem_info.t)
-    _add_day_ahead_clear_objective!(sp, prb, problem_info.t, problem_info.k)
+    return _add_day_ahead_clear_objective!(sp, prb, problem_info.t, problem_info.k)
 end

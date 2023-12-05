@@ -96,7 +96,7 @@ function _read_random!(prb::Problem, dict::Dict)
     random.ωᵪ = dict["random"]["prob_inflow"]
 
     random.P = []
-    
+
     for t in 1:(numbers.T)
         M = dict["random"]["markov_transitions"][t]
         N = dict["random"]["markov_transitions"][t][1]
