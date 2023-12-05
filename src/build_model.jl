@@ -34,12 +34,12 @@ function _build_subproblem!(sp::Model, prb::Problem, t::Int, markov_state::Int)
 
     if prb.flags.generation_as_state
         _variable_generation_state!(sp, prb)
-        _constraint_add_generation_state!(sp, prb)
+        _constraint_volume_balance_state!(sp, prb)
         _constraint_real_time_accepted_state!(sp, prb, problem_info.k, problem_info.t)
         _add_real_time_clear_objective_state!(sp, prb, problem_info.t, problem_info.k)
     else
         _variable_generation!(sp, prb)
-        _constraint_add_generation!(sp, prb)
+        _constraint_volume_balance!(sp, prb)
         _constraint_real_time_accepted!(sp, prb, problem_info.k, problem_info.t)
         _add_real_time_clear_objective!(sp, prb, problem_info.t, problem_info.k)
     end
@@ -52,9 +52,7 @@ end
 
 """Creates the real time offer subproblem"""
 function _build_real_time_bid!(sp::Model, prb::Problem)
-    _constraint_add_inflow!(sp, prb)
     _constraint_real_time_bid_bound!(sp, prb)
-    _constraint_copy_day_ahead_clear!(sp, prb)
     _constraint_inflow!(sp, prb, problem_info.t)
     _constraint_copy_day_ahead_bid!(sp, prb)
     if prb.options.use_ramp_up
@@ -76,8 +74,6 @@ end
 
 """Creates the day ahead offer subproblem"""
 function _build_day_ahead_bid!(sp, prb::Problem)
-    _constraint_copy_volume!(sp, prb)
-    _constraint_copy_day_ahead_clear!(sp, prb)
     if prb.options.use_day_ahead_bid_bound
         _constraint_bound_day_ahead_bid!(sp, prb)
     end
@@ -85,7 +81,6 @@ end
 
 """Creates the day ahead clear subproblem"""
 function _build_day_ahead_clear!(sp::Model, prb::Problem)
-    _constraint_copy_volume!(sp, prb)
     _constraint_add_day_ahead_clear!(sp, prb, problem_info.k, problem_info.t)
     return _add_day_ahead_clear_objective!(sp, prb, problem_info.t, problem_info.k)
 end

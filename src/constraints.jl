@@ -6,24 +6,6 @@ function _constraint_inflow!(sp::Model, prb::Problem, t::Int)
     end
 end
 
-"""Adds the copy volume constraint"""
-function _constraint_copy_volume!(sp::Model, prb::Problem)
-    @constraint(
-        sp, copy_volume[i=1:(prb.numbers.I)], sp[:volume][i].out == sp[:volume][i].in
-    )
-    return nothing
-end
-
-"""Adds the copy generation constraint"""
-function _constraint_copy_generation!(sp::Model, prb::Problem)
-    @constraint(
-        sp,
-        copy_generation[i=1:(prb.numbers.I)],
-        sp[:generation][i].out == sp[:generation][i].in
-    )
-    return nothing
-end
-
 """Adds the generation ramp down constraint"""
 function _constraint_generation_ramp_down!(sp::Model, prb::Problem)
     @constraint(
@@ -52,18 +34,6 @@ function _constraint_bound_day_ahead_bid!(sp::Model, prb::Problem)
         bound_day_ahead_bid[i=1:(prb.numbers.I), n=1:(prb.numbers.N)],
         sum(sp[:day_ahead_bid][k, i, n].out for k in 1:(prb.numbers.Kᵧ)) <=
             prb.data.volume_max[i]
-    )
-    return nothing
-end
-
-"""Adds the copy day ahead clear constraint"""
-function _constraint_copy_day_ahead_clear!(sp::Model, prb::Problem)
-    @constraint(
-        sp,
-        copy_day_ahead_clear[
-            i=1:(prb.numbers.I), n=1:(2 * prb.numbers.N - prb.numbers.V + 1)
-        ],
-        sp[:day_ahead_clear][i, n].out == sp[:day_ahead_clear][i, n].in
     )
     return nothing
 end
@@ -97,16 +67,6 @@ function _constraint_add_day_ahead_clear!(sp::Model, prb::Problem, K::Int, T::In
     return nothing
 end
 
-"""Adds the inflow constraint"""
-function _constraint_add_inflow!(sp::Model, prb::Problem)
-    @constraint(
-        sp,
-        add_inflow[i=1:(prb.numbers.I)],
-        sp[:volume][i].out == sp[:volume][i].in + sp[:inflow][i] - sp[:spillage][i]
-    )
-    return nothing
-end
-
 """Adds the real time offer bound constraint"""
 function _constraint_real_time_bid_bound!(sp::Model, prb::Problem)
     @constraint(
@@ -130,11 +90,12 @@ function _constraint_ramp_up_bound!(sp::Model, prb::Problem)
 end
 
 """Adds the generatarion constraint using generatarion as a control variable"""
-function _constraint_add_generation!(sp::Model, prb::Problem)
+function _constraint_volume_balance!(sp::Model, prb::Problem)
     @constraint(
         sp,
         constraint_add_generation[i=1:(prb.numbers.I)],
-        sp[:volume][i].out == sp[:volume][i].in - sp[:generation][i]
+        sp[:volume][i].out ==
+            sp[:volume][i].in - sp[:generation][i] + sp[:inflow][i] - sp[:spillage][i]
     )
     return nothing
 end
@@ -153,11 +114,12 @@ function _constraint_real_time_accepted!(sp::Model, prb::Problem, K::Int, T::Int
 end
 
 """Adds the generatarion constraint using generatarion as a state variable"""
-function _constraint_add_generation_state!(sp::Model, prb::Problem)
+function _constraint_volume_balance_state!(sp::Model, prb::Problem)
     @constraint(
         sp,
         constraint_add_generation_state[i=1:(prb.numbers.I)],
-        sp[:volume][i].out == sp[:volume][i].in - sp[:generation][i].out
+        sp[:volume][i].out ==
+            sp[:volume][i].in - sp[:generation][i].out + sp[:inflow][i] - sp[:spillage][i]
     )
     return nothing
 end
