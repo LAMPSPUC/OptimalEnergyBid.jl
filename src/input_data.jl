@@ -46,8 +46,8 @@ function _read_numbers!(prb::Problem, dict::Dict)
     numbers.U = dict["numbers"]["period_of_day_ahead_bid"]
     numbers.V = dict["numbers"]["period_of_day_ahead_clear"]
     numbers.T = dict["numbers"]["duration"]
-    numbers.Kᵦ = dict["numbers"]["prices_day_ahead_curve"]
-    numbers.Kᵧ = dict["numbers"]["prices_real_time_curve"]
+    numbers.Kᵦ = dict["numbers"]["total_day_ahead_curve"]
+    numbers.Kᵧ = dict["numbers"]["total_real_time_curve"]
     numbers.D = Int(ceil(numbers.T / numbers.N))
 
     return nothing
@@ -98,8 +98,8 @@ function _read_random!(prb::Problem, dict::Dict)
     random.P = []
 
     for t in 1:(numbers.T)
-        M = dict["random"]["markov_transitions"][t]
-        N = dict["random"]["markov_transitions"][t][1]
+        M = length(dict["random"]["markov_transitions"][t])
+        N = length(dict["random"]["markov_transitions"][t][1])
         temp = zeros(M, N)
         for m in 1:(M), n in 1:(N)
             temp[m, n] = dict["random"]["markov_transitions"][t][m][n]
@@ -124,6 +124,9 @@ _names_map = Dict(
     "\"T\":" => "\"duration\":",
     "\"pᵦ\":" => "\"prices_real_time_curve\":",
     "\"pᵧ\":" => "\"prices_day_ahead_curve\":",
+    "\"Kᵦ\":" => "\"total_real_time_curve\":",
+    "\"Kᵧ\":" => "\"total_day_ahead_curve\":",
+    "\"P\":" => "\"markov_transitions\":",
 )
 
 """

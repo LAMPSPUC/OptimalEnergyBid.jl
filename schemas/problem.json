@@ -39,8 +39,8 @@
                 "period_of_day_ahead_bid",
                 "period_of_day_ahead_clear",
                 "duration",
-                "prices_day_ahead_curve",
-                "prices_real_time_curve"
+                "total_day_ahead_curve",
+                "total_real_time_curve"
             ],
             "properties": {
                 "periods_per_day": {
@@ -61,10 +61,10 @@
                 "duration": {
                     "type": "integer"
                 },
-                "prices_day_ahead_curve": {
+                "total_day_ahead_curve": {
                     "type": "integer"
                 },
-                "prices_real_time_curve": {
+                "total_real_time_curve": {
                     "type": "integer"
                 }
             }
