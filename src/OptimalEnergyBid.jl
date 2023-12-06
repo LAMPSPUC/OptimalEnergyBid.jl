@@ -11,7 +11,7 @@ using Plots
 include("structs.jl")
 include("options.jl")
 include("input_data.jl")
-# include("preprocess.jl")
+include("preprocess.jl")
 # include("variables.jl")
 # include("constraints.jl")
 # include("objective.jl")
