@@ -1,35 +1,3 @@
-prb = Problem()
-
-numbers = prb.numbers
-random = prb.random
-data = prb.data
-options = prb.options
-
-values_beta = zeros(2, 1, 4)
-values_gamma = zeros(2, 1, 2, 2)
-probabilities = zeros(2, 4)
-probabilities[:, :] .= 0.5
-values_beta[:, :, :] .= 10.0
-values_gamma[:, :, :, :] .= 9.0
-random.πᵦ = values_beta
-random.ωᵦ = probabilities
-random.πᵧ = values_gamma
-random.ωᵧ = probabilities
-random.πᵪ = values_beta
-random.ωᵪ = probabilities
-
-numbers.N = 2
-numbers.n₀ = 2
-numbers.I = 1
-numbers.T = 4
-numbers.Kᵦ = 2
-numbers.Kᵧ = 2
-numbers.U = 1
-numbers.V = 2
-numbers.D = 2
-
-data.volume_max = ones(2)
-data.volume_min = zeros(2)
-data.volume_initial = ones(2)
+prb = create_problem(joinpath(dirname(@__DIR__), "cases", "toy.json"))
 
 build_model!(prb)

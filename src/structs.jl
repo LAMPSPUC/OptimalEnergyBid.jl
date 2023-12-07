@@ -37,7 +37,7 @@ end
 """Contains the cache data"""
 Base.@kwdef mutable struct Cache
     acceptance_real_time::Vector{Vector{Matrix{Bool}}} = [] # t,n,i,k
-    acceptance_day_ahead::Vector{Vector{Vector{Matrix{Bool}}}} = [] # d,j,i,k
+    acceptance_day_ahead::Vector{Vector{Vector{Matrix{Bool}}}} = [] # d,j,n,i,k
 end
 
 """Contains the storages and generators data"""

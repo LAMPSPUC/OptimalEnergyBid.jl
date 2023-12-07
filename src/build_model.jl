@@ -4,7 +4,7 @@ function build_model!(prb::Problem)
     _evaluate_flags!(prb)
     graph = _build_graph(prb)
 
-    prb.model = SDDP.MarkovianPolicyGraph(
+    prb.model = SDDP.PolicyGraph(
         graph;
         sense=:Max,
         optimizer=prb.options.optimizer,
@@ -19,7 +19,7 @@ end
 
 """Creates the SDDP graph"""
 function _build_graph(prb::Problem)::SDDP.Graph
-    graph = SDDP.MarkovianPolicyGraph(prb.random.P)
+    graph = SDDP.MarkovianGraph(prb.random.P)
     return graph
 end
 
@@ -31,56 +31,48 @@ function _build_subproblem!(sp::Model, prb::Problem, t::Int, markov_state::Int)
     _variable_spillage!(sp, prb)
     _variable_day_ahead_bid!(sp, prb)
     _variable_day_ahead_clear!(sp, prb)
+    _constraint_inflow!(sp, prb, t, markov_state)
+    _constraint_shift_day_ahead_clear!(sp, prb)
+    _constraint_real_time_bid_bound!(sp, prb)
+
+    # _create_objective_expression!(sp)
 
     if prb.flags.generation_as_state
         _variable_generation_state!(sp, prb)
         _constraint_volume_balance_state!(sp, prb)
-        _constraint_real_time_accepted_state!(sp, prb, problem_info.k, problem_info.t)
-        _add_real_time_clear_objective_state!(sp, prb, problem_info.t, problem_info.k)
+        _constraint_real_time_accepted_state!(sp, prb, t, markov_state)
+        #_add_real_time_clear_objective_state!(sp, prb, problem_info.t, problem_info.k)
     else
         _variable_generation!(sp, prb)
         _constraint_volume_balance!(sp, prb)
-        _constraint_real_time_accepted!(sp, prb, problem_info.k, problem_info.t)
-        _add_real_time_clear_objective!(sp, prb, problem_info.t, problem_info.k)
+        _constraint_real_time_accepted!(sp, prb, t, markov_state)
+        # _add_real_time_clear_objective!(sp, prb, problem_info.t, problem_info.k)
     end
 
-    _create_objective_expression!(sp)
-
-    _set_objective_expression!(sp)
-    return nothing
-end
-
-"""Creates the real time offer subproblem"""
-function _build_real_time_bid!(sp::Model, prb::Problem)
-    _constraint_real_time_bid_bound!(sp, prb)
-    _constraint_inflow!(sp, prb, problem_info.t)
-    _constraint_copy_day_ahead_bid!(sp, prb)
-    if prb.options.use_ramp_up
-        _constraint_ramp_up_bound!(sp, prb)
-    end
-    return nothing
-end
-
-"""Creates the real time clear subproblem"""
-function _build_real_time_clear!(sp::Model, prb::Problem)
     if prb.options.use_ramp_down
         _variable_ramp_down_violation!(sp, prb)
-        _constraint_generation_ramp_down!(sp, prb)
-        _add_ramp_down_objective!(sp, prb)
+        _constraint_ramp_down!(sp, prb)
+        # _add_ramp_down_objective!(sp, prb)
     end
-    _constraint_shift_day_ahead_clear!(sp, prb)
-    return _constraint_copy_day_ahead_bid!(sp, prb)
-end
 
-"""Creates the day ahead offer subproblem"""
-function _build_day_ahead_bid!(sp, prb::Problem)
+    if prb.options.use_ramp_up
+        _constraint_ramp_up!(sp, prb)
+    end
+
     if prb.options.use_day_ahead_bid_bound
         _constraint_bound_day_ahead_bid!(sp, prb)
     end
+
+    if mod(t - prb.numbers.U + prb.numbers.n₀ - 1, prb.numbers.N) != 0
+        _constraint_copy_day_ahead_bid!(sp, prb)
+    end
+
+    if mod(t - prb.numbers.V + prb.numbers.n₀ - 1, prb.numbers.N) == 0
+        _constraint_add_day_ahead_clear!(sp, prb, t, markov_state)
+    end
+
+    # _set_objective_expression!(sp)
+    return nothing
 end
 
-"""Creates the day ahead clear subproblem"""
-function _build_day_ahead_clear!(sp::Model, prb::Problem)
-    _constraint_add_day_ahead_clear!(sp, prb, problem_info.k, problem_info.t)
-    return _add_day_ahead_clear_objective!(sp, prb, problem_info.t, problem_info.k)
-end
+# return _add_day_ahead_clear_objective!(sp, prb, problem_info.t, problem_info.k)
