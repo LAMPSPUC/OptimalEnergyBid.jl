@@ -12,19 +12,13 @@ Keyword arguments (same as SDDP.simulate):
 
 """
 function simulate!(
-    prb::Problem,
-    number_replications::Int=1,
-    variables::Vector{Symbol}=variable_list,
-    skip_undefined_variables::Bool=true;
-    kwargs...,
+    prb::Problem, number_replications::Int=1, skip_undefined_variables::Bool=true; kwargs...
 )::Vector{Vector{Dict{Symbol,Any}}}
     simul = SDDP.simulate(
         prb.model,
-        number_replications,
-        variables;
+        number_replications;
         skip_undefined_variables=skip_undefined_variables,
         kwargs...,
     )
-    _write_output!(prb, simul)
     return simul
 end

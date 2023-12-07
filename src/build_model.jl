@@ -34,25 +34,24 @@ function _build_subproblem!(sp::Model, prb::Problem, t::Int, markov_state::Int)
     _constraint_inflow!(sp, prb, t, markov_state)
     _constraint_shift_day_ahead_clear!(sp, prb)
     _constraint_real_time_bid_bound!(sp, prb)
-
-    # _create_objective_expression!(sp)
+    _create_objective_expression!(sp)
 
     if prb.flags.generation_as_state
         _variable_generation_state!(sp, prb)
         _constraint_volume_balance_state!(sp, prb)
         _constraint_real_time_accepted_state!(sp, prb, t, markov_state)
-        #_add_real_time_clear_objective_state!(sp, prb, problem_info.t, problem_info.k)
+        _add_real_time_clear_objective_state!(sp, prb, t, markov_state)
     else
         _variable_generation!(sp, prb)
         _constraint_volume_balance!(sp, prb)
         _constraint_real_time_accepted!(sp, prb, t, markov_state)
-        # _add_real_time_clear_objective!(sp, prb, problem_info.t, problem_info.k)
+        _add_real_time_clear_objective!(sp, prb, t, markov_state)
     end
 
     if prb.options.use_ramp_down
         _variable_ramp_down_violation!(sp, prb)
         _constraint_ramp_down!(sp, prb)
-        # _add_ramp_down_objective!(sp, prb)
+        _add_ramp_down_objective!(sp, prb)
     end
 
     if prb.options.use_ramp_up
@@ -69,10 +68,9 @@ function _build_subproblem!(sp::Model, prb::Problem, t::Int, markov_state::Int)
 
     if mod(t - prb.numbers.V + prb.numbers.n₀ - 1, prb.numbers.N) == 0
         _constraint_add_day_ahead_clear!(sp, prb, t, markov_state)
+        _add_day_ahead_clear_objective!(sp, prb, t, markov_state)
     end
 
-    # _set_objective_expression!(sp)
+    _set_objective_expression!(sp)
     return nothing
 end
-
-# return _add_day_ahead_clear_objective!(sp, prb, problem_info.t, problem_info.k)
