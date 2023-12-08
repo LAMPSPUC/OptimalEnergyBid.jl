@@ -15,14 +15,14 @@ include("preprocess.jl")
 include("variables.jl")
 include("constraints.jl")
 include("objective.jl")
-include("build_model.jl")
-include("train_model.jl")
-include("simulate_model.jl")
+include("build.jl")
+include("solve.jl")
 
 export validate_json,
     write_json,
     create_problem,
     simulate!,
+    validate_problem,
     build_model!,
     train!,
     Problem,
