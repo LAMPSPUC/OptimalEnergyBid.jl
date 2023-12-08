@@ -53,6 +53,18 @@ Base.@kwdef mutable struct Data
     names::Vector{String} = Array{String}(undef, zeros(Int, 1)...) # Storage names (optional)
 end
 
+"""Contains all outputs"""
+Base.@kwdef mutable struct Output
+    objective::Array{Float64,1} = Array{Float64}(undef, zeros(Int, 1)...)
+    volume::Array{Float64,3} = Array{Float64}(undef, zeros(Int, 3)...)
+    real_time_bid::Array{Float64,4} = Array{Float64}(undef, zeros(Int, 4)...)
+    day_ahead_bid::Array{Float64,5} = Array{Float64}(undef, zeros(Int, 5)...)
+    day_ahead_clear::Array{Float64,4} = Array{Float64}(undef, zeros(Int, 4)...)
+    inflow::Array{Float64,3} = Array{Float64}(undef, zeros(Int, 3)...)
+    generation::Array{Float64,3} = Array{Float64}(undef, zeros(Int, 3)...)
+    spillage::Array{Float64,3} = Array{Float64}(undef, zeros(Int, 3)...)
+end
+
 """Contains all the problem description"""
 Base.@kwdef mutable struct Problem
     options::Options = Options()
@@ -61,5 +73,6 @@ Base.@kwdef mutable struct Problem
     random::RandomVariables = RandomVariables()
     flags::Flags = Flags()
     cache::Cache = Cache()
+    output::Output = Output()
     model::Union{SDDP.PolicyGraph,Nothing} = nothing
 end

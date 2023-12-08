@@ -31,11 +31,13 @@ function simulate!(
     skip_undefined_variables::Bool=true;
     kwargs...,
 )::Vector{Vector{Dict{Symbol,Any}}}
-    return SDDP.simulate(
+    simul = SDDP.simulate(
         prb.model,
         number_replications,
         variables;
         skip_undefined_variables=skip_undefined_variables,
         kwargs...,
     )
+    _write_output!(prb, simul)
+    return simul
 end

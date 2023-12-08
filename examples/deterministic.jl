@@ -5,6 +5,7 @@ set_optimizer!(prb, HiGHS.Optimizer)
 build_model!(prb)
 train!(prb)
 simul = simulate!(prb)
+plot_all(prb, 1, "")
 
 prb.random.πᵦ[:, :, 2] .+= 0.5
 build_model!(prb)
