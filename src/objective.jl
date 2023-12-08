@@ -46,7 +46,7 @@ function _add_day_ahead_clear_objective!(sp::Model, prb::Problem, t::Int, markov
             sp[:objective],
             sum(
                 prb.random.πᵧ[temp][n][i][markov_state] *
-                (sp[:day_ahead_clear][i, n + prb.numbers.N - prb.numbers.V + 1].out) for
+                (sp[:day_ahead_clear][i, n + prb.numbers.N - prb.numbers.V].out) for
                 i in 1:(prb.numbers.I), n in 1:(prb.numbers.N)
             ),
         )

@@ -10,7 +10,7 @@
         "first_period": 1,
         "units": 2,
         "period_of_day_ahead_bid": 1,
-        "period_of_day_ahead_clear": 1,
+        "period_of_day_ahead_clear": 2,
         "duration": 6,
         "total_day_ahead_curve": 2,
         "total_real_time_curve": 2

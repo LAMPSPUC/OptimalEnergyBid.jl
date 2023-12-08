@@ -4,15 +4,13 @@ prb = create_problem(joinpath(@__DIR__, "cases", "stochastic.json"))
 set_optimizer!(prb, HiGHS.Optimizer)
 build_model!(prb)
 train!(prb)
-simul = simulate!(prb, 1)
-plot_all(prb, 1, "")
+simul = simulate!(prb)
 
 prb.random.πᵦ[1, :, :] .= 1.1
 
 build_model!(prb)
 train!(prb)
-simul = simulate!(prb, 1)
-plot_all(prb, 1, "")
+simul = simulate!(prb)
 
 prb.random.ωᵪ = [
     0.5 0.5 0.5 0.5 0.5 0.5
@@ -28,10 +26,4 @@ prb.random.πᵪ[2, 2, :] .= 0.6
 
 build_model!(prb)
 train!(prb)
-simul = simulate!(prb, 5)
-
-plot_all(prb, 1, "")
-plot_all(prb, 2, "")
-plot_all(prb, 3, "")
-plot_all(prb, 4, "")
-plot_all(prb, 5, "")
+simul = simulate!(prb)

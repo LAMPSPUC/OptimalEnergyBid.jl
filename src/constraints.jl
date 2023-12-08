@@ -43,7 +43,9 @@ end
 function _constraint_shift_day_ahead_clear!(sp::Model, prb::Problem)
     @constraint(
         sp,
-        shift_day_ahead_clear[i=1:(prb.numbers.I), n=1:(2 * prb.numbers.N - prb.numbers.V)],
+        shift_day_ahead_clear[
+            i=1:(prb.numbers.I), n=1:(2 * prb.numbers.N - prb.numbers.V - 1)
+        ],
         sp[:day_ahead_clear][i, n].out == sp[:day_ahead_clear][i, n + 1].in
     )
     return nothing
@@ -56,13 +58,13 @@ function _constraint_add_day_ahead_clear!(
     temp = div(t - 1, prb.numbers.N) + 1
     @constraint(
         sp,
-        keep_day_ahead_clear[i=1:(prb.numbers.I), n=1:(prb.numbers.N - prb.numbers.V + 1)],
-        sp[:day_ahead_clear][i, n].out == sp[:day_ahead_clear][i, n].in
+        keep_day_ahead_clear[i=1:(prb.numbers.I), n=1:(prb.numbers.N - prb.numbers.V)],
+        sp[:day_ahead_clear][i, n].out == sp[:day_ahead_clear][i, n + 1].in
     )
     @constraint(
         sp,
         add_shift_day_ahead_clear[i=1:(prb.numbers.I), n=1:(prb.numbers.N)],
-        sp[:day_ahead_clear][i, n + prb.numbers.N - prb.numbers.V + 1].out == sum(
+        sp[:day_ahead_clear][i, n + prb.numbers.N - prb.numbers.V].out == sum(
             sp[:day_ahead_bid][k, i, n].in for k in 1:(prb.numbers.Kᵧ) if
             prb.cache.acceptance_day_ahead[temp][n][markov_state][i, k]
         )

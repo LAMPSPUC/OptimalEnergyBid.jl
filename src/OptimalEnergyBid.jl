@@ -6,7 +6,6 @@ using JSONSchema
 using JuMP
 using SDDP
 using Match
-using Plots
 
 include("structs.jl")
 include("options.jl")

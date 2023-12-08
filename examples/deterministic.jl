@@ -4,20 +4,17 @@ prb = create_problem(joinpath(@__DIR__, "cases", "deterministic.json"))
 set_optimizer!(prb, HiGHS.Optimizer)
 build_model!(prb)
 train!(prb)
-simul = simulate!(prb, 1)
-plot_all(prb, 1, "")
+simul = simulate!(prb)
 
 prb.random.πᵦ[:, :, 2] .+= 0.5
 build_model!(prb)
 train!(prb)
-simul = simulate!(prb, 1)
-plot_all(prb, 1, "")
+simul = simulate!(prb)
 
 prb.random.πᵧ[:, :, 1, 1] .+= 1.0
 build_model!(prb)
 train!(prb)
-simul = simulate!(prb, 1)
-plot_all(prb, 1, "")
+simul = simulate!(prb)
 
 prb = create_problem(joinpath(@__DIR__, "cases", "deterministic.json"))
 set_optimizer!(prb, HiGHS.Optimizer)
@@ -32,5 +29,4 @@ prb.data.generation_initial = [0.1, 0.1]
 
 build_model!(prb)
 train!(prb)
-simul = simulate!(prb, 1)
-plot_all(prb, 1, "")
+simul = simulate!(prb)
