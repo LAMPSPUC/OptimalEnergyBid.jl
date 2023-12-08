@@ -1,10 +1,12 @@
 """Build the model"""
 function build_model!(prb::Problem, validade::Bool=false)
-    _preprocess!(prb)
     if validade
-        validate_problem(prb)
+        validate_problem!(prb)
+    else
+        _evaluate_flags!(prb)
     end
-    _evaluate_flags!(prb)
+
+    _preprocess!(prb)
     graph = _build_graph(prb)
 
     prb.model = SDDP.PolicyGraph(
@@ -28,6 +30,10 @@ end
 
 """Creates the subproblem"""
 function _build_subproblem!(sp::Model, prb::Problem, t::Int, markov_state::Int)
+    numbers = prb.numbers
+    options = prb.options
+    flags = prb.flags
+
     _variable_volume!(sp, prb)
     _variable_inflow!(sp, prb)
     _variable_real_time_bid!(sp, prb)
@@ -39,7 +45,7 @@ function _build_subproblem!(sp::Model, prb::Problem, t::Int, markov_state::Int)
     _constraint_real_time_bid_bound!(sp, prb)
     _create_objective_expression!(sp)
 
-    if prb.flags.generation_as_state
+    if flags.generation_as_state
         _variable_generation_state!(sp, prb)
         _constraint_volume_balance_state!(sp, prb)
         _constraint_real_time_accepted_state!(sp, prb, t, markov_state)
@@ -51,25 +57,25 @@ function _build_subproblem!(sp::Model, prb::Problem, t::Int, markov_state::Int)
         _add_real_time_clear_objective!(sp, prb, t, markov_state)
     end
 
-    if prb.options.use_ramp_down
+    if options.use_ramp_down
         _variable_ramp_down_violation!(sp, prb)
         _constraint_ramp_down!(sp, prb)
         _add_ramp_down_objective!(sp, prb)
     end
 
-    if prb.options.use_ramp_up
+    if options.use_ramp_up
         _constraint_ramp_up!(sp, prb)
     end
 
-    if prb.options.use_day_ahead_bid_bound
+    if options.use_day_ahead_bid_bound
         _constraint_bound_day_ahead_bid!(sp, prb)
     end
 
-    if mod(t - prb.numbers.U + prb.numbers.n₀ - 1, prb.numbers.N) != 0
+    if mod(t - numbers.U + numbers.n₀ - 1, numbers.N) != 0
         _constraint_copy_day_ahead_bid!(sp, prb)
     end
 
-    if mod(t - prb.numbers.V + prb.numbers.n₀ - 1, prb.numbers.N) == 0
+    if mod(t - numbers.V + numbers.n₀ - 1, numbers.N) == 0
         _constraint_add_day_ahead_clear!(sp, prb, t, markov_state)
         _add_day_ahead_clear_objective!(sp, prb, t, markov_state)
     end
@@ -79,7 +85,8 @@ function _build_subproblem!(sp::Model, prb::Problem, t::Int, markov_state::Int)
 end
 
 """Validate the problem"""
-function validate_problem(prb::Problem)
+function validate_problem!(prb::Problem)
+    _evaluate_flags!(prb)
     _validate_numbers(prb)
     _validate_data(prb)
     _validate_random(prb)
@@ -143,6 +150,8 @@ function _validate_data(prb::Problem)
     if flags.generation_as_state
         @assert length(data.generation_initial) >= numbers.I
     end
+
+    @assert length(data.names) >= numbers.I
 
     return nothing
 end

@@ -15,7 +15,6 @@ end
     simulate!(prb::Problem,
         number_replications::Int = 1,
         variables::Vector{Symbol} = Symbol[]
-        skip_undefined_variables::Bool = true
         )::Vector{Vector{Dict{Symbol, Any}}}
 
 Simulates using SDDP.
@@ -25,13 +24,8 @@ Keyword arguments (same as SDDP.simulate):
 
 """
 function simulate!(
-    prb::Problem, number_replications::Int=1, skip_undefined_variables::Bool=true; kwargs...
+    prb::Problem, number_replications::Int=1; kwargs...
 )::Vector{Vector{Dict{Symbol,Any}}}
-    simul = SDDP.simulate(
-        prb.model,
-        number_replications;
-        skip_undefined_variables=skip_undefined_variables,
-        kwargs...,
-    )
+    simul = SDDP.simulate(prb.model, number_replications; kwargs...)
     return simul
 end
