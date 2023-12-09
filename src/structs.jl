@@ -63,6 +63,7 @@ Base.@kwdef mutable struct Output
     inflow::Array{Float64,3} = Array{Float64}(undef, zeros(Int, 3)...)
     generation::Array{Float64,3} = Array{Float64}(undef, zeros(Int, 3)...)
     spillage::Array{Float64,3} = Array{Float64}(undef, zeros(Int, 3)...)
+    ramp_down_violation::Array{Float64,3} = Array{Float64}(undef, zeros(Int, 3)...)
 end
 
 """Contains all the problem description"""

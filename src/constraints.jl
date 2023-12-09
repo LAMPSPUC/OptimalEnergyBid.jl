@@ -90,7 +90,7 @@ function _constraint_ramp_up!(sp::Model, prb::Problem)
         ramp_up[i=1:(prb.numbers.I)],
         prb.data.ramp_up[i] >=
             sum(sp[:real_time_bid][k, i].out for k in 1:(prb.numbers.Kᵦ)) -
-        sp[:generation][i].in
+        sp[:generation][i].out
     )
     return nothing
 end

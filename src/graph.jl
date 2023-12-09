@@ -41,7 +41,7 @@ function _plot_day_ahead_bids(prb::Problem, s::Int, folder::Union{String,Nothing
     day_ahead_bid = prb.output.day_ahead_bid[:, :, :, :, s]
 
     for d in 1:(prb.numbers.D), n in 1:(prb.numbers.N), i in 1:(prb.numbers.I)
-        prices = prb.random.πᵧ[d][n][i]
+        prices = prb.data.pᵧ[d][n][i]
         offer = day_ahead_bid[:, i, n, d]
         for k in 1:(prb.numbers.Kᵧ - 1)
             offer[k + 1] += offer[k]
@@ -91,7 +91,7 @@ function _plot_real_time_bids(prb::Problem, s::Int, folder::Union{String,Nothing
     real_time_bid = prb.output.real_time_bid[:, :, :, s]
 
     for t in 1:(prb.numbers.T), i in 1:(prb.numbers.I)
-        prices = prb.random.πᵦ[t][i]
+        prices = prb.data.pᵦ[t][i]
         offer = real_time_bid[:, i, t]
         for k in 1:(prb.numbers.Kᵦ - 1)
             offer[k + 1] += offer[k]

@@ -133,7 +133,7 @@ function _write_ramp_down_violation!(prb::Problem, simul::Vector{Vector{Dict{Sym
         for s in 1:S, t in 1:(numbers.T)
             ramp_down_violation[:, t, s] = simul[s][t][:ramp_down_violation]
         end
-        prb.output.inflow = inflow
+        prb.output.ramp_down_violation = ramp_down_violation
     end
     return nothing
 end

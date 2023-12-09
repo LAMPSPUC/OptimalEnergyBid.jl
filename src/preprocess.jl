@@ -17,7 +17,7 @@ function _evaluate_acceptance_real_time!(prb::Problem)
         for n in 1:(size(random.P[t])[2])
             matrix = zeros(numbers.I, numbers.Kᵦ)
             for i in 1:(numbers.I), k in 1:(numbers.Kᵦ)
-                matrix[i, k] = random.πᵦ[t][i][n] <= data.pᵦ[t][i][k]
+                matrix[i, k] = data.pᵦ[t][i][k] <= random.πᵦ[t][i][n]
             end
             push!(temp, matrix)
         end
@@ -42,7 +42,7 @@ function _evaluate_acceptance_day_ahead!(prb::Problem)
             for n in 1:(size(random.P[j + (numbers.N * (d - 1))])[2])
                 matrix = zeros(numbers.I, numbers.Kᵧ)
                 for i in 1:(numbers.I), k in 1:(numbers.Kᵧ)
-                    matrix[i, k] = random.πᵧ[d][j][i][n] <= data.pᵧ[d][j][i][k]
+                    matrix[i, k] = data.pᵧ[d][j][i][k] <= random.πᵧ[d][j][i][n]
                 end
                 push!(temp1, matrix)
             end

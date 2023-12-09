@@ -22,5 +22,5 @@ data.pᵧ = [[[[9.0, 6.0]], [[0.0, 1.0]]]]
 
 OptimalEnergyBid._preprocess!(prb)
 
-@test prb.cache.acceptance_real_time == [[[1 1], [1 1], [1 0]], [[0 1], [0 0], [0 0]]]
-@test prb.cache.acceptance_day_ahead == [[[[1 1], [1 1], [1 0]], [[0 1], [0 0], [0 0]]]]
+@test prb.cache.acceptance_real_time == [[[0 0], [0 0], [0 1]], [[1 1], [1 1], [1 1]]]
+@test prb.cache.acceptance_day_ahead == [[[[0 0], [0 0], [0 1]], [[1 1], [1 1], [1 1]]]]
