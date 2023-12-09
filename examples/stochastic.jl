@@ -17,18 +17,12 @@ train!(prb)
 simul = simulate!(prb)
 plot_all(prb, 1, "")
 
-prb.random.ωᵪ = [
-    0.5 0.5 0.5 0.5 0.5 0.5
-    0.5 0.5 0.5 0.5 0.5 0.5
-]
-
-prb.random.πᵪ = zeros(2, 2, 6)
-
-prb.random.πᵪ[1, 1, :] .= 0.6
-prb.random.πᵪ[1, 2, :] .= 0.3
-prb.random.πᵪ[2, 1, :] .= 0.3
-prb.random.πᵪ[2, 2, :] .= 0.6
+for t in 1:(prb.numbers.T), n in 1:2
+    prb.random.πᵪ[t][n] = [[0.6, 0.3], [0.3, 0.6]]
+    prb.random.ωᵪ[t][n] = [0.5, 0.5]
+end
 
 build_model!(prb)
 train!(prb)
 simul = simulate!(prb)
+plot_all(prb, 1, "")
