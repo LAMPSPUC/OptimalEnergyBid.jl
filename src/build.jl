@@ -41,7 +41,6 @@ function _build_subproblem!(sp::Model, prb::Problem, t::Int, markov_state::Int)
     _variable_day_ahead_bid!(sp, prb)
     _variable_day_ahead_clear!(sp, prb)
     _constraint_inflow!(sp, prb, t, markov_state)
-    _constraint_shift_day_ahead_clear!(sp, prb)
     _constraint_real_time_bid_bound!(sp, prb)
     _create_objective_expression!(sp)
 
@@ -78,6 +77,8 @@ function _build_subproblem!(sp::Model, prb::Problem, t::Int, markov_state::Int)
     if mod(t - numbers.V + numbers.n₀ - 1, numbers.N) == 0
         _constraint_add_day_ahead_clear!(sp, prb, t, markov_state)
         _add_day_ahead_clear_objective!(sp, prb, t, markov_state)
+    else
+        _constraint_shift_day_ahead_clear!(sp, prb)
     end
 
     _set_objective_expression!(sp)

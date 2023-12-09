@@ -9,6 +9,7 @@ plot_all(prb, 1, "")
 
 for t in 1:(prb.numbers.T), i in 1:(prb.numbers.I)
     prb.random.πᵦ[t][i] = [1.1, 1.5]
+    prb.data.pᵦ[t][i] = [1.1, 1.5]
 end
 
 build_model!(prb)
