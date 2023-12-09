@@ -5,12 +5,16 @@ set_optimizer!(prb, HiGHS.Optimizer)
 build_model!(prb)
 train!(prb)
 simul = simulate!(prb)
+plot_all(prb, 1, "")
 
-prb.random.πᵦ[1, :, :] .= 1.1
+for t in 1:(prb.numbers.T), i in 1:(prb.numbers.I)
+    prb.random.πᵦ[t][i] = [1.1, 1.5]
+end
 
 build_model!(prb)
 train!(prb)
 simul = simulate!(prb)
+plot_all(prb, 1, "")
 
 prb.random.ωᵪ = [
     0.5 0.5 0.5 0.5 0.5 0.5
