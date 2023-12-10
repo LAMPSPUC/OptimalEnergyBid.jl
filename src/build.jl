@@ -13,7 +13,7 @@ function build_model!(prb::Problem, validade::Bool=false)
         graph;
         sense=:Max,
         optimizer=prb.options.optimizer,
-        upper_bound=100.0,
+        upper_bound=_evaluate_upper_bound(prb),
         direct_mode=false,
     ) do sp, node
         t, markov_state = node
@@ -26,6 +26,22 @@ end
 function _build_graph(prb::Problem)::SDDP.Graph
     graph = SDDP.MarkovianGraph(prb.random.P)
     return graph
+end
+
+"""Evaluate the upper bound"""
+function _evaluate_upper_bound(prb::Problem)
+    numbers = prb.numbers
+    random = prb.random
+    data = prb.data
+
+    temp = zeros(numbers.I)
+    for t in 1:(numbers.T), i in 1:(numbers.I)
+        temp[i] = max(temp[i], maximum(random.πᵦ[t][i]))
+    end
+    for d in 1:(numbers.D), j in 1:(numbers.N), i in 1:(numbers.I)
+        temp[i] = max(temp[i], maximum(random.πᵧ[d][j][i]))
+    end
+    return JuMP.LinearAlgebra.dot(temp, data.volume_max) * numbers.T
 end
 
 """Creates the subproblem"""
