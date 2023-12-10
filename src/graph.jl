@@ -34,6 +34,7 @@ function plot_output(
         $(OutputType.DayAheadClear) => _plot_day_ahead_clears(prb, s, folder)
         $(OutputType.DayAheadBid) => _plot_day_ahead_bids(prb, s, folder)
     end
+    return nothing
 end
 
 """Plots the day ahead clear output"""
