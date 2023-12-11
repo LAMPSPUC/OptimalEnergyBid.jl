@@ -18,7 +18,7 @@ function _write_day_ahead_bid!(prb::Problem, simul::Vector{Vector{Dict{Symbol,An
     day_ahead_bid = zeros(numbers.Kᵧ, numbers.I, numbers.N, numbers.D, S)
 
     for s in 1:S, t in 1:(numbers.T)
-        if mod(t - numbers.V + numbers.n₀ - 1, numbers.N) == 0
+        if _is_clear_day_ahead(numbers, t)
             for n in 1:(numbers.N), i in 1:(numbers.I), k in 1:(numbers.Kᵧ)
                 d = div(t - numbers.V + numbers.n₀ - 1, numbers.N) + 1
                 day_ahead_bid[k, i, n, d, s] = simul[s][t][:day_ahead_bid][k, i, n].out
@@ -37,7 +37,7 @@ function _write_day_ahead_clear!(prb::Problem, simul::Vector{Vector{Dict{Symbol,
     day_ahead_clear = zeros(numbers.I, numbers.N, numbers.D, S)
 
     for s in 1:S, t in 1:(numbers.T)
-        if mod(t - numbers.V + numbers.n₀ - 1, numbers.N) == 0
+        if _is_clear_day_ahead(numbers, t)
             for n in 1:(numbers.N), i in 1:(numbers.I)
                 d = div(t - numbers.V + numbers.n₀ - 1, numbers.N) + 1
                 day_ahead_clear[i, n, d, s] =

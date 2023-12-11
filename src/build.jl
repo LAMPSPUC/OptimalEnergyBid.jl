@@ -86,11 +86,11 @@ function _build_subproblem!(sp::Model, prb::Problem, t::Int, markov_state::Int)
         _constraint_bound_day_ahead_bid!(sp, prb)
     end
 
-    if mod(t - numbers.U + numbers.n₀ - 1, numbers.N) != 0
+    if !_is_offer_day_ahead(numbers, t)
         _constraint_copy_day_ahead_bid!(sp, prb)
     end
 
-    if mod(t - numbers.V + numbers.n₀ - 1, numbers.N) == 0
+    if _is_clear_day_ahead(numbers, t)
         _constraint_add_day_ahead_clear!(sp, prb, t, markov_state)
         _add_day_ahead_clear_objective!(sp, prb, t, markov_state)
     else
@@ -99,6 +99,21 @@ function _build_subproblem!(sp::Model, prb::Problem, t::Int, markov_state::Int)
 
     _set_objective_expression!(sp)
     return nothing
+end
+
+"""Is offer day ahead"""
+function _is_offer_day_ahead(numbers::Numbers, t::Int)
+    return _clever_mod(numbers, t, numbers.U)
+end
+
+"""Is clear day ahead"""
+function _is_clear_day_ahead(numbers::Numbers, t::Int)
+    return _clever_mod(numbers, t, numbers.V)
+end
+
+"""Clever mod"""
+function _clever_mod(numbers::Numbers, t::Int, base::Int)
+    return mod(t - base + numbers.n₀ - 1, numbers.N) == 0
 end
 
 """Validate the problem"""

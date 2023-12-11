@@ -6,9 +6,9 @@ using InteractiveUtils
 
 # ╔═╡ af7a6e30-9723-11ee-18f6-2552c59ac981
 begin
-	import Pkg
-	Pkg.activate("..")
-	using OptimalEnergyBid, HiGHS, Images
+    import Pkg
+    Pkg.activate("..")
+    using OptimalEnergyBid, HiGHS, Images
 end
 
 # ╔═╡ 94c16ad4-7dbf-49cb-beda-f301ac7d8e53
@@ -24,12 +24,12 @@ md"""
 
 # ╔═╡ 71ec49f5-5b71-43e5-8e8a-e7f4e369618a
 begin
-	prb = create_problem(joinpath(dirname(@__DIR__), "cases", "deterministic.json"))
-	set_optimizer!(prb, HiGHS.Optimizer)
-	build_model!(prb)
-	train!(prb)
-	simulate!(prb, 1)
-	plot_all(prb, 1, "")
+    prb = create_problem(joinpath(dirname(@__DIR__), "cases", "deterministic.json"))
+    set_optimizer!(prb, HiGHS.Optimizer)
+    build_model!(prb)
+    train!(prb)
+    simulate!(prb, 1)
+    plot_all(prb, 1, "")
 end
 
 # ╔═╡ 5f05e0d6-d896-4151-9c37-2359fe043464
@@ -79,13 +79,13 @@ md"""
 
 # ╔═╡ 2793fc42-c43f-4b44-a4cd-f9491e399168
 begin
-	for i in 1:(prb.numbers.I)
-	    prb.random.πᵦ[3][i][1] = 2.5
-	end
-	build_model!(prb)
-	train!(prb)
-	simulate!(prb, 1)
-	plot_all(prb, 1, "")
+    for i in 1:(prb.numbers.I)
+        prb.random.πᵦ[3][i][1] = 2.5
+    end
+    build_model!(prb)
+    train!(prb)
+    simulate!(prb, 1)
+    plot_all(prb, 1, "")
 end
 
 # ╔═╡ dcb25596-8528-4c4c-ac68-2a6560e96ff2
@@ -115,13 +115,13 @@ md"""
 
 # ╔═╡ 5972566b-58c1-45ba-bd3b-0353516b4cb4
 begin
-	for i in 1:(prb.numbers.I)
-	    prb.random.πᵧ[1][2][i][1] = 3.0
-	end
-	build_model!(prb)
-	train!(prb)
-	simulate!(prb, 1)
-	plot_all(prb, 1, "")
+    for i in 1:(prb.numbers.I)
+        prb.random.πᵧ[1][2][i][1] = 3.0
+    end
+    build_model!(prb)
+    train!(prb)
+    simulate!(prb, 1)
+    plot_all(prb, 1, "")
 end
 
 # ╔═╡ 698f4b95-852c-40cd-b125-8d1426b5c6f2
@@ -151,21 +151,21 @@ md"""
 
 # ╔═╡ f37e8a4f-512e-4cc6-bd2c-355c4c5612c8
 begin
-	prb2 = create_problem(joinpath(dirname(@__DIR__), "cases", "deterministic.json"))
-	set_optimizer!(prb2, HiGHS.Optimizer)
-	
-	set_bool_parameter!(prb2, ParameterBool.UseRampUp, true)
-	set_bool_parameter!(prb2, ParameterBool.UseRampDown, true)
-	set_float_parameter!(prb2, ParameterFloat.PenaltyRampDown, 100.0)
-	
-	prb2.data.ramp_up = [0.1, 0.1]
-	prb2.data.ramp_down = [0.1, 0.1]
-	prb2.data.generation_initial = [0.1, 0.1]
-	
-	build_model!(prb2)
-	train!(prb2)
-	simulate!(prb2)
-	plot_all(prb2, 1, "")
+    prb2 = create_problem(joinpath(dirname(@__DIR__), "cases", "deterministic.json"))
+    set_optimizer!(prb2, HiGHS.Optimizer)
+
+    set_bool_parameter!(prb2, ParameterBool.UseRampUp, true)
+    set_bool_parameter!(prb2, ParameterBool.UseRampDown, true)
+    set_float_parameter!(prb2, ParameterFloat.PenaltyRampDown, 100.0)
+
+    prb2.data.ramp_up = [0.1, 0.1]
+    prb2.data.ramp_down = [0.1, 0.1]
+    prb2.data.generation_initial = [0.1, 0.1]
+
+    build_model!(prb2)
+    train!(prb2)
+    simulate!(prb2)
+    plot_all(prb2, 1, "")
 end
 
 # ╔═╡ 213a0337-a34b-4af3-aaa7-4cdd99ac691a
@@ -201,12 +201,12 @@ md"""
 
 # ╔═╡ 5c5a126b-bcea-4dfe-961d-b98b6ffb391a
 begin
-	prb3 = create_problem(joinpath(dirname(@__DIR__), "cases", "stochastic.json"))
-	set_optimizer!(prb3, HiGHS.Optimizer)
-	build_model!(prb3)
-	train!(prb3)
-	simulate!(prb3, 1)
-	plot_all(prb3, 1, "")
+    prb3 = create_problem(joinpath(dirname(@__DIR__), "cases", "stochastic.json"))
+    set_optimizer!(prb3, HiGHS.Optimizer)
+    build_model!(prb3)
+    train!(prb3)
+    simulate!(prb3, 1)
+    plot_all(prb3, 1, "")
 end
 
 # ╔═╡ e3c8bb14-60f5-460e-8e45-9073807d5501
@@ -263,16 +263,16 @@ md"""
 """
 
 # ╔═╡ 31e13286-b414-464d-983a-b1dbd3a39ebf
-begin 
-	for t in 1:(prb3.numbers.T), i in 1:(prb3.numbers.I)
-	    prb3.random.πᵦ[t][i] = [1.1, 1.5]
-	    prb3.data.pᵦ[t][i] = [1.1, 1.5]
-	end
-	
-	build_model!(prb3)
-	train!(prb3)
-	simulate!(prb3, 1)
-	plot_all(prb3, 1, "")
+begin
+    for t in 1:(prb3.numbers.T), i in 1:(prb3.numbers.I)
+        prb3.random.πᵦ[t][i] = [1.1, 1.5]
+        prb3.data.pᵦ[t][i] = [1.1, 1.5]
+    end
+
+    build_model!(prb3)
+    train!(prb3)
+    simulate!(prb3, 1)
+    plot_all(prb3, 1, "")
 end
 
 # ╔═╡ f92891c9-85cb-4308-b948-a586018276e6
@@ -297,20 +297,20 @@ md"""
 
 # ╔═╡ 55de0841-c4c5-409c-beed-6a6bfb7eca39
 begin
-	for t in 1:(prb3.numbers.T), n in 1:2
-	    prb3.random.πᵪ[t][n] = [[0.6, 0.3], [0.3, 0.6]]
-	    prb3.random.ωᵪ[t][n] = [0.5, 0.5]
-	end
-	
-	for i in 1:(prb3.numbers.I)
-	    prb3.random.πᵦ[3][i] = [1.5, 5.0]
-	    prb3.data.pᵦ[3][i] = [1.5, 5.0]
-	end
-	
-	build_model!(prb3)
-	train!(prb3)
-	simulate!(prb3, 1)
-	plot_all(prb3, 1, "")
+    for t in 1:(prb3.numbers.T), n in 1:2
+        prb3.random.πᵪ[t][n] = [[0.6, 0.3], [0.3, 0.6]]
+        prb3.random.ωᵪ[t][n] = [0.5, 0.5]
+    end
+
+    for i in 1:(prb3.numbers.I)
+        prb3.random.πᵦ[3][i] = [1.5, 5.0]
+        prb3.data.pᵦ[3][i] = [1.5, 5.0]
+    end
+
+    build_model!(prb3)
+    train!(prb3)
+    simulate!(prb3, 1)
+    plot_all(prb3, 1, "")
 end
 
 # ╔═╡ 8c198f51-102d-4479-b956-11a3d4481df5
@@ -338,7 +338,7 @@ load("generation.png")
 # ╟─623ec462-7313-4185-975b-9d05e2070695
 # ╟─9aae9053-7af3-44d7-bf27-76b14a0db7f5
 # ╟─e8b1ff03-9a79-4c28-8037-f0ab351468b7
-# ╟─2793fc42-c43f-4b44-a4cd-f9491e399168
+# ╠═2793fc42-c43f-4b44-a4cd-f9491e399168
 # ╟─dcb25596-8528-4c4c-ac68-2a6560e96ff2
 # ╟─c4bb7c7c-856d-4ac5-827c-a35e19d57da1
 # ╟─68bc5bfd-5733-4fb7-a4cd-b1d816625bd8
