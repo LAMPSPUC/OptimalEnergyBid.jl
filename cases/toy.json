@@ -12,21 +12,21 @@
         "period_of_day_ahead_bid": 1,
         "period_of_day_ahead_clear": 1,
         "duration": 1,
-        "prices_day_ahead_curve": 1,
-        "prices_real_time_curve": 1,
-        "inflows_scenarios": 1
+        "total_day_ahead_curve": 1,
+        "total_real_time_curve": 1
     },
     "data": {
         "volume_max": [1.0],
         "volume_min": [0.0],
-        "volume_initial": [0.0]
+        "volume_initial": [0.0],
+        "prices_real_time_curve": [[[10.0]]],
+        "prices_day_ahead_curve": [[[[9.0]]]]
     },
     "random": {
         "prices_real_time": [[[10.0]]],
-        "prob_real_time": [[1.0]],
         "prices_day_ahead": [[[[9.0]]]],
-        "prob_day_ahead": [[1.0]],
-        "inflow_values": [[[1.0]]],
-        "prob_inflow": [[1.0]]
+        "inflow_values": [[[[1.0]]]],
+        "prob_inflow": [[[1.0]]],
+        "markov_transitions": [[[1.0]]]
     }
 }

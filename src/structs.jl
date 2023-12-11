@@ -1,19 +1,3 @@
-"""Contains all possibles types of the problem"""
-@enumx ProblemType begin
-    NOT # nothing
-    RTB # Real time bid
-    RTC # Real time clear
-    DAB # Day ahead bid
-    DAC # Day ahead clear
-end
-
-"""Information about position and type of each subproblem"""
-struct ProblemInfo
-    problem_type::ProblemType.T
-    t::Int
-    k::Int
-end
-
 """Contains all user options"""
 Base.@kwdef mutable struct Options
     optimizer::Union{DataType,Nothing} = nothing
@@ -30,12 +14,11 @@ end
 
 """Contains all random variables"""
 Base.@kwdef mutable struct RandomVariables
-    πᵦ::Array{Float64,3} = Array{Float64}(undef, zeros(Int, 3)...) # Prices of real time (k,i,t)
-    ωᵦ::Array{Float64,2} = Array{Float64}(undef, zeros(Int, 2)...) # Probabilities of real time (k,t)
-    πᵧ::Array{Float64,4} = Array{Float64}(undef, zeros(Int, 4)...) # Prices of day ahead (k,i,n,d)
-    ωᵧ::Array{Float64,2} = Array{Float64}(undef, zeros(Int, 2)...) # Probabilities of day ahead (k,t)
-    πᵪ::Array{Float64,3} = Array{Float64}(undef, zeros(Int, 3)...) # Inflow values (j,i,t)
-    ωᵪ::Array{Float64,2} = Array{Float64}(undef, zeros(Int, 2)...) # Probabilities of inflow (j,t)
+    πᵦ::Vector{Vector{Vector{Float64}}} = [] # Prices of real time t,i,n
+    πᵧ::Vector{Vector{Vector{Vector{Float64}}}} = [] # Prices of day ahead d,j,i,n
+    πᵪ::Vector{Vector{Vector{Vector{Float64}}}} = [] # Inflow values t,n,w,i
+    ωᵪ::Vector{Vector{Vector{Float64}}} = [] # Probabilities of inflow t,n,w
+    P::Vector{Matrix{Float64}} = [] # Markov transition matrices
 end
 
 """Contains all sizes and indices"""
@@ -49,14 +32,12 @@ Base.@kwdef mutable struct Numbers
     T::Int = 0 # Number of periods of time in the horizon
     Kᵦ::Int = 0 # Number of prices in the real time curve
     Kᵧ::Int = 0 # Number of prices in the day ahead curve
-    Kᵪ::Int = 0 # Number of inflow scenarios
 end
 
 """Contains the cache data"""
 Base.@kwdef mutable struct Cache
-    problem_info::Dict{Int,ProblemInfo} = Dict{Int,ProblemInfo}()
-    acceptance_real_time::Array{Bool,4} = Array{Bool}(undef, zeros(Int, 4)...)
-    acceptance_day_ahead::Array{Bool,5} = Array{Bool}(undef, zeros(Int, 5)...)
+    acceptance_real_time::Vector{Vector{Matrix{Bool}}} = [] # t,n,i,k
+    acceptance_day_ahead::Vector{Vector{Vector{Matrix{Bool}}}} = [] # d,j,n,i,k
 end
 
 """Contains the storages and generators data"""
@@ -64,6 +45,8 @@ Base.@kwdef mutable struct Data
     volume_max::Vector{Float64} = Array{Float64}(undef, zeros(Int, 1)...) # Storage max capacity
     volume_min::Vector{Float64} = Array{Float64}(undef, zeros(Int, 1)...) # Storage min capacity
     volume_initial::Vector{Float64} = Array{Float64}(undef, zeros(Int, 1)...) # Storage inicial condition
+    pᵦ::Vector{Vector{Vector{Float64}}} = [] # Prices of real time t,i,k
+    pᵧ::Vector{Vector{Vector{Vector{Float64}}}} = [] # Prices of day ahead d,j,i,k
     ramp_up::Vector{Float64} = Array{Float64}(undef, zeros(Int, 1)...) # ramp up generation (optional)
     ramp_down::Vector{Float64} = Array{Float64}(undef, zeros(Int, 1)...) # ramp down generation (optional)
     generation_initial::Vector{Float64} = Array{Float64}(undef, zeros(Int, 1)...) # initial generation (optional)
@@ -80,6 +63,7 @@ Base.@kwdef mutable struct Output
     inflow::Array{Float64,3} = Array{Float64}(undef, zeros(Int, 3)...)
     generation::Array{Float64,3} = Array{Float64}(undef, zeros(Int, 3)...)
     spillage::Array{Float64,3} = Array{Float64}(undef, zeros(Int, 3)...)
+    ramp_down_violation::Array{Float64,3} = Array{Float64}(undef, zeros(Int, 3)...)
 end
 
 """Contains all the problem description"""

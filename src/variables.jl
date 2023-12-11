@@ -1,3 +1,15 @@
+"""List of all variables"""
+variable_list = [
+    :volume,
+    :real_time_bid,
+    :day_ahead_bid,
+    :day_ahead_clear,
+    :inflow,
+    :generation,
+    :spillage,
+    :ramp_down_violation,
+]
+
 """Creates the volume as a state variable"""
 function _variable_volume!(sp::Model, prb::Problem)
     @variable(
@@ -35,8 +47,7 @@ end
 function _variable_day_ahead_clear!(sp::Model, prb::Problem)
     @variable(
         sp,
-        0.0 <=
-            day_ahead_clear[1:(prb.numbers.I), 1:(2 * prb.numbers.N - prb.numbers.V + 1)],
+        0.0 <= day_ahead_clear[1:(prb.numbers.I), 1:(2 * prb.numbers.N - prb.numbers.V)],
         SDDP.State,
         initial_value = 0.0
     )

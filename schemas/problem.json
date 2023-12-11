@@ -39,9 +39,8 @@
                 "period_of_day_ahead_bid",
                 "period_of_day_ahead_clear",
                 "duration",
-                "prices_day_ahead_curve",
-                "prices_real_time_curve",
-                "inflows_scenarios"
+                "total_day_ahead_curve",
+                "total_real_time_curve"
             ],
             "properties": {
                 "periods_per_day": {
@@ -62,13 +61,10 @@
                 "duration": {
                     "type": "integer"
                 },
-                "prices_day_ahead_curve": {
+                "total_day_ahead_curve": {
                     "type": "integer"
                 },
-                "prices_real_time_curve": {
-                    "type": "integer"
-                },
-                "inflows_scenarios": {
+                "total_real_time_curve": {
                     "type": "integer"
                 }
             }
@@ -78,7 +74,9 @@
             "required": [
                 "volume_max",
                 "volume_min",
-                "volume_initial"
+                "volume_initial",
+                "prices_real_time_curve",
+                "prices_day_ahead_curve"
             ],
             "properties": {
                 "volume_max": {
@@ -122,21 +120,8 @@
                     "items": {
                         "type": "string"
                     }
-                }
-            }
-        },
-        "random": {
-            "type": "object",
-            "required": [
-                "prices_real_time",
-                "prob_real_time",
-                "prices_day_ahead",
-                "prob_day_ahead",
-                "inflow_values",
-                "prob_inflow"
-            ],
-            "properties": {
-                "prices_real_time": {
+                },
+                "prices_real_time_curve": {
                     "type": "array",
                     "items": {
                         "type": "array",
@@ -148,12 +133,42 @@
                         }
                     }
                 },
-                "prob_real_time": {
+                "prices_day_ahead_curve": {
                     "type": "array",
                     "items": {
                         "type": "array",
                         "items": {
-                            "type": "number"
+                            "type": "array",
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "random": {
+            "type": "object",
+            "required": [
+                "prices_real_time",
+                "prices_day_ahead",
+                "inflow_values",
+                "prob_inflow",
+                "markov_transitions"
+            ],
+            "properties": {
+                "prices_real_time": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
                         }
                     }
                 },
@@ -172,15 +187,6 @@
                         }
                     }
                 },
-                "prob_day_ahead": {
-                    "type": "array",
-                    "items": {
-                        "type": "array",
-                        "items": {
-                            "type": "number"
-                        }
-                    }
-                },
                 "inflow_values": {
                     "type": "array",
                     "items": {
@@ -188,7 +194,10 @@
                         "items": {
                             "type": "array",
                             "items": {
-                                "type": "number"
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
                             }
                         }
                     }
@@ -198,7 +207,22 @@
                     "items": {
                         "type": "array",
                         "items": {
-                            "type": "number"
+                            "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                        }
+                    }
+                },
+                "markov_transitions": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
                         }
                     }
                 }

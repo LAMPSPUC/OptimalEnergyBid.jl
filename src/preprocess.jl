@@ -9,11 +9,19 @@ end
 function _evaluate_acceptance_real_time!(prb::Problem)
     numbers = prb.numbers
     random = prb.random
+    data = prb.data
 
-    real_time = Array{Bool,4}(undef, numbers.Kᵦ, numbers.Kᵦ, numbers.I, numbers.T)
-
-    for t in 1:(numbers.T), i in 1:(numbers.I), k in 1:(numbers.Kᵦ), kk in 1:(numbers.Kᵦ)
-        real_time[kk, k, i, t] = random.πᵦ[k, i, t] <= random.πᵦ[kk, i, t]
+    real_time = []
+    for t in 1:(numbers.T)
+        temp = []
+        for n in 1:(size(random.P[t])[2])
+            matrix = zeros(numbers.I, numbers.Kᵦ)
+            for i in 1:(numbers.I), k in 1:(numbers.Kᵦ)
+                matrix[i, k] = data.pᵦ[t][i][k] <= random.πᵦ[t][i][n]
+            end
+            push!(temp, matrix)
+        end
+        push!(real_time, temp)
     end
     prb.cache.acceptance_real_time = real_time
 
@@ -24,19 +32,25 @@ end
 function _evaluate_acceptance_day_ahead!(prb::Problem)
     numbers = prb.numbers
     random = prb.random
+    data = prb.data
 
-    day_ahead = Array{Bool,5}(
-        undef, numbers.Kᵧ, numbers.Kᵧ, numbers.I, numbers.N, numbers.D
-    )
-
-    for d in 1:(numbers.D),
-        n in 1:(numbers.N),
-        i in 1:(numbers.I),
-        k in 1:(numbers.Kᵧ),
-        kk in 1:(numbers.Kᵧ)
-
-        day_ahead[kk, k, i, n, d] = random.πᵧ[k, i, n, d] <= random.πᵧ[kk, i, n, d]
+    day_ahead = []
+    for d in 1:(numbers.D)
+        temp = []
+        for j in 1:(numbers.N)
+            temp1 = []
+            for n in 1:(size(random.P[j + (numbers.N * (d - 1))])[2])
+                matrix = zeros(numbers.I, numbers.Kᵧ)
+                for i in 1:(numbers.I), k in 1:(numbers.Kᵧ)
+                    matrix[i, k] = data.pᵧ[d][j][i][k] <= random.πᵧ[d][j][i][n]
+                end
+                push!(temp1, matrix)
+            end
+            push!(temp, temp1)
+        end
+        push!(day_ahead, temp)
     end
     prb.cache.acceptance_day_ahead = day_ahead
+
     return nothing
 end

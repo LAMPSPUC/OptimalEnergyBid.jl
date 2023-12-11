@@ -1,14 +1,3 @@
-"""List of all variables"""
-variable_list = [
-    :volume,
-    :real_time_bid,
-    :day_ahead_bid,
-    :day_ahead_clear,
-    :inflow,
-    :generation,
-    :spillage,
-]
-
 """Get all output data"""
 function _write_output!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     _write_day_ahead_bid!(prb, simul)
@@ -18,6 +7,7 @@ function _write_output!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     _write_generation!(prb, simul)
     _write_spillage!(prb, simul)
     _write_inflow!(prb, simul)
+    _write_ramp_down_violation!(prb, simul)
     return nothing
 end
 
@@ -27,19 +17,15 @@ function _write_day_ahead_bid!(prb::Problem, simul::Vector{Vector{Dict{Symbol,An
     S = length(simul)
     day_ahead_bid = zeros(numbers.Kᵧ, numbers.I, numbers.N, numbers.D, S)
 
-    for s in 1:S
-        L = length(simul[s])
-        d = 1
-        for l in 1:L
-            if prb.cache.problem_info[simul[s][l][:node_index]].problem_type ==
-                ProblemType.DAB
-                for n in 1:(numbers.N), i in 1:(numbers.I), k in 1:(numbers.Kᵧ)
-                    day_ahead_bid[k, i, n, d, s] = simul[s][l][:day_ahead_bid][k, i, n].out
-                end
-                d += 1
+    for s in 1:S, t in 1:(numbers.T)
+        if _is_clear_day_ahead(numbers, t)
+            for n in 1:(numbers.N), i in 1:(numbers.I), k in 1:(numbers.Kᵧ)
+                d = div(t - numbers.V + numbers.n₀ - 1, numbers.N) + 1
+                day_ahead_bid[k, i, n, d, s] = simul[s][t][:day_ahead_bid][k, i, n].out
             end
         end
     end
+
     prb.output.day_ahead_bid = day_ahead_bid
     return nothing
 end
@@ -50,22 +36,16 @@ function _write_day_ahead_clear!(prb::Problem, simul::Vector{Vector{Dict{Symbol,
     S = length(simul)
     day_ahead_clear = zeros(numbers.I, numbers.N, numbers.D, S)
 
-    for s in 1:S
-        L = length(simul[s])
-        d = 1
-        for l in 1:L
-            if prb.cache.problem_info[simul[s][l][:node_index]].problem_type ==
-                ProblemType.DAC
-                for i in 1:(numbers.I), n in 1:(numbers.N)
-                    day_ahead_clear[i, n, d, s] =
-                        simul[s][l][:day_ahead_clear][
-                            i, n + prb.numbers.N - prb.numbers.V + 1
-                        ].out
-                end
-                d += 1
+    for s in 1:S, t in 1:(numbers.T)
+        if _is_clear_day_ahead(numbers, t)
+            for n in 1:(numbers.N), i in 1:(numbers.I)
+                d = div(t - numbers.V + numbers.n₀ - 1, numbers.N) + 1
+                day_ahead_clear[i, n, d, s] =
+                    simul[s][t][:day_ahead_clear][i, n + prb.numbers.N - prb.numbers.V].out
             end
         end
     end
+
     prb.output.day_ahead_clear = day_ahead_clear
     return nothing
 end
@@ -76,19 +56,10 @@ function _write_real_time_bid!(prb::Problem, simul::Vector{Vector{Dict{Symbol,An
     S = length(simul)
     real_time_bid = zeros(numbers.Kᵦ, numbers.I, numbers.T, S)
 
-    for s in 1:S
-        L = length(simul[s])
-        t = 1
-        for l in 1:L
-            if prb.cache.problem_info[simul[s][l][:node_index]].problem_type ==
-                ProblemType.RTB
-                for i in 1:(numbers.I), k in 1:(numbers.Kᵦ)
-                    real_time_bid[k, i, t, s] = simul[s][l][:real_time_bid][k, i].out
-                end
-                t += 1
-            end
-        end
+    for s in 1:S, t in 1:(numbers.T), i in 1:(numbers.I), k in 1:(numbers.Kᵦ)
+        real_time_bid[k, i, t, s] = simul[s][t][:real_time_bid][k, i].out
     end
+
     prb.output.real_time_bid = real_time_bid
     return nothing
 end
@@ -99,18 +70,8 @@ function _write_volume!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     S = length(simul)
     volume = zeros(numbers.I, numbers.T, S)
 
-    for s in 1:S
-        L = length(simul[s])
-        t = 1
-        for l in 1:L
-            if prb.cache.problem_info[simul[s][l][:node_index]].problem_type ==
-                ProblemType.RTC
-                for i in 1:(numbers.I)
-                    volume[i, t, s] = simul[s][l][:volume][i].out
-                end
-                t += 1
-            end
-        end
+    for s in 1:S, t in 1:(numbers.T), i in 1:(numbers.I)
+        volume[i, t, s] = simul[s][t][:volume][i].out
     end
     prb.output.volume = volume
     return nothing
@@ -122,23 +83,16 @@ function _write_generation!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}
     S = length(simul)
     generation = zeros(numbers.I, numbers.T, S)
 
-    for s in 1:S
-        L = length(simul[s])
-        t = 1
-        for l in 1:L
-            if prb.cache.problem_info[simul[s][l][:node_index]].problem_type ==
-                ProblemType.RTC
-                if prb.flags.generation_as_state
-                    for i in 1:(prb.numbers.I)
-                        generation[i, t, s] = simul[s][l][:generation][i].out
-                    end
-                else
-                    generation[:, t, s] = simul[s][l][:generation]
-                end
-                t += 1
+    for s in 1:S, t in 1:(numbers.T)
+        if prb.flags.generation_as_state
+            for i in 1:(prb.numbers.I)
+                generation[i, t, s] = simul[s][t][:generation][i].out
             end
+        else
+            generation[:, t, s] = simul[s][t][:generation]
         end
     end
+
     prb.output.generation = generation
     return nothing
 end
@@ -149,16 +103,8 @@ function _write_spillage!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     S = length(simul)
     spillage = zeros(numbers.I, numbers.T, S)
 
-    for s in 1:S
-        L = length(simul[s])
-        t = 1
-        for l in 1:L
-            if prb.cache.problem_info[simul[s][l][:node_index]].problem_type ==
-                ProblemType.RTB
-                spillage[:, t, s] = simul[s][l][:spillage]
-                t += 1
-            end
-        end
+    for s in 1:S, t in 1:(numbers.T)
+        spillage[:, t, s] = simul[s][t][:spillage]
     end
     prb.output.spillage = spillage
     return nothing
@@ -170,17 +116,24 @@ function _write_inflow!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
     S = length(simul)
     inflow = zeros(numbers.I, numbers.T, S)
 
-    for s in 1:S
-        L = length(simul[s])
-        t = 1
-        for l in 1:L
-            if prb.cache.problem_info[simul[s][l][:node_index]].problem_type ==
-                ProblemType.RTB
-                inflow[:, t, s] = simul[s][l][:inflow]
-                t += 1
-            end
-        end
+    for s in 1:S, t in 1:(numbers.T)
+        inflow[:, t, s] = simul[s][t][:inflow]
     end
     prb.output.inflow = inflow
+    return nothing
+end
+
+"""Get the ramp down violation"""
+function _write_ramp_down_violation!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
+    if prb.options.use_ramp_down
+        numbers = prb.numbers
+        S = length(simul)
+        ramp_down_violation = zeros(numbers.I, numbers.T, S)
+
+        for s in 1:S, t in 1:(numbers.T)
+            ramp_down_violation[:, t, s] = simul[s][t][:ramp_down_violation]
+        end
+        prb.output.ramp_down_violation = ramp_down_violation
+    end
     return nothing
 end

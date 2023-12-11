@@ -34,6 +34,7 @@ function plot_output(
         $(OutputType.DayAheadClear) => _plot_day_ahead_clears(prb, s, folder)
         $(OutputType.DayAheadBid) => _plot_day_ahead_bids(prb, s, folder)
     end
+    return nothing
 end
 
 """Plots the day ahead clear output"""
@@ -41,11 +42,8 @@ function _plot_day_ahead_bids(prb::Problem, s::Int, folder::Union{String,Nothing
     day_ahead_bid = prb.output.day_ahead_bid[:, :, :, :, s]
 
     for d in 1:(prb.numbers.D), n in 1:(prb.numbers.N), i in 1:(prb.numbers.I)
-        prices = prb.random.πᵧ[:, i, n, d]
+        prices = prb.data.pᵧ[d][n][i]
         offer = day_ahead_bid[:, i, n, d]
-        perm = sortperm(prices)
-        prices = prices[perm]
-        offer = offer[perm]
         for k in 1:(prb.numbers.Kᵧ - 1)
             offer[k + 1] += offer[k]
         end
@@ -94,11 +92,8 @@ function _plot_real_time_bids(prb::Problem, s::Int, folder::Union{String,Nothing
     real_time_bid = prb.output.real_time_bid[:, :, :, s]
 
     for t in 1:(prb.numbers.T), i in 1:(prb.numbers.I)
-        prices = prb.random.πᵦ[:, i, t]
+        prices = prb.data.pᵦ[t][i]
         offer = real_time_bid[:, i, t]
-        perm = sortperm(prices)
-        prices = prices[perm]
-        offer = offer[perm]
         for k in 1:(prb.numbers.Kᵦ - 1)
             offer[k + 1] += offer[k]
         end

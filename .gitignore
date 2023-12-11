@@ -1,6 +1,7 @@
 .vscode/
 docs/build/
 Debug/
+revise/
 *.log
 *.lp
 *.mps
