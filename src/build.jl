@@ -1,5 +1,5 @@
 """Build the model"""
-function build_model!(prb::Problem, validade::Bool=false)
+function build_model!(prb::Problem, validade::Bool=false)::Nothing
     if validade
         validate_problem!(prb)
     else
@@ -29,7 +29,7 @@ function _build_graph(prb::Problem)::SDDP.Graph
 end
 
 """Evaluate the upper bound"""
-function _evaluate_upper_bound(prb::Problem)
+function _evaluate_upper_bound(prb::Problem)::Float64
     numbers = prb.numbers
     random = prb.random
     data = prb.data
@@ -45,7 +45,7 @@ function _evaluate_upper_bound(prb::Problem)
 end
 
 """Creates the subproblem"""
-function _build_subproblem!(sp::Model, prb::Problem, t::Int, markov_state::Int)
+function _build_subproblem!(sp::Model, prb::Problem, t::Int, markov_state::Int)::Nothing
     numbers = prb.numbers
     options = prb.options
     flags = prb.flags
@@ -102,22 +102,22 @@ function _build_subproblem!(sp::Model, prb::Problem, t::Int, markov_state::Int)
 end
 
 """Is offer day ahead"""
-function _is_offer_day_ahead(numbers::Numbers, t::Int)
+function _is_offer_day_ahead(numbers::Numbers, t::Int)::Bool
     return _clever_mod(numbers, t, numbers.U)
 end
 
 """Is clear day ahead"""
-function _is_clear_day_ahead(numbers::Numbers, t::Int)
+function _is_clear_day_ahead(numbers::Numbers, t::Int)::Bool
     return _clever_mod(numbers, t, numbers.V)
 end
 
 """Clever mod"""
-function _clever_mod(numbers::Numbers, t::Int, base::Int)
+function _clever_mod(numbers::Numbers, t::Int, base::Int)::Bool
     return mod(t - base + numbers.n₀ - 1, numbers.N) == 0
 end
 
 """Validate the problem"""
-function validate_problem!(prb::Problem)
+function validate_problem!(prb::Problem)::Nothing
     _evaluate_flags!(prb)
     _validate_numbers(prb)
     _validate_data(prb)
@@ -126,7 +126,7 @@ function validate_problem!(prb::Problem)
 end
 
 """Validate the numbers"""
-function _validate_numbers(prb::Problem)
+function _validate_numbers(prb::Problem)::Nothing
     numbers = prb.numbers
 
     @assert 1 <= numbers.N
@@ -142,7 +142,7 @@ function _validate_numbers(prb::Problem)
 end
 
 """Validate the data"""
-function _validate_data(prb::Problem)
+function _validate_data(prb::Problem)::Nothing
     numbers = prb.numbers
     options = prb.options
     flags = prb.flags
@@ -189,7 +189,7 @@ function _validate_data(prb::Problem)
 end
 
 """Validate the random"""
-function _validate_random(prb::Problem)
+function _validate_random(prb::Problem)::Nothing
     numbers = prb.numbers
     random = prb.random
 

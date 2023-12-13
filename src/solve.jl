@@ -7,8 +7,8 @@ Keyword arguments (same as SDDP.train):
 <https://github.com/odow/SDDP.jl/blob/0490bea2c46787e1d4d63a5491ea0106c7fe70cf/src/algorithm.jl#L780-L827>
 
 """
-function train!(prb::Problem; kwargs...)
-    return SDDP.train(prb.model; kwargs...)
+function train!(prb::Problem; risk_measure=_evaluate_risk_measure(prb), kwargs...)::Nothing
+    return SDDP.train(prb.model; risk_measure=risk_measure, kwargs...)
 end
 
 """
@@ -40,4 +40,10 @@ function simulate!(
     )
     _write_output!(prb, simul)
     return simul
+end
+
+"""Evaluate the risk measure"""
+function _evaluate_risk_measure(prb::Problem)::SDDP.AbstractRiskMeasure
+    options = prb.options
+    return SDDP.EAVaR(; lambda=options.lambda, beta=options.beta)
 end

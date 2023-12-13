@@ -2,12 +2,12 @@
 const schema_path = joinpath(dirname(@__DIR__), "schemas", "problem.json")
 
 """json file to dict"""
-function _parse_file_json(file::String)
+function _parse_file_json(file::String)::Dict
     return JSON.parse(String(read(file)))
 end
 
 """Validates a json file"""
-function validate_json(file_path::String)
+function validate_json(file_path::String)::Union{JSONSchema.SingleIssue,Nothing}
     return validate(Schema(_parse_file_json(schema_path)), _parse_file_json(file_path))
 end
 
@@ -25,19 +25,33 @@ function create_problem(file::String)::Problem
 end
 
 """Reads size and indeces information"""
-function _read_options!(prb::Problem, dict::Dict)
+function _read_options!(prb::Problem, dict::Dict)::Nothing
     options = prb.options
 
-    options.use_ramp_up = dict["options"]["use_ramp_up"]
-    options.use_ramp_down = dict["options"]["use_ramp_down"]
-    options.use_day_ahead_bid_bound = dict["options"]["use_day_ahead_bid_bound"]
-    options.penalty_ramp_down = dict["options"]["penalty_ramp_down"]
+    if haskey(dict["options"], "use_ramp_up")
+        options.use_ramp_up = dict["options"]["use_ramp_up"]
+    end
+    if haskey(dict["options"], "use_ramp_down")
+        options.use_ramp_down = dict["options"]["use_ramp_down"]
+    end
+    if haskey(dict["options"], "use_day_ahead_bid_bound")
+        options.use_day_ahead_bid_bound = dict["options"]["use_day_ahead_bid_bound"]
+    end
+    if haskey(dict["options"], "penalty_ramp_down")
+        options.penalty_ramp_down = dict["options"]["penalty_ramp_down"]
+    end
+    if haskey(dict["options"], "lambda")
+        options.lambda = dict["options"]["lambda"]
+    end
+    if haskey(dict["options"], "beta")
+        options.beta = dict["options"]["beta"]
+    end
 
     return nothing
 end
 
 """Reads size and indeces information"""
-function _read_numbers!(prb::Problem, dict::Dict)
+function _read_numbers!(prb::Problem, dict::Dict)::Nothing
     numbers = prb.numbers
 
     numbers.N = dict["numbers"]["periods_per_day"]
@@ -54,7 +68,7 @@ function _read_numbers!(prb::Problem, dict::Dict)
 end
 
 """Reads storage/generators data information"""
-function _read_data!(prb::Problem, dict::Dict)
+function _read_data!(prb::Problem, dict::Dict)::Nothing
     data = prb.data
 
     data.volume_max = dict["data"]["volume_max"]
@@ -86,7 +100,7 @@ function _read_data!(prb::Problem, dict::Dict)
 end
 
 """Reads random variables information"""
-function _read_random!(prb::Problem, dict::Dict)
+function _read_random!(prb::Problem, dict::Dict)::Nothing
     random = prb.random
     numbers = prb.numbers
 
@@ -136,7 +150,7 @@ _names_map = Dict(
 
 Write all the input data present in "prb" to "file".
 """
-function write_json(prb::Problem, file::String)
+function write_json(prb::Problem, file::String)::Nothing
     prb_temp = _copy_only_input(prb)
     string_data = JSON.json(prb_temp)
     index = findfirst(",\"flags\":", string_data)[1]

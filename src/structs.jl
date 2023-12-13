@@ -5,6 +5,8 @@ Base.@kwdef mutable struct Options
     use_ramp_down::Bool = false
     use_day_ahead_bid_bound::Bool = true
     penalty_ramp_down::Float64 = 0.0
+    lambda::Float64 = 1.0
+    beta::Float64 = 0.0
 end
 
 """Contains all flags, evaluated using options"""

@@ -1,5 +1,5 @@
 """Get all output data"""
-function _write_output!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
+function _write_output!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})::Nothing
     _write_day_ahead_bid!(prb, simul)
     _write_day_ahead_clear!(prb, simul)
     _write_real_time_bid!(prb, simul)
@@ -12,7 +12,9 @@ function _write_output!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
 end
 
 """Get the day ahead offer"""
-function _write_day_ahead_bid!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
+function _write_day_ahead_bid!(
+    prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}}
+)::Nothing
     numbers = prb.numbers
     S = length(simul)
     day_ahead_bid = zeros(numbers.Kᵧ, numbers.I, numbers.N, numbers.D, S)
@@ -31,7 +33,9 @@ function _write_day_ahead_bid!(prb::Problem, simul::Vector{Vector{Dict{Symbol,An
 end
 
 """Get the day ahead clear"""
-function _write_day_ahead_clear!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
+function _write_day_ahead_clear!(
+    prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}}
+)::Nothing
     numbers = prb.numbers
     S = length(simul)
     day_ahead_clear = zeros(numbers.I, numbers.N, numbers.D, S)
@@ -51,7 +55,9 @@ function _write_day_ahead_clear!(prb::Problem, simul::Vector{Vector{Dict{Symbol,
 end
 
 """Get the real time offer"""
-function _write_real_time_bid!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
+function _write_real_time_bid!(
+    prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}}
+)::Nothing
     numbers = prb.numbers
     S = length(simul)
     real_time_bid = zeros(numbers.Kᵦ, numbers.I, numbers.T, S)
@@ -65,7 +71,7 @@ function _write_real_time_bid!(prb::Problem, simul::Vector{Vector{Dict{Symbol,An
 end
 
 """Get the volume"""
-function _write_volume!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
+function _write_volume!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})::Nothing
     numbers = prb.numbers
     S = length(simul)
     volume = zeros(numbers.I, numbers.T, S)
@@ -78,7 +84,7 @@ function _write_volume!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
 end
 
 """Get the generation"""
-function _write_generation!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
+function _write_generation!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})::Nothing
     numbers = prb.numbers
     S = length(simul)
     generation = zeros(numbers.I, numbers.T, S)
@@ -98,7 +104,7 @@ function _write_generation!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}
 end
 
 """Get the spillage"""
-function _write_spillage!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
+function _write_spillage!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})::Nothing
     numbers = prb.numbers
     S = length(simul)
     spillage = zeros(numbers.I, numbers.T, S)
@@ -111,7 +117,7 @@ function _write_spillage!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
 end
 
 """Get the inflow"""
-function _write_inflow!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
+function _write_inflow!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})::Nothing
     numbers = prb.numbers
     S = length(simul)
     inflow = zeros(numbers.I, numbers.T, S)
@@ -124,7 +130,9 @@ function _write_inflow!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
 end
 
 """Get the ramp down violation"""
-function _write_ramp_down_violation!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})
+function _write_ramp_down_violation!(
+    prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}}
+)::Nothing
     if prb.options.use_ramp_down
         numbers = prb.numbers
         S = length(simul)

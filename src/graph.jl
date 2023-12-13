@@ -1,5 +1,5 @@
 """Plots all output"""
-function plot_all(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)
+function plot_all(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)::Nothing
     _plot_volumes(prb, s, folder)
     _plot_spillages(prb, s, folder)
     _plot_generations(prb, s, folder)
@@ -24,7 +24,7 @@ end
 """Plot the output"""
 function plot_output(
     prb::Problem, type::OutputType.T, s::Int, folder::Union{String,Nothing}=nothing
-)
+)::Nothing
     @match type begin
         $(OutputType.Volume) => _plot_volumes(prb, s, folder)
         $(OutputType.Spillage) => _plot_spillages(prb, s, folder)
@@ -38,7 +38,9 @@ function plot_output(
 end
 
 """Plots the day ahead clear output"""
-function _plot_day_ahead_bids(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)
+function _plot_day_ahead_bids(
+    prb::Problem, s::Int, folder::Union{String,Nothing}=nothing
+)::Nothing
     day_ahead_bid = prb.output.day_ahead_bid[:, :, :, :, s]
 
     for d in 1:(prb.numbers.D), n in 1:(prb.numbers.N), i in 1:(prb.numbers.I)
@@ -66,7 +68,9 @@ function _plot_day_ahead_bids(prb::Problem, s::Int, folder::Union{String,Nothing
 end
 
 """Plots the day ahead clear output"""
-function _plot_day_ahead_clears(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)
+function _plot_day_ahead_clears(
+    prb::Problem, s::Int, folder::Union{String,Nothing}=nothing
+)::Nothing
     day_ahead_clear = prb.output.day_ahead_clear[:, :, :, s]
 
     for d in 1:(prb.numbers.D)
@@ -88,7 +92,9 @@ function _plot_day_ahead_clears(prb::Problem, s::Int, folder::Union{String,Nothi
 end
 
 """Plots the real time offer output"""
-function _plot_real_time_bids(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)
+function _plot_real_time_bids(
+    prb::Problem, s::Int, folder::Union{String,Nothing}=nothing
+)::Nothing
     real_time_bid = prb.output.real_time_bid[:, :, :, s]
 
     for t in 1:(prb.numbers.T), i in 1:(prb.numbers.I)
@@ -116,10 +122,10 @@ function _plot_real_time_bids(prb::Problem, s::Int, folder::Union{String,Nothing
 end
 
 """Plots the volume output"""
-function _plot_volumes(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)
+function _plot_volumes(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)::Nothing
     volume = prb.output.volume[:, :, s]
     vectors = [volume[i, :] for i in 1:(prb.numbers.I)]
-    p = plot(
+    plot(
         vectors;
         title="Volumes",
         label=reshape(prb.data.names, 1, prb.numbers.I),
@@ -131,14 +137,16 @@ function _plot_volumes(prb::Problem, s::Int, folder::Union{String,Nothing}=nothi
     if !isnothing(folder)
         savefig(joinpath(folder, "volume.png"))
     end
-    return p
+    return nothing
 end
 
 """Plots the spillage output"""
-function _plot_spillages(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)
+function _plot_spillages(
+    prb::Problem, s::Int, folder::Union{String,Nothing}=nothing
+)::Nothing
     spillage = prb.output.spillage[:, :, s]
     vectors = [spillage[i, :] for i in 1:(prb.numbers.I)]
-    p = plot(
+    plot(
         vectors;
         title="Spillages",
         label=reshape(prb.data.names, 1, prb.numbers.I),
@@ -150,14 +158,16 @@ function _plot_spillages(prb::Problem, s::Int, folder::Union{String,Nothing}=not
     if !isnothing(folder)
         savefig(joinpath(folder, "spillage.png"))
     end
-    return p
+    return nothing
 end
 
 """Plots the generation output"""
-function _plot_generations(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)
+function _plot_generations(
+    prb::Problem, s::Int, folder::Union{String,Nothing}=nothing
+)::Nothing
     generation = prb.output.generation[:, :, s]
     vectors = [generation[i, :] for i in 1:(prb.numbers.I)]
-    p = plot(
+    plot(
         vectors;
         title="Generations",
         label=reshape(prb.data.names, 1, prb.numbers.I),
@@ -169,14 +179,14 @@ function _plot_generations(prb::Problem, s::Int, folder::Union{String,Nothing}=n
     if !isnothing(folder)
         savefig(joinpath(folder, "generation.png"))
     end
-    return p
+    return nothing
 end
 
 """Plots the inflow output"""
-function _plot_inflows(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)
+function _plot_inflows(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)::Nothing
     inflow = prb.output.inflow[:, :, s]
     vectors = [inflow[i, :] for i in 1:(prb.numbers.I)]
-    p = plot(
+    plot(
         vectors;
         title="Inflows",
         label=reshape(prb.data.names, 1, prb.numbers.I),
@@ -188,5 +198,5 @@ function _plot_inflows(prb::Problem, s::Int, folder::Union{String,Nothing}=nothi
     if !isnothing(folder)
         savefig(joinpath(folder, "inflow.png"))
     end
-    return p
+    return nothing
 end

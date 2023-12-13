@@ -1,9 +1,5 @@
 {
     "options": {
-        "use_ramp_up": false,
-        "use_ramp_down": false,
-        "use_day_ahead_bid_bound": true,
-        "penalty_ramp_down": 0.0
     },
     "numbers": {
         "periods_per_day": 1,

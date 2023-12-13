@@ -1,17 +1,19 @@
 """Creates an empty objective"""
-function _create_objective_expression!(sp::Model)
+function _create_objective_expression!(sp::Model)::Nothing
     @expression(sp, objective, AffExpr(0.0))
     return nothing
 end
 
 """Sets the objective"""
-function _set_objective_expression!(sp::Model)
+function _set_objective_expression!(sp::Model)::Nothing
     @stageobjective(sp, sp[:objective])
     return nothing
 end
 
 """Add real time clear objective function using control generation"""
-function _add_real_time_clear_objective!(sp::Model, prb::Problem, t::Int, markov_state::Int)
+function _add_real_time_clear_objective!(
+    sp::Model, prb::Problem, t::Int, markov_state::Int
+)::Nothing
     add_to_expression!(
         sp[:objective],
         sum(
@@ -25,7 +27,7 @@ end
 """Add real time clear objective function using state generation"""
 function _add_real_time_clear_objective_state!(
     sp::Model, prb::Problem, t::Int, markov_state::Int
-)
+)::Nothing
     add_to_expression!(
         sp[:objective],
         sum(
@@ -38,7 +40,9 @@ function _add_real_time_clear_objective_state!(
 end
 
 """Add day ahead clear objective function"""
-function _add_day_ahead_clear_objective!(sp::Model, prb::Problem, t::Int, markov_state::Int)
+function _add_day_ahead_clear_objective!(
+    sp::Model, prb::Problem, t::Int, markov_state::Int
+)::Nothing
     temp = div(t - 1, prb.numbers.N) + 1
 
     if temp != prb.numbers.D
@@ -55,7 +59,7 @@ function _add_day_ahead_clear_objective!(sp::Model, prb::Problem, t::Int, markov
 end
 
 """Add ramp down penalty objective function"""
-function _add_ramp_down_objective!(sp::Model, prb::Problem)
+function _add_ramp_down_objective!(sp::Model, prb::Problem)::Nothing
     add_to_expression!(
         sp[:objective], -prb.options.penalty_ramp_down * sum(sp[:ramp_down_violation])
     )

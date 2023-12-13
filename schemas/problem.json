@@ -9,12 +9,6 @@
     "properties": {
         "options": {
             "type": "object",
-            "required": [
-                "use_ramp_up",
-                "use_ramp_down",
-                "use_day_ahead_bid_bound",
-                "penalty_ramp_down"
-            ],
             "properties": {
                 "use_ramp_up": {
                     "type": "boolean"
@@ -26,6 +20,12 @@
                     "type": "boolean"
                 },
                 "penalty_ramp_down": {
+                    "type": "number"
+                },
+                "lambda": {
+                    "type": "number"
+                },
+                "beta": {
                     "type": "number"
                 }
             }

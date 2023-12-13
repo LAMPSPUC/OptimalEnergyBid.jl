@@ -1,14 +1,15 @@
 """Adds the inflow random variable constraint"""
-function _constraint_inflow!(sp::Model, prb::Problem, t::Int, markov_state::Int)
+function _constraint_inflow!(sp::Model, prb::Problem, t::Int, markov_state::Int)::Nothing
     SDDP.parameterize(
         sp, prb.random.πᵪ[t][markov_state], prb.random.ωᵪ[t][markov_state]
     ) do ω
         return JuMP.fix.(sp[:inflow], ω)
     end
+    return nothing
 end
 
 """Adds the generation ramp down constraint"""
-function _constraint_ramp_down!(sp::Model, prb::Problem)
+function _constraint_ramp_down!(sp::Model, prb::Problem)::Nothing
     @constraint(
         sp,
         ramp_down[i=1:(prb.numbers.I)],
@@ -19,7 +20,7 @@ function _constraint_ramp_down!(sp::Model, prb::Problem)
 end
 
 """Adds the copy day ahead bid constraint"""
-function _constraint_copy_day_ahead_bid!(sp::Model, prb::Problem)
+function _constraint_copy_day_ahead_bid!(sp::Model, prb::Problem)::Nothing
     @constraint(
         sp,
         copy_day_ahead_bid[k=1:(prb.numbers.Kᵧ), i=1:(prb.numbers.I), n=1:(prb.numbers.N)],
@@ -29,7 +30,7 @@ function _constraint_copy_day_ahead_bid!(sp::Model, prb::Problem)
 end
 
 """Adds the bound day ahead bid constraint"""
-function _constraint_bound_day_ahead_bid!(sp::Model, prb::Problem)
+function _constraint_bound_day_ahead_bid!(sp::Model, prb::Problem)::Nothing
     @constraint(
         sp,
         bound_day_ahead_bid[i=1:(prb.numbers.I), n=1:(prb.numbers.N)],
@@ -40,7 +41,7 @@ function _constraint_bound_day_ahead_bid!(sp::Model, prb::Problem)
 end
 
 """Adds the shift day ahead clear constraint"""
-function _constraint_shift_day_ahead_clear!(sp::Model, prb::Problem)
+function _constraint_shift_day_ahead_clear!(sp::Model, prb::Problem)::Nothing
     @constraint(
         sp,
         shift_day_ahead_clear[
@@ -54,7 +55,7 @@ end
 """Adds the day ahead clear constraint"""
 function _constraint_add_day_ahead_clear!(
     sp::Model, prb::Problem, t::Int, markov_state::Int
-)
+)::Nothing
     temp = div(t - 1, prb.numbers.N) + 1
     @constraint(
         sp,
@@ -73,7 +74,7 @@ function _constraint_add_day_ahead_clear!(
 end
 
 """Adds the real time offer bound constraint"""
-function _constraint_real_time_bid_bound!(sp::Model, prb::Problem)
+function _constraint_real_time_bid_bound!(sp::Model, prb::Problem)::Nothing
     @constraint(
         sp,
         real_time_bid_bound[i=1:(prb.numbers.I)],
@@ -84,7 +85,7 @@ function _constraint_real_time_bid_bound!(sp::Model, prb::Problem)
 end
 
 """Adds the ramp up offer bound constraint"""
-function _constraint_ramp_up!(sp::Model, prb::Problem)
+function _constraint_ramp_up!(sp::Model, prb::Problem)::Nothing
     @constraint(
         sp,
         ramp_up[i=1:(prb.numbers.I)],
@@ -96,7 +97,7 @@ function _constraint_ramp_up!(sp::Model, prb::Problem)
 end
 
 """Adds the generatarion constraint using generatarion as a control variable"""
-function _constraint_volume_balance!(sp::Model, prb::Problem)
+function _constraint_volume_balance!(sp::Model, prb::Problem)::Nothing
     @constraint(
         sp,
         constraint_add_generation[i=1:(prb.numbers.I)],
@@ -107,7 +108,9 @@ function _constraint_volume_balance!(sp::Model, prb::Problem)
 end
 
 """Adds the real time accepted constraint using generatarion as a control variable"""
-function _constraint_real_time_accepted!(sp::Model, prb::Problem, t::Int, markov_state::Int)
+function _constraint_real_time_accepted!(
+    sp::Model, prb::Problem, t::Int, markov_state::Int
+)::Nothing
     @constraint(
         sp,
         real_time_accepted[i=1:(prb.numbers.I)],
@@ -120,7 +123,7 @@ function _constraint_real_time_accepted!(sp::Model, prb::Problem, t::Int, markov
 end
 
 """Adds the generatarion constraint using generatarion as a state variable"""
-function _constraint_volume_balance_state!(sp::Model, prb::Problem)
+function _constraint_volume_balance_state!(sp::Model, prb::Problem)::Nothing
     @constraint(
         sp,
         constraint_add_generation_state[i=1:(prb.numbers.I)],
@@ -133,7 +136,7 @@ end
 """Adds the real time accepted constraint using generatarion as a state variable"""
 function _constraint_real_time_accepted_state!(
     sp::Model, prb::Problem, t::Int, markov_state::Int
-)
+)::Nothing
     @constraint(
         sp,
         real_time_accepted_state[i=1:(prb.numbers.I)],
