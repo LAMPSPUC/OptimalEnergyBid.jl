@@ -333,6 +333,46 @@ load("spillage.png")
 # ╔═╡ b3e78c7a-be71-4a38-98c6-ac7e2aecfaae
 load("generation.png")
 
+# ╔═╡ d0a31085-ab02-4d4d-a5c1-f95c67c0e502
+md"""
+## Risk aversion case
+"""
+
+# ╔═╡ 3d647090-4800-471f-ad98-074d8556e19b
+begin
+    prb4 = OptimalEnergyBid.create_problem(
+        joinpath(dirname(@__DIR__), "cases", "stochastic.json")
+    )
+    OptimalEnergyBid.set_parameter!(
+        prb4, OptimalEnergyBid.Parameter.Optimizer, HiGHS.Optimizer
+    )
+    for t in 1:(prb4.numbers.duration), i in 1:(prb4.numbers.units)
+        prb4.random.prices_real_time[t][i] = [1.5 - t * 0.1, 2.0 + t * 10]
+        prb4.data.prices_real_time_curve[t][i] = [1.5 - t * 0.1, 2.0 + t * 10]
+    end
+    prb4.data.volume_max = [100.0, 100.0]
+    OptimalEnergyBid.build_model!(prb4)
+    OptimalEnergyBid.train!(prb4)
+    OptimalEnergyBid.simulate!(prb4)
+    OptimalEnergyBid.plot_all(prb4, 1, "")
+end
+
+# ╔═╡ d5ab3d27-6c4a-4f49-a5cc-17d5cbcefc90
+load("volume.png")
+
+# ╔═╡ 153cddc0-e6c7-4019-b31c-bd2b3d697a6e
+begin
+    OptimalEnergyBid.set_parameter!(prb4, OptimalEnergyBid.Parameter.Lambda, 0.5)
+    OptimalEnergyBid.set_parameter!(prb4, OptimalEnergyBid.Parameter.Beta, 0.05)
+    OptimalEnergyBid.build_model!(prb4)
+    OptimalEnergyBid.train!(prb4)
+    OptimalEnergyBid.simulate!(prb4)
+    OptimalEnergyBid.plot_all(prb4, 1, "")
+end
+
+# ╔═╡ b14421cd-f505-47f2-80d7-e10cd20cdf47
+load("volume.png")
+
 # ╔═╡ Cell order:
 # ╟─94c16ad4-7dbf-49cb-beda-f301ac7d8e53
 # ╠═af7a6e30-9723-11ee-18f6-2552c59ac981
@@ -396,10 +436,15 @@ load("generation.png")
 # ╟─f92891c9-85cb-4308-b948-a586018276e6
 # ╟─0ed061e0-7ad2-4cce-93b8-875c9c68cd29
 # ╟─0c90567a-78b3-45df-a4a6-c9928fdc0349
-# ╟─5e024476-ef59-4b4c-bf88-ae8ae52183a5
+# ╠═5e024476-ef59-4b4c-bf88-ae8ae52183a5
 # ╟─282729ad-6faa-498b-8a3e-f6b461080a8c
 # ╟─767e0d0f-552b-4761-a36b-0d3d9f0c9739
 # ╠═55de0841-c4c5-409c-beed-6a6bfb7eca39
 # ╟─8c198f51-102d-4479-b956-11a3d4481df5
 # ╟─d838fc76-b123-472d-9e75-df903b5d3eae
 # ╟─b3e78c7a-be71-4a38-98c6-ac7e2aecfaae
+# ╟─d0a31085-ab02-4d4d-a5c1-f95c67c0e502
+# ╠═3d647090-4800-471f-ad98-074d8556e19b
+# ╠═d5ab3d27-6c4a-4f49-a5cc-17d5cbcefc90
+# ╠═153cddc0-e6c7-4019-b31c-bd2b3d697a6e
+# ╠═b14421cd-f505-47f2-80d7-e10cd20cdf47
