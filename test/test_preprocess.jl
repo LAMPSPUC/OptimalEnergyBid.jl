@@ -1,4 +1,4 @@
-prb = Problem()
+prb = OptimalEnergyBid.Problem()
 
 numbers = prb.numbers
 random = prb.random

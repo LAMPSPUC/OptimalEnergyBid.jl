@@ -1,7 +1,7 @@
-prb = create_problem(joinpath(dirname(@__DIR__), "cases", "toy.json"))
+prb = OptimalEnergyBid.create_problem(joinpath(dirname(@__DIR__), "cases", "toy.json"))
 
-set_optimizer!(prb, HiGHS.Optimizer)
+OptimalEnergyBid.set_parameter!(prb, OptimalEnergyBid.Parameter.Optimizer, HiGHS.Optimizer)
 
-build_model!(prb, true)
-train!(prb)
-simulate!(prb)
+OptimalEnergyBid.build_model!(prb, true)
+OptimalEnergyBid.train!(prb)
+OptimalEnergyBid.simulate!(prb)

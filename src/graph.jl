@@ -1,44 +1,17 @@
 """Plots all output"""
 function plot_all(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)::Nothing
-    _plot_volumes(prb, s, folder)
-    _plot_spillages(prb, s, folder)
-    _plot_generations(prb, s, folder)
-    _plot_inflows(prb, s, folder)
-    _plot_real_time_bids(prb, s, folder)
-    _plot_day_ahead_clears(prb, s, folder)
-    _plot_day_ahead_bids(prb, s, folder)
-    return nothing
-end
-
-"""Outpus enum"""
-@enumx OutputType begin
-    Volume
-    Spillage
-    Generation
-    Inflow
-    RealTimeBid
-    DayAheadClear
-    DayAheadBid
-end
-
-"""Plot the output"""
-function plot_output(
-    prb::Problem, type::OutputType.T, s::Int, folder::Union{String,Nothing}=nothing
-)::Nothing
-    @match type begin
-        $(OutputType.Volume) => _plot_volumes(prb, s, folder)
-        $(OutputType.Spillage) => _plot_spillages(prb, s, folder)
-        $(OutputType.Generation) => _plot_generations(prb, s, folder)
-        $(OutputType.Inflow) => _plot_inflows(prb, s, folder)
-        $(OutputType.RealTimeBid) => _plot_real_time_bids(prb, s, folder)
-        $(OutputType.DayAheadClear) => _plot_day_ahead_clears(prb, s, folder)
-        $(OutputType.DayAheadBid) => _plot_day_ahead_bids(prb, s, folder)
-    end
+    plot_volumes(prb, s, folder)
+    plot_spillages(prb, s, folder)
+    plot_generations(prb, s, folder)
+    plot_inflows(prb, s, folder)
+    plot_real_time_bids(prb, s, folder)
+    plot_day_ahead_clears(prb, s, folder)
+    plot_day_ahead_bids(prb, s, folder)
     return nothing
 end
 
 """Plots the day ahead clear output"""
-function _plot_day_ahead_bids(
+function plot_day_ahead_bids(
     prb::Problem, s::Int, folder::Union{String,Nothing}=nothing
 )::Nothing
     day_ahead_bid = prb.output.day_ahead_bid[:, :, :, :, s]
@@ -71,7 +44,7 @@ function _plot_day_ahead_bids(
 end
 
 """Plots the day ahead clear output"""
-function _plot_day_ahead_clears(
+function plot_day_ahead_clears(
     prb::Problem, s::Int, folder::Union{String,Nothing}=nothing
 )::Nothing
     day_ahead_clear = prb.output.day_ahead_clear[:, :, :, s]
@@ -97,7 +70,7 @@ function _plot_day_ahead_clears(
 end
 
 """Plots the real time offer output"""
-function _plot_real_time_bids(
+function plot_real_time_bids(
     prb::Problem, s::Int, folder::Union{String,Nothing}=nothing
 )::Nothing
     real_time_bid = prb.output.real_time_bid[:, :, :, s]
@@ -127,7 +100,7 @@ function _plot_real_time_bids(
 end
 
 """Plots the volume output"""
-function _plot_volumes(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)::Nothing
+function plot_volumes(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)::Nothing
     volume = prb.output.volume[:, :, s]
     vectors = [volume[i, :] for i in 1:(prb.numbers.units)]
     plot(
@@ -146,7 +119,7 @@ function _plot_volumes(prb::Problem, s::Int, folder::Union{String,Nothing}=nothi
 end
 
 """Plots the spillage output"""
-function _plot_spillages(
+function plot_spillages(
     prb::Problem, s::Int, folder::Union{String,Nothing}=nothing
 )::Nothing
     spillage = prb.output.spillage[:, :, s]
@@ -167,7 +140,7 @@ function _plot_spillages(
 end
 
 """Plots the generation output"""
-function _plot_generations(
+function plot_generations(
     prb::Problem, s::Int, folder::Union{String,Nothing}=nothing
 )::Nothing
     generation = prb.output.generation[:, :, s]
@@ -188,7 +161,7 @@ function _plot_generations(
 end
 
 """Plots the inflow output"""
-function _plot_inflows(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)::Nothing
+function plot_inflows(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)::Nothing
     inflow = prb.output.inflow[:, :, s]
     vectors = [inflow[i, :] for i in 1:(prb.numbers.units)]
     plot(

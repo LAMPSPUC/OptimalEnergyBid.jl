@@ -1,42 +1,41 @@
 using OptimalEnergyBid, HiGHS
 
-prb = create_problem(joinpath(@__DIR__, "cases", "deterministic.json"))
-set_optimizer!(prb, HiGHS.Optimizer)
-build_model!(prb)
-train!(prb)
-simul = simulate!(prb)
-plot_all(prb, 1, "")
+prb = OptimalEnergyBid.create_problem(joinpath(@__DIR__, "cases", "deterministic.json"))
+OptimalEnergyBid.set_parameter!(prb, OptimalEnergyBid.Parameter.Optimizer, HiGHS.Optimizer)
+OptimalEnergyBid.build_model!(prb)
+OptimalEnergyBid.train!(prb)
+simul = OptimalEnergyBid.simulate!(prb)
+OptimalEnergyBid.plot_all(prb, 1, "")
 
 for i in 1:(prb.numbers.units)
     prb.random.prices_real_time[3][i][1] = 2.5
 end
 
-build_model!(prb)
-train!(prb)
-simul = simulate!(prb)
-plot_all(prb, 1, "")
+OptimalEnergyBid.build_model!(prb)
+OptimalEnergyBid.train!(prb)
+OptimalEnergyBid.simulate!(prb)
+OptimalEnergyBid.plot_all(prb, 1, "")
 
 for i in 1:(prb.numbers.units)
     prb.random.prices_day_ahead[1][2][i][1] = 3.0
 end
 
-build_model!(prb)
-train!(prb)
-simul = simulate!(prb)
-plot_all(prb, 1, "")
+OptimalEnergyBid.build_model!(prb)
+OptimalEnergyBid.train!(prb)
+OptimalEnergyBid.simulate!(prb)
+OptimalEnergyBid.plot_all(prb, 1, "")
 
-prb = create_problem(joinpath(@__DIR__, "cases", "deterministic.json"))
-set_optimizer!(prb, HiGHS.Optimizer)
-
-set_bool_parameter!(prb, ParameterBool.UseRampUp, true)
-set_bool_parameter!(prb, ParameterBool.UseRampDown, true)
-set_float_parameter!(prb, ParameterFloat.PenaltyRampDown, 100.0)
+prb = OptimalEnergyBid.create_problem(joinpath(@__DIR__, "cases", "deterministic.json"))
+OptimalEnergyBid.set_parameter!(prb, OptimalEnergyBid.Parameter.Optimizer, HiGHS.Optimizer)
+OptimalEnergyBid.set_parameter!(prb, OptimalEnergyBid.Parameter.UseRampUp, true)
+OptimalEnergyBid.set_parameter!(prb, OptimalEnergyBid.Parameter.UseRampDown, true)
+OptimalEnergyBid.set_parameter!(prb, OptimalEnergyBid.Parameter.PenaltyRampDown, 100.0)
 
 prb.data.ramp_up = [0.1, 0.1]
 prb.data.ramp_down = [0.1, 0.1]
 prb.data.generation_initial = [0.1, 0.1]
 
-build_model!(prb)
-train!(prb)
-simul = simulate!(prb)
-plot_all(prb, 1, "")
+OptimalEnergyBid.build_model!(prb)
+OptimalEnergyBid.train!(prb)
+OptimalEnergyBid.simulate!(prb)
+OptimalEnergyBid.plot_all(prb, 1, "")

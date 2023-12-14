@@ -1,4 +1,4 @@
-prb1 = Problem()
+prb1 = OptimalEnergyBid.Problem()
 
 numbers = prb1.numbers
 random = prb1.random
@@ -26,7 +26,7 @@ data.volume_initial = zeros(1)
 data.prices_real_time_curve = [[[10.0]]]
 data.prices_day_ahead_curve = [[[[9.0]]]]
 
-prb2 = create_problem(joinpath(dirname(@__DIR__), "cases", "toy.json"))
+prb2 = OptimalEnergyBid.create_problem(joinpath(dirname(@__DIR__), "cases", "toy.json"))
 
 @test random.prices_real_time == prb2.random.prices_real_time
 @test random.prices_day_ahead == prb2.random.prices_day_ahead
@@ -51,8 +51,8 @@ prb2 = create_problem(joinpath(dirname(@__DIR__), "cases", "toy.json"))
 
 mktempdir() do path
     file = joinpath(path, "test.json")
-    write_json(prb1, file)
-    prb3 = create_problem(file)
+    OptimalEnergyBid.write_json(prb1, file)
+    prb3 = OptimalEnergyBid.create_problem(file)
 
     @test random.prices_real_time == prb3.random.prices_real_time
     @test random.prices_day_ahead == prb3.random.prices_day_ahead

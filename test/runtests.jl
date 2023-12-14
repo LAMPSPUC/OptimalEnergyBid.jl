@@ -1,5 +1,4 @@
-using OptimalEnergyBid
-using Test, HiGHS
+using OptimalEnergyBid, Test, HiGHS
 
 include("test_validate_json.jl")
 include("test_read_write_json.jl")

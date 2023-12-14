@@ -24,12 +24,16 @@ md"""
 
 # ╔═╡ 71ec49f5-5b71-43e5-8e8a-e7f4e369618a
 begin
-    prb = create_problem(joinpath(dirname(@__DIR__), "cases", "deterministic.json"))
-    set_optimizer!(prb, HiGHS.Optimizer)
-    build_model!(prb)
-    train!(prb)
-    simulate!(prb, 1)
-    plot_all(prb, 1, "")
+    prb = OptimalEnergyBid.create_problem(
+        joinpath(dirname(@__DIR__), "cases", "deterministic.json")
+    )
+    OptimalEnergyBid.set_parameter!(
+        prb, OptimalEnergyBid.Parameter.Optimizer, HiGHS.Optimizer
+    )
+    OptimalEnergyBid.build_model!(prb)
+    OptimalEnergyBid.train!(prb)
+    OptimalEnergyBid.simulate!(prb, 1)
+    OptimalEnergyBid.plot_all(prb, 1, "")
 end
 
 # ╔═╡ 5f05e0d6-d896-4151-9c37-2359fe043464
@@ -82,10 +86,10 @@ begin
     for i in 1:(prb.numbers.units)
         prb.random.prices_real_time[3][i][1] = 2.5
     end
-    build_model!(prb)
-    train!(prb)
-    simulate!(prb, 1)
-    plot_all(prb, 1, "")
+    OptimalEnergyBid.build_model!(prb)
+    OptimalEnergyBid.train!(prb)
+    OptimalEnergyBid.simulate!(prb, 1)
+    OptimalEnergyBid.plot_all(prb, 1, "")
 end
 
 # ╔═╡ dcb25596-8528-4c4c-ac68-2a6560e96ff2
@@ -118,10 +122,10 @@ begin
     for i in 1:(prb.numbers.units)
         prb.random.prices_day_ahead[1][2][i][1] = 3.0
     end
-    build_model!(prb)
-    train!(prb)
-    simulate!(prb, 1)
-    plot_all(prb, 1, "")
+    OptimalEnergyBid.build_model!(prb)
+    OptimalEnergyBid.train!(prb)
+    OptimalEnergyBid.simulate!(prb, 1)
+    OptimalEnergyBid.plot_all(prb, 1, "")
 end
 
 # ╔═╡ 698f4b95-852c-40cd-b125-8d1426b5c6f2
@@ -151,21 +155,24 @@ md"""
 
 # ╔═╡ f37e8a4f-512e-4cc6-bd2c-355c4c5612c8
 begin
-    prb2 = create_problem(joinpath(dirname(@__DIR__), "cases", "deterministic.json"))
-    set_optimizer!(prb2, HiGHS.Optimizer)
-
-    set_bool_parameter!(prb2, ParameterBool.UseRampUp, true)
-    set_bool_parameter!(prb2, ParameterBool.UseRampDown, true)
-    set_float_parameter!(prb2, ParameterFloat.PenaltyRampDown, 100.0)
+    prb2 = OptimalEnergyBid.create_problem(
+        joinpath(dirname(@__DIR__), "cases", "deterministic.json")
+    )
+    OptimalEnergyBid.set_parameter!(
+        prb2, OptimalEnergyBid.Parameter.Optimizer, HiGHS.Optimizer
+    )
+    OptimalEnergyBid.set_parameter!(prb2, OptimalEnergyBid.Parameter.UseRampUp, true)
+    OptimalEnergyBid.set_parameter!(prb2, OptimalEnergyBid.Parameter.UseRampDown, true)
+    OptimalEnergyBid.set_parameter!(prb2, OptimalEnergyBid.Parameter.PenaltyRampDown, 100.0)
 
     prb2.data.ramp_up = [0.1, 0.1]
     prb2.data.ramp_down = [0.1, 0.1]
     prb2.data.generation_initial = [0.1, 0.1]
 
-    build_model!(prb2)
-    train!(prb2)
-    simulate!(prb2)
-    plot_all(prb2, 1, "")
+    OptimalEnergyBid.build_model!(prb2)
+    OptimalEnergyBid.train!(prb2)
+    OptimalEnergyBid.simulate!(prb2)
+    OptimalEnergyBid.plot_all(prb2, 1, "")
 end
 
 # ╔═╡ 213a0337-a34b-4af3-aaa7-4cdd99ac691a
@@ -201,12 +208,16 @@ md"""
 
 # ╔═╡ 5c5a126b-bcea-4dfe-961d-b98b6ffb391a
 begin
-    prb3 = create_problem(joinpath(dirname(@__DIR__), "cases", "stochastic.json"))
-    set_optimizer!(prb3, HiGHS.Optimizer)
-    build_model!(prb3)
-    train!(prb3)
-    simulate!(prb3, 1)
-    plot_all(prb3, 1, "")
+    prb3 = OptimalEnergyBid.create_problem(
+        joinpath(dirname(@__DIR__), "cases", "stochastic.json")
+    )
+    OptimalEnergyBid.set_parameter!(
+        prb3, OptimalEnergyBid.Parameter.Optimizer, HiGHS.Optimizer
+    )
+    OptimalEnergyBid.build_model!(prb3)
+    OptimalEnergyBid.train!(prb3)
+    OptimalEnergyBid.simulate!(prb3, 1)
+    OptimalEnergyBid.plot_all(prb3, 1, "")
 end
 
 # ╔═╡ e3c8bb14-60f5-460e-8e45-9073807d5501
@@ -269,10 +280,10 @@ begin
         prb3.data.prices_real_time_curve[t][i] = [1.1, 1.5]
     end
 
-    build_model!(prb3)
-    train!(prb3)
-    simulate!(prb3, 1)
-    plot_all(prb3, 1, "")
+    OptimalEnergyBid.build_model!(prb3)
+    OptimalEnergyBid.train!(prb3)
+    OptimalEnergyBid.simulate!(prb3, 1)
+    OptimalEnergyBid.plot_all(prb3, 1, "")
 end
 
 # ╔═╡ f92891c9-85cb-4308-b948-a586018276e6
@@ -307,10 +318,10 @@ begin
         prb3.data.prices_real_time_curve[3][i] = [1.5, 5.0]
     end
 
-    build_model!(prb3)
-    train!(prb3)
-    simulate!(prb3, 1)
-    plot_all(prb3, 1, "")
+    OptimalEnergyBid.build_model!(prb3)
+    OptimalEnergyBid.train!(prb3)
+    OptimalEnergyBid.simulate!(prb3, 1)
+    OptimalEnergyBid.plot_all(prb3, 1, "")
 end
 
 # ╔═╡ 8c198f51-102d-4479-b956-11a3d4481df5

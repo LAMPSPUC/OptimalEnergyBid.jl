@@ -1,21 +1,21 @@
 using OptimalEnergyBid, HiGHS
 
-prb = create_problem(joinpath(@__DIR__, "cases", "stochastic.json"))
-set_optimizer!(prb, HiGHS.Optimizer)
-build_model!(prb)
-train!(prb)
-simul = simulate!(prb)
-plot_all(prb, 1, "")
+prb = OptimalEnergyBid.create_problem(joinpath(@__DIR__, "cases", "stochastic.json"))
+OptimalEnergyBid.set_parameter!(prb, OptimalEnergyBid.Parameter.Optimizer, HiGHS.Optimizer)
+OptimalEnergyBid.build_model!(prb)
+OptimalEnergyBid.train!(prb)
+OptimalEnergyBid.simulate!(prb)
+OptimalEnergyBid.plot_all(prb, 1, "")
 
 for t in 1:(prb.numbers.duration), i in 1:(prb.numbers.units)
     prb.random.prices_real_time[t][i] = [1.1, 1.5]
     prb.data.prices_real_time_curve[t][i] = [1.1, 1.5]
 end
 
-build_model!(prb)
-train!(prb)
-simul = simulate!(prb)
-plot_all(prb, 1, "")
+OptimalEnergyBid.build_model!(prb)
+OptimalEnergyBid.train!(prb)
+OptimalEnergyBid.simulate!(prb)
+OptimalEnergyBid.plot_all(prb, 1, "")
 
 for t in 1:(prb.numbers.duration), n in 1:2
     prb.random.inflow[t][n] = [[0.6, 0.3], [0.3, 0.6]]
@@ -27,7 +27,7 @@ for i in 1:(prb.numbers.units)
     prb.data.prices_real_time_curve[3][i] = [1.5, 5.0]
 end
 
-build_model!(prb)
-train!(prb)
-simul = simulate!(prb)
-plot_all(prb, 1, "")
+OptimalEnergyBid.build_model!(prb)
+OptimalEnergyBid.train!(prb)
+simulate!(prb)
+OptimalEnergyBid.plot_all(prb, 1, "")
