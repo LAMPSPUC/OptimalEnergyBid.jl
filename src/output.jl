@@ -17,12 +17,21 @@ function _write_day_ahead_bid!(
 )::Nothing
     numbers = prb.numbers
     S = length(simul)
-    day_ahead_bid = zeros(numbers.Kᵧ, numbers.I, numbers.N, numbers.D, S)
+    day_ahead_bid = zeros(
+        numbers.day_ahead_steps, numbers.units, numbers.periods_per_day, numbers.days, S
+    )
 
-    for s in 1:S, t in 1:(numbers.T)
+    for s in 1:S, t in 1:(numbers.duration)
         if _is_clear_day_ahead(numbers, t)
-            for n in 1:(numbers.N), i in 1:(numbers.I), k in 1:(numbers.Kᵧ)
-                d = div(t - numbers.V + numbers.n₀ - 1, numbers.N) + 1
+            for n in 1:(numbers.periods_per_day),
+                i in 1:(numbers.units),
+                k in 1:(numbers.day_ahead_steps)
+
+                d =
+                    div(
+                        t - numbers.period_of_day_ahead_clear + numbers.first_period - 1,
+                        numbers.periods_per_day,
+                    ) + 1
                 day_ahead_bid[k, i, n, d, s] = simul[s][t][:day_ahead_bid][k, i, n].out
             end
         end
@@ -38,14 +47,21 @@ function _write_day_ahead_clear!(
 )::Nothing
     numbers = prb.numbers
     S = length(simul)
-    day_ahead_clear = zeros(numbers.I, numbers.N, numbers.D, S)
+    day_ahead_clear = zeros(numbers.units, numbers.periods_per_day, numbers.days, S)
 
-    for s in 1:S, t in 1:(numbers.T)
+    for s in 1:S, t in 1:(numbers.duration)
         if _is_clear_day_ahead(numbers, t)
-            for n in 1:(numbers.N), i in 1:(numbers.I)
-                d = div(t - numbers.V + numbers.n₀ - 1, numbers.N) + 1
+            for n in 1:(numbers.periods_per_day), i in 1:(numbers.units)
+                d =
+                    div(
+                        t - numbers.period_of_day_ahead_clear + numbers.first_period - 1,
+                        numbers.periods_per_day,
+                    ) + 1
                 day_ahead_clear[i, n, d, s] =
-                    simul[s][t][:day_ahead_clear][i, n + prb.numbers.N - prb.numbers.V].out
+                    simul[s][t][:day_ahead_clear][
+                        i,
+                        n + prb.numbers.periods_per_day - prb.numbers.period_of_day_ahead_clear,
+                    ].out
             end
         end
     end
@@ -60,9 +76,13 @@ function _write_real_time_bid!(
 )::Nothing
     numbers = prb.numbers
     S = length(simul)
-    real_time_bid = zeros(numbers.Kᵦ, numbers.I, numbers.T, S)
+    real_time_bid = zeros(numbers.real_tume_steps, numbers.units, numbers.duration, S)
 
-    for s in 1:S, t in 1:(numbers.T), i in 1:(numbers.I), k in 1:(numbers.Kᵦ)
+    for s in 1:S,
+        t in 1:(numbers.duration),
+        i in 1:(numbers.units),
+        k in 1:(numbers.real_tume_steps)
+
         real_time_bid[k, i, t, s] = simul[s][t][:real_time_bid][k, i].out
     end
 
@@ -74,9 +94,9 @@ end
 function _write_volume!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})::Nothing
     numbers = prb.numbers
     S = length(simul)
-    volume = zeros(numbers.I, numbers.T, S)
+    volume = zeros(numbers.units, numbers.duration, S)
 
-    for s in 1:S, t in 1:(numbers.T), i in 1:(numbers.I)
+    for s in 1:S, t in 1:(numbers.duration), i in 1:(numbers.units)
         volume[i, t, s] = simul[s][t][:volume][i].out
     end
     prb.output.volume = volume
@@ -87,11 +107,11 @@ end
 function _write_generation!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})::Nothing
     numbers = prb.numbers
     S = length(simul)
-    generation = zeros(numbers.I, numbers.T, S)
+    generation = zeros(numbers.units, numbers.duration, S)
 
-    for s in 1:S, t in 1:(numbers.T)
+    for s in 1:S, t in 1:(numbers.duration)
         if prb.flags.generation_as_state
-            for i in 1:(prb.numbers.I)
+            for i in 1:(prb.numbers.units)
                 generation[i, t, s] = simul[s][t][:generation][i].out
             end
         else
@@ -107,9 +127,9 @@ end
 function _write_spillage!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})::Nothing
     numbers = prb.numbers
     S = length(simul)
-    spillage = zeros(numbers.I, numbers.T, S)
+    spillage = zeros(numbers.units, numbers.duration, S)
 
-    for s in 1:S, t in 1:(numbers.T)
+    for s in 1:S, t in 1:(numbers.duration)
         spillage[:, t, s] = simul[s][t][:spillage]
     end
     prb.output.spillage = spillage
@@ -120,9 +140,9 @@ end
 function _write_inflow!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}})::Nothing
     numbers = prb.numbers
     S = length(simul)
-    inflow = zeros(numbers.I, numbers.T, S)
+    inflow = zeros(numbers.units, numbers.duration, S)
 
-    for s in 1:S, t in 1:(numbers.T)
+    for s in 1:S, t in 1:(numbers.duration)
         inflow[:, t, s] = simul[s][t][:inflow]
     end
     prb.output.inflow = inflow
@@ -136,9 +156,9 @@ function _write_ramp_down_violation!(
     if prb.options.use_ramp_down
         numbers = prb.numbers
         S = length(simul)
-        ramp_down_violation = zeros(numbers.I, numbers.T, S)
+        ramp_down_violation = zeros(numbers.units, numbers.duration, S)
 
-        for s in 1:S, t in 1:(numbers.T)
+        for s in 1:S, t in 1:(numbers.duration)
             ramp_down_violation[:, t, s] = simul[s][t][:ramp_down_violation]
         end
         prb.output.ramp_down_violation = ramp_down_violation

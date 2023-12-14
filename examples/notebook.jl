@@ -6,7 +6,7 @@ using InteractiveUtils
 
 # ╔═╡ af7a6e30-9723-11ee-18f6-2552c59ac981
 begin
-    import Pkg
+    using Pkg: Pkg
     Pkg.activate("..")
     using OptimalEnergyBid, HiGHS, Images
 end
@@ -79,8 +79,8 @@ md"""
 
 # ╔═╡ 2793fc42-c43f-4b44-a4cd-f9491e399168
 begin
-    for i in 1:(prb.numbers.I)
-        prb.random.πᵦ[3][i][1] = 2.5
+    for i in 1:(prb.numbers.units)
+        prb.random.prices_real_time[3][i][1] = 2.5
     end
     build_model!(prb)
     train!(prb)
@@ -115,8 +115,8 @@ md"""
 
 # ╔═╡ 5972566b-58c1-45ba-bd3b-0353516b4cb4
 begin
-    for i in 1:(prb.numbers.I)
-        prb.random.πᵧ[1][2][i][1] = 3.0
+    for i in 1:(prb.numbers.units)
+        prb.random.prices_day_ahead[1][2][i][1] = 3.0
     end
     build_model!(prb)
     train!(prb)
@@ -264,9 +264,9 @@ md"""
 
 # ╔═╡ 31e13286-b414-464d-983a-b1dbd3a39ebf
 begin
-    for t in 1:(prb3.numbers.T), i in 1:(prb3.numbers.I)
-        prb3.random.πᵦ[t][i] = [1.1, 1.5]
-        prb3.data.pᵦ[t][i] = [1.1, 1.5]
+    for t in 1:(prb3.numbers.duration), i in 1:(prb3.numbers.units)
+        prb3.random.prices_real_time[t][i] = [1.1, 1.5]
+        prb3.data.prices_real_time_curve[t][i] = [1.1, 1.5]
     end
 
     build_model!(prb3)
@@ -297,14 +297,14 @@ md"""
 
 # ╔═╡ 55de0841-c4c5-409c-beed-6a6bfb7eca39
 begin
-    for t in 1:(prb3.numbers.T), n in 1:2
-        prb3.random.πᵪ[t][n] = [[0.6, 0.3], [0.3, 0.6]]
-        prb3.random.ωᵪ[t][n] = [0.5, 0.5]
+    for t in 1:(prb3.numbers.duration), n in 1:2
+        prb3.random.inflow[t][n] = [[0.6, 0.3], [0.3, 0.6]]
+        prb3.random.inflow_probability[t][n] = [0.5, 0.5]
     end
 
-    for i in 1:(prb3.numbers.I)
-        prb3.random.πᵦ[3][i] = [1.5, 5.0]
-        prb3.data.pᵦ[3][i] = [1.5, 5.0]
+    for i in 1:(prb3.numbers.units)
+        prb3.random.prices_real_time[3][i] = [1.5, 5.0]
+        prb3.data.prices_real_time_curve[3][i] = [1.5, 5.0]
     end
 
     build_model!(prb3)

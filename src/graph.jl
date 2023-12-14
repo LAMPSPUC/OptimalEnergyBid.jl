@@ -43,10 +43,13 @@ function _plot_day_ahead_bids(
 )::Nothing
     day_ahead_bid = prb.output.day_ahead_bid[:, :, :, :, s]
 
-    for d in 1:(prb.numbers.D), n in 1:(prb.numbers.N), i in 1:(prb.numbers.I)
-        prices = prb.data.pᵧ[d][n][i]
+    for d in 1:(prb.numbers.days),
+        n in 1:(prb.numbers.periods_per_day),
+        i in 1:(prb.numbers.units)
+
+        prices = prb.data.prices_day_ahead_curve[d][n][i]
         offer = day_ahead_bid[:, i, n, d]
-        for k in 1:(prb.numbers.Kᵧ - 1)
+        for k in 1:(prb.numbers.day_ahead_steps - 1)
             offer[k + 1] += offer[k]
         end
         plot(
@@ -73,12 +76,14 @@ function _plot_day_ahead_clears(
 )::Nothing
     day_ahead_clear = prb.output.day_ahead_clear[:, :, :, s]
 
-    for d in 1:(prb.numbers.D)
-        vectors = [day_ahead_clear[i, :, d] for i in 1:(prb.numbers.I)]
+    for d in 1:(prb.numbers.days)
+        vectors = [day_ahead_clear[i, :, d] for i in 1:(prb.numbers.units)]
         plot(
             vectors;
             title="Day Ahead Clear $(d)",
-            label=reshape(reshape(prb.data.names, 1, prb.numbers.I), 1, prb.numbers.I),
+            label=reshape(
+                reshape(prb.data.names, 1, prb.numbers.units), 1, prb.numbers.units
+            ),
             legend=:outerbottom,
         )
         ylims!(0, 1.1 * maximum(day_ahead_clear))
@@ -97,10 +102,10 @@ function _plot_real_time_bids(
 )::Nothing
     real_time_bid = prb.output.real_time_bid[:, :, :, s]
 
-    for t in 1:(prb.numbers.T), i in 1:(prb.numbers.I)
-        prices = prb.data.pᵦ[t][i]
+    for t in 1:(prb.numbers.duration), i in 1:(prb.numbers.units)
+        prices = prb.data.prices_real_time_curve[t][i]
         offer = real_time_bid[:, i, t]
-        for k in 1:(prb.numbers.Kᵦ - 1)
+        for k in 1:(prb.numbers.real_tume_steps - 1)
             offer[k + 1] += offer[k]
         end
         plot(
@@ -124,11 +129,11 @@ end
 """Plots the volume output"""
 function _plot_volumes(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)::Nothing
     volume = prb.output.volume[:, :, s]
-    vectors = [volume[i, :] for i in 1:(prb.numbers.I)]
+    vectors = [volume[i, :] for i in 1:(prb.numbers.units)]
     plot(
         vectors;
         title="Volumes",
-        label=reshape(prb.data.names, 1, prb.numbers.I),
+        label=reshape(prb.data.names, 1, prb.numbers.units),
         legend=:outerbottom,
     )
     ylims!(0, 1.1 * maximum(volume))
@@ -145,11 +150,11 @@ function _plot_spillages(
     prb::Problem, s::Int, folder::Union{String,Nothing}=nothing
 )::Nothing
     spillage = prb.output.spillage[:, :, s]
-    vectors = [spillage[i, :] for i in 1:(prb.numbers.I)]
+    vectors = [spillage[i, :] for i in 1:(prb.numbers.units)]
     plot(
         vectors;
         title="Spillages",
-        label=reshape(prb.data.names, 1, prb.numbers.I),
+        label=reshape(prb.data.names, 1, prb.numbers.units),
         legend=:outerbottom,
     )
     ylims!(0, 1.1 * maximum(spillage))
@@ -166,11 +171,11 @@ function _plot_generations(
     prb::Problem, s::Int, folder::Union{String,Nothing}=nothing
 )::Nothing
     generation = prb.output.generation[:, :, s]
-    vectors = [generation[i, :] for i in 1:(prb.numbers.I)]
+    vectors = [generation[i, :] for i in 1:(prb.numbers.units)]
     plot(
         vectors;
         title="Generations",
-        label=reshape(prb.data.names, 1, prb.numbers.I),
+        label=reshape(prb.data.names, 1, prb.numbers.units),
         legend=:outerbottom,
     )
     ylims!(0, 1.1 * maximum(generation))
@@ -185,11 +190,11 @@ end
 """Plots the inflow output"""
 function _plot_inflows(prb::Problem, s::Int, folder::Union{String,Nothing}=nothing)::Nothing
     inflow = prb.output.inflow[:, :, s]
-    vectors = [inflow[i, :] for i in 1:(prb.numbers.I)]
+    vectors = [inflow[i, :] for i in 1:(prb.numbers.units)]
     plot(
         vectors;
         title="Inflows",
-        label=reshape(prb.data.names, 1, prb.numbers.I),
+        label=reshape(prb.data.names, 1, prb.numbers.units),
         legend=:outerbottom,
     )
     ylims!(0, 1.1 * maximum(inflow))

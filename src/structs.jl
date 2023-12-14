@@ -15,25 +15,25 @@ Base.@kwdef mutable struct Flags
 end
 
 """Contains all random variables"""
-Base.@kwdef mutable struct RandomVariables
-    πᵦ::Vector{Vector{Vector{Float64}}} = [] # Prices of real time t,i,n
-    πᵧ::Vector{Vector{Vector{Vector{Float64}}}} = [] # Prices of day ahead d,j,i,n
-    πᵪ::Vector{Vector{Vector{Vector{Float64}}}} = [] # Inflow values t,n,w,i
-    ωᵪ::Vector{Vector{Vector{Float64}}} = [] # Probabilities of inflow t,n,w
-    P::Vector{Matrix{Float64}} = [] # Markov transition matrices
+Base.@kwdef mutable struct Random
+    prices_real_time::Vector{Vector{Vector{Float64}}} = [] # Prices of real time t,i,n
+    prices_day_ahead::Vector{Vector{Vector{Vector{Float64}}}} = [] # Prices of day ahead d,j,i,n
+    inflow::Vector{Vector{Vector{Vector{Float64}}}} = [] # Inflow values t,n,w,i
+    inflow_probability::Vector{Vector{Vector{Float64}}} = [] # Probabilities of inflow t,n,w
+    markov_transitions::Vector{Matrix{Float64}} = [] # Markov transition matrices
 end
 
 """Contains all sizes and indices"""
 Base.@kwdef mutable struct Numbers
-    N::Int = 0 # Number of periods of time per day
-    n₀::Int = 0 # First period of time
-    I::Int = 0 # Number of units
-    U::Int = 0 # Periods of day ahead bid
-    V::Int = 0 # Periods of day ahead clear
-    D::Int = 0 # Number of days 
-    T::Int = 0 # Number of periods of time in the horizon
-    Kᵦ::Int = 0 # Number of prices in the real time curve
-    Kᵧ::Int = 0 # Number of prices in the day ahead curve
+    periods_per_day::Int = 0 # Number of periods of time per day
+    first_period::Int = 0 # First period of time
+    units::Int = 0 # Number of units
+    period_of_day_ahead_bid::Int = 0 # Periods of day ahead bid
+    period_of_day_ahead_clear::Int = 0 # Periods of day ahead clear
+    days::Int = 0 # Number of days 
+    duration::Int = 0 # Number of periods of time in the horizon
+    real_tume_steps::Int = 0 # Number of prices in the real time curve
+    day_ahead_steps::Int = 0 # Number of prices in the day ahead curve
 end
 
 """Contains the cache data"""
@@ -44,15 +44,15 @@ end
 
 """Contains the storages and generators data"""
 Base.@kwdef mutable struct Data
-    volume_max::Vector{Float64} = Array{Float64}(undef, zeros(Int, 1)...) # Storage max capacity
-    volume_min::Vector{Float64} = Array{Float64}(undef, zeros(Int, 1)...) # Storage min capacity
-    volume_initial::Vector{Float64} = Array{Float64}(undef, zeros(Int, 1)...) # Storage inicial condition
-    pᵦ::Vector{Vector{Vector{Float64}}} = [] # Prices of real time t,i,k
-    pᵧ::Vector{Vector{Vector{Vector{Float64}}}} = [] # Prices of day ahead d,j,i,k
-    ramp_up::Vector{Float64} = Array{Float64}(undef, zeros(Int, 1)...) # ramp up generation (optional)
-    ramp_down::Vector{Float64} = Array{Float64}(undef, zeros(Int, 1)...) # ramp down generation (optional)
-    generation_initial::Vector{Float64} = Array{Float64}(undef, zeros(Int, 1)...) # initial generation (optional)
-    names::Vector{String} = Array{String}(undef, zeros(Int, 1)...) # Storage names (optional)
+    volume_max::Vector{Float64} = [] # Storage max capacity
+    volume_min::Vector{Float64} = [] # Storage min capacity
+    volume_initial::Vector{Float64} = [] # Storage inicial condition
+    prices_real_time_curve::Vector{Vector{Vector{Float64}}} = [] # Prices of real time t,i,k
+    prices_day_ahead_curve::Vector{Vector{Vector{Vector{Float64}}}} = [] # Prices of day ahead d,j,i,k
+    ramp_up::Vector{Float64} = [] # ramp up generation (optional)
+    ramp_down::Vector{Float64} = [] # ramp down generation (optional)
+    generation_initial::Vector{Float64} = [] # initial generation (optional)
+    names::Vector{String} = [] # Storage names (optional)
 end
 
 """Contains all outputs"""
@@ -73,7 +73,7 @@ Base.@kwdef mutable struct Problem
     options::Options = Options()
     numbers::Numbers = Numbers()
     data::Data = Data()
-    random::RandomVariables = RandomVariables()
+    random::Random = Random()
     flags::Flags = Flags()
     cache::Cache = Cache()
     output::Output = Output()

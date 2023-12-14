@@ -8,8 +8,8 @@
         "period_of_day_ahead_bid": 1,
         "period_of_day_ahead_clear": 1,
         "duration": 1,
-        "total_day_ahead_curve": 1,
-        "total_real_time_curve": 1
+        "day_ahead_steps": 1,
+        "real_tume_steps": 1
     },
     "data": {
         "volume_max": [1.0],
@@ -21,8 +21,8 @@
     "random": {
         "prices_real_time": [[[10.0]]],
         "prices_day_ahead": [[[[9.0]]]],
-        "inflow_values": [[[[1.0]]]],
-        "prob_inflow": [[[1.0]]],
+        "inflow": [[[[1.0]]]],
+        "inflow_probability": [[[1.0]]],
         "markov_transitions": [[[1.0]]]
     }
 }

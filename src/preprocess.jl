@@ -12,12 +12,13 @@ function _evaluate_acceptance_real_time!(prb::Problem)::Nothing
     data = prb.data
 
     real_time = []
-    for t in 1:(numbers.T)
+    for t in 1:(numbers.duration)
         temp = []
-        for n in 1:(size(random.P[t])[2])
-            matrix = zeros(numbers.I, numbers.Kᵦ)
-            for i in 1:(numbers.I), k in 1:(numbers.Kᵦ)
-                matrix[i, k] = data.pᵦ[t][i][k] <= random.πᵦ[t][i][n]
+        for n in 1:(size(random.markov_transitions[t])[2])
+            matrix = zeros(numbers.units, numbers.real_tume_steps)
+            for i in 1:(numbers.units), k in 1:(numbers.real_tume_steps)
+                matrix[i, k] =
+                    data.prices_real_time_curve[t][i][k] <= random.prices_real_time[t][i][n]
             end
             push!(temp, matrix)
         end
@@ -35,14 +36,19 @@ function _evaluate_acceptance_day_ahead!(prb::Problem)::Nothing
     data = prb.data
 
     day_ahead = []
-    for d in 1:(numbers.D)
+    for d in 1:(numbers.days)
         temp = []
-        for j in 1:(numbers.N)
+        for j in 1:(numbers.periods_per_day)
             temp1 = []
-            for n in 1:(size(random.P[j + (numbers.N * (d - 1))])[2])
-                matrix = zeros(numbers.I, numbers.Kᵧ)
-                for i in 1:(numbers.I), k in 1:(numbers.Kᵧ)
-                    matrix[i, k] = data.pᵧ[d][j][i][k] <= random.πᵧ[d][j][i][n]
+            for n in
+                1:(size(
+                random.markov_transitions[j + (numbers.periods_per_day * (d - 1))]
+            )[2])
+                matrix = zeros(numbers.units, numbers.day_ahead_steps)
+                for i in 1:(numbers.units), k in 1:(numbers.day_ahead_steps)
+                    matrix[i, k] =
+                        data.prices_day_ahead_curve[d][j][i][k] <=
+                        random.prices_day_ahead[d][j][i][n]
                 end
                 push!(temp1, matrix)
             end

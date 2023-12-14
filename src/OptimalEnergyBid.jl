@@ -1,6 +1,7 @@
 module OptimalEnergyBid
 
 using EnumX
+using StructMapping
 using JSON
 using JSONSchema
 using JuMP

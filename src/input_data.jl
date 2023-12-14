@@ -26,122 +26,46 @@ end
 
 """Reads size and indeces information"""
 function _read_options!(prb::Problem, dict::Dict)::Nothing
-    options = prb.options
-
-    if haskey(dict["options"], "use_ramp_up")
-        options.use_ramp_up = dict["options"]["use_ramp_up"]
-    end
-    if haskey(dict["options"], "use_ramp_down")
-        options.use_ramp_down = dict["options"]["use_ramp_down"]
-    end
-    if haskey(dict["options"], "use_day_ahead_bid_bound")
-        options.use_day_ahead_bid_bound = dict["options"]["use_day_ahead_bid_bound"]
-    end
-    if haskey(dict["options"], "penalty_ramp_down")
-        options.penalty_ramp_down = dict["options"]["penalty_ramp_down"]
-    end
-    if haskey(dict["options"], "lambda")
-        options.lambda = dict["options"]["lambda"]
-    end
-    if haskey(dict["options"], "beta")
-        options.beta = dict["options"]["beta"]
-    end
-
+    prb.options = convertdict(Options, dict["options"])
     return nothing
 end
 
 """Reads size and indeces information"""
 function _read_numbers!(prb::Problem, dict::Dict)::Nothing
-    numbers = prb.numbers
-
-    numbers.N = dict["numbers"]["periods_per_day"]
-    numbers.n₀ = dict["numbers"]["first_period"]
-    numbers.I = dict["numbers"]["units"]
-    numbers.U = dict["numbers"]["period_of_day_ahead_bid"]
-    numbers.V = dict["numbers"]["period_of_day_ahead_clear"]
-    numbers.T = dict["numbers"]["duration"]
-    numbers.Kᵦ = dict["numbers"]["total_day_ahead_curve"]
-    numbers.Kᵧ = dict["numbers"]["total_real_time_curve"]
-    numbers.D = Int(ceil(numbers.T / numbers.N))
+    prb.numbers = convertdict(Numbers, dict["numbers"])
+    prb.numbers.days = Int(ceil(prb.numbers.duration / prb.numbers.periods_per_day))
 
     return nothing
 end
 
 """Reads storage/generators data information"""
 function _read_data!(prb::Problem, dict::Dict)::Nothing
-    data = prb.data
-
-    data.volume_max = dict["data"]["volume_max"]
-    data.volume_min = dict["data"]["volume_min"]
-    data.volume_initial = dict["data"]["volume_initial"]
-    data.pᵦ = dict["data"]["prices_real_time_curve"]
-    data.pᵧ = dict["data"]["prices_day_ahead_curve"]
-
-    if haskey(dict["data"], "names")
-        data.names = dict["data"]["names"]
-    else
-        temp = []
-        for i in 1:(prb.numbers.I)
-            push!(temp, "$i")
+    prb.data = convertdict(Data, dict["data"])
+    if prb.data.names == []
+        for i in 1:(prb.numbers.units)
+            push!(prb.data.names, "$i")
         end
-        data.names = temp
     end
-    if haskey(dict["data"], "ramp_up")
-        data.ramp_up = dict["data"]["ramp_up"]
-    end
-    if haskey(dict["data"], "ramp_down")
-        data.ramp_down = dict["data"]["ramp_down"]
-    end
-    if haskey(dict["data"], "generation_initial")
-        data.generation_initial = dict["data"]["generation_initial"]
-    end
-
     return nothing
 end
 
 """Reads random variables information"""
 function _read_random!(prb::Problem, dict::Dict)::Nothing
-    random = prb.random
-    numbers = prb.numbers
-
-    random.πᵦ = dict["random"]["prices_real_time"]
-    random.πᵧ = dict["random"]["prices_day_ahead"]
-    random.πᵪ = dict["random"]["inflow_values"]
-    random.ωᵪ = dict["random"]["prob_inflow"]
-
-    random.P = []
-
-    for t in 1:(numbers.T)
-        M = length(dict["random"]["markov_transitions"][t])
-        N = length(dict["random"]["markov_transitions"][t][1])
+    markov_transitions = dict["random"]["markov_transitions"]
+    delete!(dict["random"], "markov_transitions")
+    prb.random = convertdict(Random, dict["random"])
+    for t in 1:(prb.numbers.duration)
+        M = length(markov_transitions[t])
+        N = length(markov_transitions[t][1])
         temp = zeros(M, N)
         for m in 1:(M), n in 1:(N)
-            temp[m, n] = dict["random"]["markov_transitions"][t][m][n]
+            temp[m, n] = markov_transitions[t][m][n]
         end
-        push!(random.P, temp)
+        push!(prb.random.markov_transitions, temp)
     end
 
     return nothing
 end
-
-"""The map between the names in the struct and json"""
-_names_map = Dict(
-    "\"πᵦ\":" => "\"prices_real_time\":",
-    "\"πᵧ\":" => "\"prices_day_ahead\":",
-    "\"πᵪ\":" => "\"inflow_values\":",
-    "\"ωᵪ\":" => "\"prob_inflow\":",
-    "\"N\":" => "\"periods_per_day\":",
-    "\"n₀\":" => "\"first_period\":",
-    "\"I\":" => "\"units\":",
-    "\"U\":" => "\"period_of_day_ahead_bid\":",
-    "\"V\":" => "\"period_of_day_ahead_clear\":",
-    "\"T\":" => "\"duration\":",
-    "\"pᵦ\":" => "\"prices_real_time_curve\":",
-    "\"pᵧ\":" => "\"prices_day_ahead_curve\":",
-    "\"Kᵦ\":" => "\"total_real_time_curve\":",
-    "\"Kᵧ\":" => "\"total_day_ahead_curve\":",
-    "\"P\":" => "\"markov_transitions\":",
-)
 
 """
     write_json(prb::Problem,
@@ -155,7 +79,6 @@ function write_json(prb::Problem, file::String)::Nothing
     string_data = JSON.json(prb_temp)
     index = findfirst(",\"flags\":", string_data)[1]
     string_data = string_data[1:(index - 1)] * "}"
-    string_data = _replace_names(string_data, _names_map)
     open(file, "w") do f
         write(f, string_data)
     end
@@ -170,12 +93,4 @@ function _copy_only_input(prb::Problem)::Problem
     prb_temp.numbers = prb.numbers
     prb_temp.random = prb.random
     return prb_temp
-end
-
-"""Replace the names that are different in the json and structs"""
-function _replace_names(s::String, _names_map::Dict{String,String})::String
-    for key in keys(_names_map)
-        s = replace(s, key => _names_map[key])
-    end
-    return s
 end

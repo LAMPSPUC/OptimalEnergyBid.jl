@@ -7,8 +7,8 @@ train!(prb)
 simul = simulate!(prb)
 plot_all(prb, 1, "")
 
-for i in 1:(prb.numbers.I)
-    prb.random.πᵦ[3][i][1] = 2.5
+for i in 1:(prb.numbers.units)
+    prb.random.prices_real_time[3][i][1] = 2.5
 end
 
 build_model!(prb)
@@ -16,8 +16,8 @@ train!(prb)
 simul = simulate!(prb)
 plot_all(prb, 1, "")
 
-for i in 1:(prb.numbers.I)
-    prb.random.πᵧ[1][2][i][1] = 3.0
+for i in 1:(prb.numbers.units)
+    prb.random.prices_day_ahead[1][2][i][1] = 3.0
 end
 
 build_model!(prb)

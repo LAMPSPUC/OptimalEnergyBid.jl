@@ -39,8 +39,8 @@
                 "period_of_day_ahead_bid",
                 "period_of_day_ahead_clear",
                 "duration",
-                "total_day_ahead_curve",
-                "total_real_time_curve"
+                "day_ahead_steps",
+                "real_tume_steps"
             ],
             "properties": {
                 "periods_per_day": {
@@ -61,10 +61,10 @@
                 "duration": {
                     "type": "integer"
                 },
-                "total_day_ahead_curve": {
+                "day_ahead_steps": {
                     "type": "integer"
                 },
-                "total_real_time_curve": {
+                "real_tume_steps": {
                     "type": "integer"
                 }
             }
@@ -155,8 +155,8 @@
             "required": [
                 "prices_real_time",
                 "prices_day_ahead",
-                "inflow_values",
-                "prob_inflow",
+                "inflow",
+                "inflow_probability",
                 "markov_transitions"
             ],
             "properties": {
@@ -187,7 +187,7 @@
                         }
                     }
                 },
-                "inflow_values": {
+                "inflow": {
                     "type": "array",
                     "items": {
                         "type": "array",
@@ -202,7 +202,7 @@
                         }
                     }
                 },
-                "prob_inflow": {
+                "inflow_probability": {
                     "type": "array",
                     "items": {
                         "type": "array",

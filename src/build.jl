@@ -24,7 +24,7 @@ end
 
 """Creates the SDDP graph"""
 function _build_graph(prb::Problem)::SDDP.Graph
-    graph = SDDP.MarkovianGraph(prb.random.P)
+    graph = SDDP.MarkovianGraph(prb.random.markov_transitions)
     return graph
 end
 
@@ -34,14 +34,14 @@ function _evaluate_upper_bound(prb::Problem)::Float64
     random = prb.random
     data = prb.data
 
-    temp = zeros(numbers.I)
-    for t in 1:(numbers.T), i in 1:(numbers.I)
-        temp[i] = max(temp[i], maximum(random.πᵦ[t][i]))
+    temp = zeros(numbers.units)
+    for t in 1:(numbers.duration), i in 1:(numbers.units)
+        temp[i] = max(temp[i], maximum(random.prices_real_time[t][i]))
     end
-    for d in 1:(numbers.D), j in 1:(numbers.N), i in 1:(numbers.I)
-        temp[i] = max(temp[i], maximum(random.πᵧ[d][j][i]))
+    for d in 1:(numbers.days), j in 1:(numbers.periods_per_day), i in 1:(numbers.units)
+        temp[i] = max(temp[i], maximum(random.prices_day_ahead[d][j][i]))
     end
-    return JuMP.LinearAlgebra.dot(temp, data.volume_max) * numbers.T
+    return JuMP.LinearAlgebra.dot(temp, data.volume_max) * numbers.duration
 end
 
 """Creates the subproblem"""
@@ -103,17 +103,17 @@ end
 
 """Is offer day ahead"""
 function _is_offer_day_ahead(numbers::Numbers, t::Int)::Bool
-    return _clever_mod(numbers, t, numbers.U)
+    return _clever_mod(numbers, t, numbers.period_of_day_ahead_bid)
 end
 
 """Is clear day ahead"""
 function _is_clear_day_ahead(numbers::Numbers, t::Int)::Bool
-    return _clever_mod(numbers, t, numbers.V)
+    return _clever_mod(numbers, t, numbers.period_of_day_ahead_clear)
 end
 
 """Clever mod"""
 function _clever_mod(numbers::Numbers, t::Int, base::Int)::Bool
-    return mod(t - base + numbers.n₀ - 1, numbers.N) == 0
+    return mod(t - base + numbers.first_period - 1, numbers.periods_per_day) == 0
 end
 
 """Validate the problem"""
@@ -129,14 +129,16 @@ end
 function _validate_numbers(prb::Problem)::Nothing
     numbers = prb.numbers
 
-    @assert 1 <= numbers.N
-    @assert 1 <= numbers.n₀ && numbers.n₀ <= numbers.N
-    @assert 1 <= numbers.I
-    @assert 1 <= numbers.U && numbers.U <= numbers.N
-    @assert 1 <= numbers.V && numbers.V <= numbers.N
-    @assert 1 <= numbers.T
-    @assert 1 <= numbers.Kᵦ
-    @assert 1 <= numbers.Kᵧ
+    @assert 1 <= numbers.periods_per_day
+    @assert 1 <= numbers.first_period && numbers.first_period <= numbers.periods_per_day
+    @assert 1 <= numbers.units
+    @assert 1 <= numbers.period_of_day_ahead_bid &&
+        numbers.period_of_day_ahead_bid <= numbers.periods_per_day
+    @assert 1 <= numbers.period_of_day_ahead_clear &&
+        numbers.period_of_day_ahead_clear <= numbers.periods_per_day
+    @assert 1 <= numbers.duration
+    @assert 1 <= numbers.real_tume_steps
+    @assert 1 <= numbers.day_ahead_steps
 
     return nothing
 end
@@ -148,42 +150,43 @@ function _validate_data(prb::Problem)::Nothing
     flags = prb.flags
     data = prb.data
 
-    @assert length(data.volume_max) >= numbers.I
-    @assert length(data.volume_min) >= numbers.I
-    @assert length(data.volume_initial) >= numbers.I
+    @assert length(data.volume_max) >= numbers.units
+    @assert length(data.volume_min) >= numbers.units
+    @assert length(data.volume_initial) >= numbers.units
 
-    @assert length(data.pᵦ) >= numbers.T
-    for t in 1:(numbers.T)
-        @assert length(data.pᵦ[t]) >= numbers.I
-        for i in 1:(numbers.I)
-            @assert length(data.pᵦ[t][i]) >= numbers.Kᵦ
+    @assert length(data.prices_real_time_curve) >= numbers.duration
+    for t in 1:(numbers.duration)
+        @assert length(data.prices_real_time_curve[t]) >= numbers.units
+        for i in 1:(numbers.units)
+            @assert length(data.prices_real_time_curve[t][i]) >= numbers.real_tume_steps
         end
     end
 
-    @assert length(data.pᵧ) >= numbers.D
-    for d in 1:(numbers.D)
-        @assert length(data.pᵧ[d]) >= numbers.N
-        for j in 1:(numbers.N)
-            @assert length(data.pᵧ[d][j]) >= numbers.I
-            for i in 1:(numbers.I)
-                @assert length(data.pᵧ[d][j][i]) >= numbers.Kᵧ
+    @assert length(data.prices_day_ahead_curve) >= numbers.days
+    for d in 1:(numbers.days)
+        @assert length(data.prices_day_ahead_curve[d]) >= numbers.periods_per_day
+        for j in 1:(numbers.periods_per_day)
+            @assert length(data.prices_day_ahead_curve[d][j]) >= numbers.units
+            for i in 1:(numbers.units)
+                @assert length(data.prices_day_ahead_curve[d][j][i]) >=
+                    numbers.day_ahead_steps
             end
         end
     end
 
     if options.use_ramp_up
-        @assert length(data.ramp_up) >= numbers.I
+        @assert length(data.ramp_up) >= numbers.units
     end
 
     if options.use_ramp_down
-        @assert length(data.ramp_down) >= numbers.I
+        @assert length(data.ramp_down) >= numbers.units
     end
 
     if flags.generation_as_state
-        @assert length(data.generation_initial) >= numbers.I
+        @assert length(data.generation_initial) >= numbers.units
     end
 
-    @assert length(data.names) >= numbers.I
+    @assert length(data.names) >= numbers.units
 
     return nothing
 end
@@ -193,42 +196,43 @@ function _validate_random(prb::Problem)::Nothing
     numbers = prb.numbers
     random = prb.random
 
-    @assert length(random.P) >= numbers.T
+    @assert length(random.markov_transitions) >= numbers.duration
     temp = []
-    for t in 1:(numbers.T)
-        push!(temp, size(random.P[t])[2])
+    for t in 1:(numbers.duration)
+        push!(temp, size(random.markov_transitions[t])[2])
     end
 
-    @assert length(random.πᵦ) >= numbers.T
-    for t in 1:(numbers.T)
-        @assert length(random.πᵦ[t]) >= numbers.I
-        for i in 1:(numbers.I)
-            @assert length(random.πᵦ[t][i]) >= temp[t]
+    @assert length(random.prices_real_time) >= numbers.duration
+    for t in 1:(numbers.duration)
+        @assert length(random.prices_real_time[t]) >= numbers.units
+        for i in 1:(numbers.units)
+            @assert length(random.prices_real_time[t][i]) >= temp[t]
         end
     end
 
-    @assert length(random.πᵧ) >= numbers.D
-    for d in 1:(numbers.D)
-        @assert length(random.πᵧ[d]) >= numbers.N
-        for j in 1:(numbers.N)
-            @assert length(random.πᵧ[d][j]) >= numbers.I
-            for i in 1:(numbers.I)
-                @assert length(random.πᵧ[d][j][i]) >= temp[j + (numbers.N * (d - 1))]
+    @assert length(random.prices_day_ahead) >= numbers.days
+    for d in 1:(numbers.days)
+        @assert length(random.prices_day_ahead[d]) >= numbers.periods_per_day
+        for j in 1:(numbers.periods_per_day)
+            @assert length(random.prices_day_ahead[d][j]) >= numbers.units
+            for i in 1:(numbers.units)
+                @assert length(random.prices_day_ahead[d][j][i]) >=
+                    temp[j + (numbers.periods_per_day * (d - 1))]
             end
         end
     end
 
-    @assert length(random.πᵪ) >= numbers.T
-    @assert length(random.ωᵪ) >= numbers.T
-    for t in 1:(numbers.T)
-        @assert length(random.πᵪ[t]) >= temp[t]
-        @assert length(random.ωᵪ[t]) >= temp[t]
+    @assert length(random.inflow) >= numbers.duration
+    @assert length(random.inflow_probability) >= numbers.duration
+    for t in 1:(numbers.duration)
+        @assert length(random.inflow[t]) >= temp[t]
+        @assert length(random.inflow_probability[t]) >= temp[t]
         for z in 1:temp[t]
-            L = length(random.πᵪ[t][z])
-            @assert length(random.πᵪ[t][z]) == length(random.ωᵪ[t][z])
-            @assert sum(random.ωᵪ[t][z]) ≈ 1
+            L = length(random.inflow[t][z])
+            @assert length(random.inflow[t][z]) == length(random.inflow_probability[t][z])
+            @assert sum(random.inflow_probability[t][z]) ≈ 1
             for l in 1:L
-                @assert length(random.πᵪ[t][z][l]) >= numbers.I
+                @assert length(random.inflow[t][z][l]) >= numbers.units
             end
         end
     end

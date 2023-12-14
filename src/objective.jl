@@ -17,8 +17,9 @@ function _add_real_time_clear_objective!(
     add_to_expression!(
         sp[:objective],
         sum(
-            prb.random.πᵦ[t][i][markov_state] *
-            (sp[:generation][i] - sp[:day_ahead_clear][i, 1].in) for i in 1:(prb.numbers.I)
+            prb.random.prices_real_time[t][i][markov_state] *
+            (sp[:generation][i] - sp[:day_ahead_clear][i, 1].in) for
+            i in 1:(prb.numbers.units)
         ),
     )
     return nothing
@@ -31,9 +32,9 @@ function _add_real_time_clear_objective_state!(
     add_to_expression!(
         sp[:objective],
         sum(
-            prb.random.πᵦ[t][i][markov_state] *
+            prb.random.prices_real_time[t][i][markov_state] *
             (sp[:generation][i].out - sp[:day_ahead_clear][i, 1].in) for
-            i in 1:(prb.numbers.I)
+            i in 1:(prb.numbers.units)
         ),
     )
     return nothing
@@ -43,15 +44,18 @@ end
 function _add_day_ahead_clear_objective!(
     sp::Model, prb::Problem, t::Int, markov_state::Int
 )::Nothing
-    temp = div(t - 1, prb.numbers.N) + 1
+    temp = div(t - 1, prb.numbers.periods_per_day) + 1
 
-    if temp != prb.numbers.D
+    if temp != prb.numbers.days
         add_to_expression!(
             sp[:objective],
             sum(
-                prb.random.πᵧ[temp][n][i][markov_state] *
-                (sp[:day_ahead_clear][i, n + prb.numbers.N - prb.numbers.V].out) for
-                i in 1:(prb.numbers.I), n in 1:(prb.numbers.N)
+                prb.random.prices_day_ahead[temp][n][i][markov_state] * (
+                    sp[:day_ahead_clear][
+                        i,
+                        n + prb.numbers.periods_per_day - prb.numbers.period_of_day_ahead_clear,
+                    ].out
+                ) for i in 1:(prb.numbers.units), n in 1:(prb.numbers.periods_per_day)
             ),
         )
     end
