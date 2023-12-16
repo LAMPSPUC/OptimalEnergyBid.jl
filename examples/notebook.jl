@@ -6,7 +6,7 @@ using InteractiveUtils
 
 # ╔═╡ af7a6e30-9723-11ee-18f6-2552c59ac981
 begin
-    using Pkg: Pkg
+    using Pkg
     Pkg.activate("..")
     using OptimalEnergyBid, HiGHS, Images
 end
@@ -347,8 +347,8 @@ begin
         prb4, OptimalEnergyBid.Parameter.Optimizer, HiGHS.Optimizer
     )
     for t in 1:(prb4.numbers.duration), i in 1:(prb4.numbers.units)
-        prb4.random.prices_real_time[t][i] = [1.5 - t * 0.1, 2.0 + t * 10]
-        prb4.data.prices_real_time_curve[t][i] = [1.5 - t * 0.1, 2.0 + t * 10]
+        prb4.random.prices_real_time[t][i] = [1.5 - t * 0.1, 2.0 + 2.5^t]
+        prb4.data.prices_real_time_curve[t][i] = [1.5 - t * 0.1, 2.0 + 2.5^t]
     end
     prb4.data.volume_max = [100.0, 100.0]
     OptimalEnergyBid.build_model!(prb4)
@@ -360,10 +360,14 @@ end
 # ╔═╡ d5ab3d27-6c4a-4f49-a5cc-17d5cbcefc90
 load("volume.png")
 
+# ╔═╡ 9e6a02f0-8c2b-4fd8-b1a8-e15841cca1d3
+md"""
+**Pior caso**
+"""
+
 # ╔═╡ 153cddc0-e6c7-4019-b31c-bd2b3d697a6e
 begin
-    OptimalEnergyBid.set_parameter!(prb4, OptimalEnergyBid.Parameter.Lambda, 0.5)
-    OptimalEnergyBid.set_parameter!(prb4, OptimalEnergyBid.Parameter.Beta, 0.05)
+    OptimalEnergyBid.set_parameter!(prb4, OptimalEnergyBid.Parameter.Lambda, 0.0)
     OptimalEnergyBid.build_model!(prb4)
     OptimalEnergyBid.train!(prb4)
     OptimalEnergyBid.simulate!(prb4)
@@ -446,5 +450,6 @@ load("volume.png")
 # ╟─d0a31085-ab02-4d4d-a5c1-f95c67c0e502
 # ╠═3d647090-4800-471f-ad98-074d8556e19b
 # ╠═d5ab3d27-6c4a-4f49-a5cc-17d5cbcefc90
+# ╟─9e6a02f0-8c2b-4fd8-b1a8-e15841cca1d3
 # ╠═153cddc0-e6c7-4019-b31c-bd2b3d697a6e
 # ╠═b14421cd-f505-47f2-80d7-e10cd20cdf47
