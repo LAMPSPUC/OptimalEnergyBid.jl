@@ -13,13 +13,22 @@ end
 
 # ╔═╡ 94c16ad4-7dbf-49cb-beda-f301ac7d8e53
 md"""
-## Import packages
+# Import packages
 """
 
 # ╔═╡ 6161e8fc-ccf8-47bb-819a-6fae07c008bb
 md"""
-## Deterministic case
-**Esse caso conta com 2 usinas, o preço real time é constante e maior que o preço day ahead, que também é constante.**
+# Deterministic case
+## Constant prices over time
+- 2 units
+- 3 days
+- 2 jours per day
+- min storage is 0
+- max storage is 1
+- initial storage is 0.3 and 0.5
+- real-time price is 2.0
+- day-ahead price is 1.5
+- inflow is 0.5 per unit
 """
 
 # ╔═╡ 71ec49f5-5b71-43e5-8e8a-e7f4e369618a
@@ -36,49 +45,25 @@ begin
     OptimalEnergyBid.plot_all(prb, 1, "")
 end
 
-# ╔═╡ 5f05e0d6-d896-4151-9c37-2359fe043464
-md"""
-**Reservatorios terminam vazios**
-"""
-
 # ╔═╡ f7528f2f-dd8a-4a80-be11-30ca505738bc
 load("volume.png")
-
-# ╔═╡ 787576c2-b326-43c6-a06c-5fcdb75ed439
-md"""
-**Não tem vertimento**
-"""
 
 # ╔═╡ 84a93406-66af-4d11-bf04-fbbbbb8fa3d6
 load("spillage.png")
 
-# ╔═╡ c5e36c52-dbfc-4448-9912-e9c590bc2d94
-md"""
-**Toda energia é gerada**
-"""
-
 # ╔═╡ c7534d90-1de7-44ec-b3d1-2e0fc26ff3ac
 load("generation.png")
 
-# ╔═╡ e27798d8-2e94-41a0-8af8-07c64835d421
-md"""
-**Sem oferta DA**
-"""
-
 # ╔═╡ 84f7962e-00b2-443c-b218-7d4e3f8f55b4
 load("day_ahead_bid_1_1_1.png")
-
-# ╔═╡ 623ec462-7313-4185-975b-9d05e2070695
-md"""
-**Oferta RT**
-"""
 
 # ╔═╡ 9aae9053-7af3-44d7-bf27-76b14a0db7f5
 load("real_time_bid_1_1.png")
 
 # ╔═╡ e8b1ff03-9a79-4c28-8037-f0ab351468b7
 md"""
-**Preço aumenta na terceira hora hora**
+## Real-time price increases in the third hour
+- real-time prices: 2.0, 2.0, 2.5, 2.0, 2.0, 2.0
 """
 
 # ╔═╡ 2793fc42-c43f-4b44-a4cd-f9491e399168
@@ -98,11 +83,6 @@ load("volume.png")
 # ╔═╡ c4bb7c7c-856d-4ac5-827c-a35e19d57da1
 load("spillage.png")
 
-# ╔═╡ 68bc5bfd-5733-4fb7-a4cd-b1d816625bd8
-md"""
-**Guarda energia na segunda hora para gerar na terceira.**
-"""
-
 # ╔═╡ d46ee75b-494a-47e8-a89e-8c78d108e88c
 load("generation.png")
 
@@ -114,7 +94,8 @@ load("real_time_bid_1_1.png")
 
 # ╔═╡ b3f6833c-b9c7-490c-8785-173407261b54
 md"""
-**Preço DA maior que RT**
+## Day-ahead price increases in the second hour
+- day-ahead prices: 1.5, 3.0, 1.5, 1.5, 1.5, 1.5
 """
 
 # ╔═╡ 5972566b-58c1-45ba-bd3b-0353516b4cb4
@@ -150,7 +131,9 @@ load("real_time_bid_1_1.png")
 
 # ╔═╡ f330b280-f7dd-4e1e-b50f-b08b4beb6952
 md"""
-**Restrição de rampa**
+## Ramp constraints
+- ramp up is 0.1
+- ramp down is 0.1
 """
 
 # ╔═╡ f37e8a4f-512e-4cc6-bd2c-355c4c5612c8
@@ -178,18 +161,8 @@ end
 # ╔═╡ 213a0337-a34b-4af3-aaa7-4cdd99ac691a
 load("volume.png")
 
-# ╔═╡ 8cfac6aa-b56f-4ef9-805d-058e2cbf99aa
-md"""
-**Obrigado a verter**
-"""
-
 # ╔═╡ 59b650ab-4779-485a-b4a9-979bd7383376
 load("spillage.png")
-
-# ╔═╡ e6e4fa17-1ee5-4c48-9c91-0971876e44d9
-md"""
-**Rampa de geração**
-"""
 
 # ╔═╡ 76712d9a-62c8-4907-8186-6cd51a22c50a
 load("generation.png")
@@ -202,8 +175,17 @@ load("real_time_bid_1_1.png")
 
 # ╔═╡ c5dc745c-ade3-4ce0-b8a8-ee90786f10dc
 md"""
-## Stochastic case
-**Esse caso conta com 2 usinas, o preço real time é maior que o preço day ahead.**
+# Stochastic case
+## Real-time price higher than day-ahead price
+- 2 units
+- 3 days
+- 2 jours per day
+- min storage is 0
+- max storage is 1
+- initial storage is 0.0 and 0.5
+- real-time price is 1.5 and 2.0 (50% each one)
+- day-ahead price is 1.0 and 1.4 (50% each one)
+- inflow is 0.5 per unit
 """
 
 # ╔═╡ 5c5a126b-bcea-4dfe-961d-b98b6ffb391a
@@ -270,7 +252,8 @@ load("real_time_bid_2_6.png")
 
 # ╔═╡ 2242fdbe-77f5-4d75-abc8-a21f7adfc324
 md"""
-**Preço diminui em um cenario RT: Oferta no preço DA que é maior que a esperança do preço RT**
+## A day-ahead price scenario is greater than the expected real-time price
+- real-time price is 1.1 and 1.5 (50% each one)
 """
 
 # ╔═╡ 31e13286-b414-464d-983a-b1dbd3a39ebf
@@ -303,7 +286,9 @@ load("real_time_bid_1_1.png")
 
 # ╔═╡ 767e0d0f-552b-4761-a36b-0d3d9f0c9739
 md"""
-**Incerteza de geração: possivel vertimento**
+## Uncertainty in inflows
+- real-time price is 1.5 and 5.0 (50% each one) in third hour
+- inflow is 0.6 and 0.3 (50% each one)
 """
 
 # ╔═╡ 55de0841-c4c5-409c-beed-6a6bfb7eca39
@@ -335,7 +320,10 @@ load("generation.png")
 
 # ╔═╡ d0a31085-ab02-4d4d-a5c1-f95c67c0e502
 md"""
-## Risk aversion case
+# Risk aversion case
+## Over time, the best real-time price gets much better and the worst real-time price gets a little worse.
+- real-time price is 1.5 - 0.1t and 2.0 + 2.5t (50% each one)
+- max storage is 100
 """
 
 # ╔═╡ 3d647090-4800-471f-ad98-074d8556e19b
@@ -362,7 +350,7 @@ load("volume.png")
 
 # ╔═╡ 9e6a02f0-8c2b-4fd8-b1a8-e15841cca1d3
 md"""
-**Pior caso**
+## Worst case
 """
 
 # ╔═╡ 153cddc0-e6c7-4019-b31c-bd2b3d697a6e
@@ -378,25 +366,19 @@ end
 load("volume.png")
 
 # ╔═╡ Cell order:
-# ╟─94c16ad4-7dbf-49cb-beda-f301ac7d8e53
+# ╠═94c16ad4-7dbf-49cb-beda-f301ac7d8e53
 # ╠═af7a6e30-9723-11ee-18f6-2552c59ac981
 # ╟─6161e8fc-ccf8-47bb-819a-6fae07c008bb
 # ╠═71ec49f5-5b71-43e5-8e8a-e7f4e369618a
-# ╟─5f05e0d6-d896-4151-9c37-2359fe043464
 # ╟─f7528f2f-dd8a-4a80-be11-30ca505738bc
-# ╟─787576c2-b326-43c6-a06c-5fcdb75ed439
 # ╟─84a93406-66af-4d11-bf04-fbbbbb8fa3d6
-# ╟─c5e36c52-dbfc-4448-9912-e9c590bc2d94
 # ╟─c7534d90-1de7-44ec-b3d1-2e0fc26ff3ac
-# ╟─e27798d8-2e94-41a0-8af8-07c64835d421
 # ╟─84f7962e-00b2-443c-b218-7d4e3f8f55b4
-# ╟─623ec462-7313-4185-975b-9d05e2070695
 # ╟─9aae9053-7af3-44d7-bf27-76b14a0db7f5
 # ╟─e8b1ff03-9a79-4c28-8037-f0ab351468b7
 # ╠═2793fc42-c43f-4b44-a4cd-f9491e399168
 # ╟─dcb25596-8528-4c4c-ac68-2a6560e96ff2
 # ╟─c4bb7c7c-856d-4ac5-827c-a35e19d57da1
-# ╟─68bc5bfd-5733-4fb7-a4cd-b1d816625bd8
 # ╟─d46ee75b-494a-47e8-a89e-8c78d108e88c
 # ╟─8391884a-f5e9-4f74-a6d6-231633b50d83
 # ╟─d2387568-6ace-4ee9-b9fb-79e711f69d37
@@ -411,9 +393,7 @@ load("volume.png")
 # ╟─f330b280-f7dd-4e1e-b50f-b08b4beb6952
 # ╠═f37e8a4f-512e-4cc6-bd2c-355c4c5612c8
 # ╟─213a0337-a34b-4af3-aaa7-4cdd99ac691a
-# ╟─8cfac6aa-b56f-4ef9-805d-058e2cbf99aa
 # ╟─59b650ab-4779-485a-b4a9-979bd7383376
-# ╟─e6e4fa17-1ee5-4c48-9c91-0971876e44d9
 # ╟─76712d9a-62c8-4907-8186-6cd51a22c50a
 # ╟─fc6b76fb-b565-453f-8da4-6256a056e05b
 # ╟─267d6a5c-1ceb-459d-87e5-08dd5ea38c11
@@ -440,7 +420,7 @@ load("volume.png")
 # ╟─f92891c9-85cb-4308-b948-a586018276e6
 # ╟─0ed061e0-7ad2-4cce-93b8-875c9c68cd29
 # ╟─0c90567a-78b3-45df-a4a6-c9928fdc0349
-# ╠═5e024476-ef59-4b4c-bf88-ae8ae52183a5
+# ╟─5e024476-ef59-4b4c-bf88-ae8ae52183a5
 # ╟─282729ad-6faa-498b-8a3e-f6b461080a8c
 # ╟─767e0d0f-552b-4761-a36b-0d3d9f0c9739
 # ╠═55de0841-c4c5-409c-beed-6a6bfb7eca39
@@ -449,7 +429,7 @@ load("volume.png")
 # ╟─b3e78c7a-be71-4a38-98c6-ac7e2aecfaae
 # ╟─d0a31085-ab02-4d4d-a5c1-f95c67c0e502
 # ╠═3d647090-4800-471f-ad98-074d8556e19b
-# ╠═d5ab3d27-6c4a-4f49-a5cc-17d5cbcefc90
+# ╟─d5ab3d27-6c4a-4f49-a5cc-17d5cbcefc90
 # ╟─9e6a02f0-8c2b-4fd8-b1a8-e15841cca1d3
 # ╠═153cddc0-e6c7-4019-b31c-bd2b3d697a6e
-# ╠═b14421cd-f505-47f2-80d7-e10cd20cdf47
+# ╟─b14421cd-f505-47f2-80d7-e10cd20cdf47
