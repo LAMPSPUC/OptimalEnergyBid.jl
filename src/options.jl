@@ -1,4 +1,4 @@
-"""Bool parameters enum"""
+"""Parameters enum"""
 @enumx Parameter begin
     Optimizer
     UseRampUp
@@ -9,7 +9,7 @@
     Beta
 end
 
-"""Set a bool parameter"""
+"""Set a parameter"""
 function set_parameter!(prb::Problem, type::Parameter.T, value::Any)::Nothing
     field = Symbol(_camelcase_to_snakecase(string(type)))
     setproperty!(prb.options, field, value)

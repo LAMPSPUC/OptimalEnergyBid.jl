@@ -7,6 +7,8 @@ using JSONSchema
 using JuMP
 using SDDP
 using Plots
+using CSV
+using DataFrames
 
 include("structs.jl")
 include("options.jl")
@@ -19,5 +21,6 @@ include("build.jl")
 include("solve.jl")
 include("output.jl")
 include("graph.jl")
+include("pjm/read_table.jl")
 
 end # module OptimalEnergyBid
