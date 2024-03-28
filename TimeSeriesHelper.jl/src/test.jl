@@ -14,3 +14,7 @@ m, o = estimate_hmm(h, N)
 matrix = build_markov_transition(m, T)
 
 rt = build_prices_real_time(o, T, P)
+
+da = build_prices_day_ahead(o, T, P, 2)
+
+inflow = build_inflow(o, T, P, N)

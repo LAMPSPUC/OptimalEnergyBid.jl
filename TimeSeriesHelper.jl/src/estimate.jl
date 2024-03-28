@@ -30,61 +30,78 @@ function build_markov_transition(transition_matrix::Matrix{Float64}, T::Int)::Ve
 end
 
 function build_prices_real_time(obs_distributions::Vector{Distribution}, T::Int, P::Int)::Vector{Vector{Vector{Float64}}}
-    prices_real_time = Vector{Vector{Vector{Float64}}}(undef, T)
     I = length(obs_distributions[1].μ) ÷ (P+2)
     N = length(obs_distributions) 
-
-    temp = []
-    for i in 1:I
-        push!(temp, [])
-        for n in 1:N
-            push!(temp[i], obs_distributions[n].μ[i])
-        end
+    prices_real_time = Vector{Vector{Vector{Float64}}}(undef, T)
+   
+    samples = zeros(T, N, I)
+    for t in 1:T, n in 1:N
+        samples[t, n, :] = rand(obs_distributions[n])[1:I]
     end
-    
+
     for t in 1:T
+        temp = []
+        for i in 1:I
+            push!(temp, [])
+            for n in 1:N
+                push!(temp[i], samples[t,n,i])
+            end
+        end
         prices_real_time[t] = temp
     end
+
     return prices_real_time
 end
 
-function build_prices_day_ahead(obs_distributions::Vector{Distribution}, T::Int, P::Int)::Vector{Vector{Vector{Vector{Float64}}}}
-    prices_day_ahead = Vector{Vector{Vector{Vector{Float64}}}}(undef, T)
+function build_prices_day_ahead(obs_distributions::Vector{Distribution}, T::Int, P::Int, U::Int)::Vector{Vector{Vector{Vector{Float64}}}}
     I = length(obs_distributions[1].μ) ÷ (P+2)
-    N = length(obs_distributions) 
+    D = T ÷ P
+    N = length(obs_distributions)
+    prices_day_ahead = Vector{Vector{Vector{Vector{Float64}}}}(undef, D)
 
-    temp = []
-    for i in (I+1):(I*(P+1))
-        push!(temp, [])
-        for n in 1:N
-            push!(temp[i], obs_distributions[n].μ[i])
+    samples = zeros(D, N, I*P)
+    for d in 1:D, n in 1:N
+        samples[d, n, :] = rand(obs_distributions[n])[I+1:I+I*P]
+    end
+
+    for d in 1:D
+        temp = []
+        for p in 1:P
+            push!(temp, [])
+            for i in 1:(I*P)
+                push!(temp[p], [])
+                for n in 1:N
+                    push!(temp[p][i], samples[d,n,i])
+                end
+            end
         end
+        prices_day_ahead[d] = temp
     end
-    
-    for t in 1:T
-        prices_day_ahead[t] = temp
-    end
+
     return prices_day_ahead
 end
 
 function build_inflow(obs_distributions::Vector{Distribution}, T::Int, P::Int, W::Int)::Vector{Vector{Vector{Vector{Float64}}}}
-    inflow = Vector{Vector{Vector{Vector{Float64}}}}(undef, T)
     I = length(obs_distributions[1].μ) ÷ (P+2)
-    N = length(obs_distributions) 
+    N = length(obs_distributions)
+    inflow = Vector{Vector{Vector{Vector{Float64}}}}(undef, T)
+   
+    samples = zeros(T, N, W, I)
+    for t in 1:T, n in 1:N, w in 1:W
+        samples[t, n, w, :] = rand(obs_distributions[n])[I*(P+1)+1:I*(P+2)]
+    end
 
-    temp = []
-    for n in 1:N
-        push!(temp, [])
-        for w in 1:W
-            push!(temp[n], [])
-            random = rand(obs_distributions[n])
-            for i in (I*(P+1)+1):(I*(P+2))
-                push!(temp[n][w], random[i])
+    for t in 1:T
+        temp = []
+        for n in 1:N
+            push!(temp, [])
+            for w in 1:W
+                push!(temp[n], [])
+                for i in 1:I
+                    push!(temp[n][w], samples[t, n, w, i])
+                end
             end
         end
-    end
-    
-    for t in 1:T
         inflow[t] = temp
     end
     return inflow
