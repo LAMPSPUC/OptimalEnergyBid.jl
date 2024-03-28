@@ -5,7 +5,7 @@ function build_serial_history(history::History, T::Int, P::Int)::Vector{Vector{F
 
     serial_history = Vector{Vector{Float64}}(undef, T)
     for t in 1:T
-        serial_history[t] = [prices_real_time[t]..., vcat(prices_day_ahead[t:t+P]...)..., inflow[t]...]
+        serial_history[t] = [prices_real_time[t]..., vcat(prices_day_ahead[t:t+P-1]...)..., inflow[t]...]
     end
     return serial_history
 end
