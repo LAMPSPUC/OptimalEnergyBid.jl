@@ -5,6 +5,7 @@
         "periods_per_day": 1,
         "first_period": 1,
         "units": 1,
+        "buses": 1,
         "period_of_day_ahead_bid": 1,
         "period_of_day_ahead_clear": 1,
         "duration": 1,
@@ -12,6 +13,7 @@
         "real_tume_steps": 1
     },
     "data": {
+        "unit_to_bus": [1],
         "volume_max": [1.0],
         "volume_min": [0.0],
         "volume_initial": [0.0],

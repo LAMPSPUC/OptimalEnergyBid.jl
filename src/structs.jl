@@ -16,8 +16,8 @@ end
 
 """Contains all random variables"""
 Base.@kwdef mutable struct Random
-    prices_real_time::Vector{Vector{Vector{Float64}}} = [] # Prices of real time t,i,n
-    prices_day_ahead::Vector{Vector{Vector{Vector{Float64}}}} = [] # Prices of day ahead d,j,i,n
+    prices_real_time::Vector{Vector{Vector{Float64}}} = [] # Prices of real time t,b,n
+    prices_day_ahead::Vector{Vector{Vector{Vector{Float64}}}} = [] # Prices of day ahead d,j,b,n
     inflow::Vector{Vector{Vector{Vector{Float64}}}} = [] # Inflow values t,n,w,i
     inflow_probability::Vector{Vector{Vector{Float64}}} = [] # Probabilities of inflow t,n,w
     markov_transitions::Vector{Matrix{Float64}} = [] # Markov transition matrices
@@ -28,6 +28,7 @@ Base.@kwdef mutable struct Numbers
     periods_per_day::Int = 0 # Number of periods of time per day
     first_period::Int = 0 # First period of time
     units::Int = 0 # Number of units
+    buses::Int = 0 # Number of buses
     period_of_day_ahead_bid::Int = 0 # Periods of day ahead bid
     period_of_day_ahead_clear::Int = 0 # Periods of day ahead clear
     days::Int = 0 # Number of days 
@@ -52,6 +53,7 @@ Base.@kwdef mutable struct Data
     ramp_up::Vector{Float64} = [] # ramp up generation (optional)
     ramp_down::Vector{Float64} = [] # ramp down generation (optional)
     generation_initial::Vector{Float64} = [] # initial generation (optional)
+    unit_to_bus::Vector{Int32} = [] # Mapping units to buses
     names::Vector{String} = [] # Storage names (optional)
 end
 

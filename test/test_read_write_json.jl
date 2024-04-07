@@ -8,6 +8,7 @@ options = prb1.options
 numbers.periods_per_day = 1
 numbers.first_period = 1
 numbers.units = 1
+numbers.buses = 1
 numbers.duration = 1
 numbers.real_tume_steps = 1
 numbers.day_ahead_steps = 1
@@ -20,6 +21,7 @@ random.inflow = [[[[1.0]]]]
 random.inflow_probability = [[[1.0]]]
 random.markov_transitions = [ones(1, 1)]
 
+data.unit_to_bus = [1]
 data.volume_max = ones(1)
 data.volume_min = zeros(1)
 data.volume_initial = zeros(1)
@@ -37,12 +39,14 @@ prb2 = OptimalEnergyBid.create_problem(joinpath(dirname(@__DIR__), "cases", "toy
 @test numbers.periods_per_day == prb2.numbers.periods_per_day
 @test numbers.first_period == prb2.numbers.first_period
 @test numbers.units == prb2.numbers.units
+@test numbers.buses == prb2.numbers.buses
 @test numbers.duration == prb2.numbers.duration
 @test numbers.real_tume_steps == prb2.numbers.real_tume_steps
 @test numbers.day_ahead_steps == prb2.numbers.day_ahead_steps
 @test numbers.period_of_day_ahead_bid == prb2.numbers.period_of_day_ahead_bid
 @test numbers.period_of_day_ahead_clear == prb2.numbers.period_of_day_ahead_clear
 
+@test data.unit_to_bus == prb2.data.unit_to_bus
 @test data.volume_max == prb2.data.volume_max
 @test data.volume_min == prb2.data.volume_min
 @test data.volume_initial == prb2.data.volume_initial

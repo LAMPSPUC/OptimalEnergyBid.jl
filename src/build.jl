@@ -34,12 +34,12 @@ function _evaluate_upper_bound(prb::Problem)::Float64
     random = prb.random
     data = prb.data
 
-    temp = zeros(numbers.units)
-    for t in 1:(numbers.duration), i in 1:(numbers.units)
-        temp[i] = max(temp[i], maximum(random.prices_real_time[t][i]))
+    temp = zeros(numbers.buses)
+    for t in 1:(numbers.duration), b in 1:(numbers.buses)
+        temp[b] = max(temp[b], maximum(random.prices_real_time[t][b]))
     end
-    for d in 1:(numbers.days), j in 1:(numbers.periods_per_day), i in 1:(numbers.units)
-        temp[i] = max(temp[i], maximum(random.prices_day_ahead[d][j][i]))
+    for d in 1:(numbers.days), j in 1:(numbers.periods_per_day), b in 1:(numbers.buses)
+        temp[b] = max(temp[b], maximum(random.prices_day_ahead[d][j][b]))
     end
     return JuMP.LinearAlgebra.dot(temp, data.volume_max) * numbers.duration
 end
@@ -132,6 +132,7 @@ function _validate_numbers(prb::Problem)::Nothing
     @assert 1 <= numbers.periods_per_day
     @assert 1 <= numbers.first_period && numbers.first_period <= numbers.periods_per_day
     @assert 1 <= numbers.units
+    @assert 1 <= numbers.buses
     @assert 1 <= numbers.period_of_day_ahead_bid &&
         numbers.period_of_day_ahead_bid <= numbers.periods_per_day
     @assert 1 <= numbers.period_of_day_ahead_clear &&
@@ -153,6 +154,7 @@ function _validate_data(prb::Problem)::Nothing
     @assert length(data.volume_max) >= numbers.units
     @assert length(data.volume_min) >= numbers.units
     @assert length(data.volume_initial) >= numbers.units
+    @assert length(data.unit_to_bus) >= numbers.units
 
     @assert length(data.prices_real_time_curve) >= numbers.duration
     for t in 1:(numbers.duration)
@@ -204,9 +206,9 @@ function _validate_random(prb::Problem)::Nothing
 
     @assert length(random.prices_real_time) >= numbers.duration
     for t in 1:(numbers.duration)
-        @assert length(random.prices_real_time[t]) >= numbers.units
-        for i in 1:(numbers.units)
-            @assert length(random.prices_real_time[t][i]) >= temp[t]
+        @assert length(random.prices_real_time[t]) >= numbers.buses
+        for b in 1:(numbers.buses)
+            @assert length(random.prices_real_time[t][b]) >= temp[t]
         end
     end
 
@@ -214,9 +216,9 @@ function _validate_random(prb::Problem)::Nothing
     for d in 1:(numbers.days)
         @assert length(random.prices_day_ahead[d]) >= numbers.periods_per_day
         for j in 1:(numbers.periods_per_day)
-            @assert length(random.prices_day_ahead[d][j]) >= numbers.units
-            for i in 1:(numbers.units)
-                @assert length(random.prices_day_ahead[d][j][i]) >=
+            @assert length(random.prices_day_ahead[d][j]) >= numbers.buses
+            for b in 1:(numbers.buses)
+                @assert length(random.prices_day_ahead[d][j][b]) >=
                     temp[j + (numbers.periods_per_day * (d - 1))]
             end
         end
