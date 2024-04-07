@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.9
+# v0.19.40
 
 using Markdown
 using InteractiveUtils
@@ -21,6 +21,7 @@ md"""
 # Deterministic case
 ## Constant prices over time
 - 2 units
+- 2 buses
 - 3 days
 - 2 jours per day
 - min storage is 0
@@ -68,8 +69,8 @@ md"""
 
 # ╔═╡ 2793fc42-c43f-4b44-a4cd-f9491e399168
 begin
-    for i in 1:(prb.numbers.units)
-        prb.random.prices_real_time[3][i][1] = 2.5
+    for b in 1:(prb.numbers.buses)
+        prb.random.prices_real_time[3][b][1] = 2.5
     end
     OptimalEnergyBid.build_model!(prb)
     OptimalEnergyBid.train!(prb)
@@ -100,8 +101,8 @@ md"""
 
 # ╔═╡ 5972566b-58c1-45ba-bd3b-0353516b4cb4
 begin
-    for i in 1:(prb.numbers.units)
-        prb.random.prices_day_ahead[1][2][i][1] = 3.0
+    for b in 1:(prb.numbers.buses)
+        prb.random.prices_day_ahead[1][2][b][1] = 3.0
     end
     OptimalEnergyBid.build_model!(prb)
     OptimalEnergyBid.train!(prb)
@@ -178,6 +179,7 @@ md"""
 # Stochastic case
 ## Real-time price higher than day-ahead price
 - 2 units
+- 2 buses
 - 3 days
 - 2 jours per day
 - min storage is 0
@@ -259,8 +261,11 @@ md"""
 # ╔═╡ 31e13286-b414-464d-983a-b1dbd3a39ebf
 begin
     for t in 1:(prb3.numbers.duration), i in 1:(prb3.numbers.units)
-        prb3.random.prices_real_time[t][i] = [1.1, 1.5]
         prb3.data.prices_real_time_curve[t][i] = [1.1, 1.5]
+    end
+
+    for t in 1:(prb3.numbers.duration), b in 1:(prb3.numbers.buses)
+        prb3.random.prices_real_time[t][b] = [1.1, 1.5]
     end
 
     OptimalEnergyBid.build_model!(prb3)
@@ -299,8 +304,11 @@ begin
     end
 
     for i in 1:(prb3.numbers.units)
-        prb3.random.prices_real_time[3][i] = [1.5, 5.0]
         prb3.data.prices_real_time_curve[3][i] = [1.5, 5.0]
+    end
+
+    for b in 1:(prb3.numbers.buses)
+        prb3.random.prices_real_time[3][b] = [1.5, 5.0]
     end
 
     OptimalEnergyBid.build_model!(prb3)
@@ -323,6 +331,7 @@ md"""
 # Risk aversion case
 ## Over time, the best real-time price gets much better and the worst real-time price gets a little worse.
 - 2 units
+- 2 buses
 - 3 days
 - 2 jours per day
 - min storage is 0
@@ -342,8 +351,10 @@ begin
         prb4, OptimalEnergyBid.Parameter.Optimizer, HiGHS.Optimizer
     )
     for t in 1:(prb4.numbers.duration), i in 1:(prb4.numbers.units)
-        prb4.random.prices_real_time[t][i] = [1.5 - t * 0.1, 2.0 + 2.5^t]
         prb4.data.prices_real_time_curve[t][i] = [1.5 - t * 0.1, 2.0 + 2.5^t]
+    end
+    for t in 1:(prb4.numbers.duration), b in 1:(prb4.numbers.buses)
+        prb4.random.prices_real_time[t][b] = [1.5 - t * 0.1, 2.0 + 2.5^t]
     end
     prb4.data.volume_max = [100.0, 100.0]
     OptimalEnergyBid.build_model!(prb4)

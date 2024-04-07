@@ -36,6 +36,7 @@
                 "periods_per_day",
                 "first_period",
                 "units",
+                "buses",
                 "period_of_day_ahead_bid",
                 "period_of_day_ahead_clear",
                 "duration",
@@ -50,6 +51,9 @@
                     "type": "integer"
                 },
                 "units": {
+                    "type": "integer"
+                },
+                "buses": {
                     "type": "integer"
                 },
                 "period_of_day_ahead_bid": {
@@ -72,6 +76,7 @@
         "data": {
             "type": "object",
             "required": [
+                "unit_to_bus",
                 "volume_max",
                 "volume_min",
                 "volume_initial",
@@ -79,6 +84,12 @@
                 "prices_day_ahead_curve"
             ],
             "properties": {
+                "unit_to_bus": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
                 "volume_max": {
                     "type": "array",
                     "items": {
