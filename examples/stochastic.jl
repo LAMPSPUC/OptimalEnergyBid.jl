@@ -8,8 +8,11 @@ OptimalEnergyBid.simulate!(prb)
 OptimalEnergyBid.plot_all(prb, 1, "")
 
 for t in 1:(prb.numbers.duration), i in 1:(prb.numbers.units)
-    prb.random.prices_real_time[t][i] = [1.1, 1.5]
     prb.data.prices_real_time_curve[t][i] = [1.1, 1.5]
+end
+
+for t in 1:(prb.numbers.duration), b in 1:(prb.numbers.buses)
+    prb.random.prices_real_time[t][b] = [1.1, 1.5]
 end
 
 OptimalEnergyBid.build_model!(prb)
@@ -23,8 +26,11 @@ for t in 1:(prb.numbers.duration), n in 1:2
 end
 
 for i in 1:(prb.numbers.units)
-    prb.random.prices_real_time[3][i] = [1.5, 5.0]
     prb.data.prices_real_time_curve[3][i] = [1.5, 5.0]
+end
+
+for b in 1:(prb.numbers.buses)
+    prb.random.prices_real_time[3][b] = [1.5, 5.0]
 end
 
 OptimalEnergyBid.build_model!(prb)
