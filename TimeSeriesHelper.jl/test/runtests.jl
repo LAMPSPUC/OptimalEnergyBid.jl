@@ -5,22 +5,18 @@ T = 3
 P = 2
 N = 2
 
-history.prices_real_time = [[1, 2],[3, 4],[5, 6]]
-history.prices_day_ahead = [[7, 8],[9, 10],[11, 12],[13, 14],[15, 16],[17, 18]]
-history.inflow = [[19, 20],[21, 22],[23, 24]]
+history.prices_real_time = [[1.1, 2.1],[1.3, 2.3],[1.2, 2.2]]
+history.prices_day_ahead = [[1.5, 2.9],[1.4, 2.6],[1.1, 2.7],[1, 2.6],[1, 2],[1.8, 2]]
+history.inflow = [[1.2, 2.2],[1.1, 2.1],[1.3, 2.3]]
 
 h = TimeSeriesHelper.build_serial_history(history, T, P)
 
-@test h == [[1.0, 2.0, 7.0, 8.0, 9.0, 10.0, 19.0, 20.0],
-            [3.0, 4.0, 9.0, 10.0, 11.0, 12.0, 21.0, 22.0],
-            [5.0, 6.0, 11.0, 12.0, 13.0, 14.0, 23.0, 24.0]]
+@test h == [[1.1, 2.1, 1.5, 2.9, 1.4, 2.6, 1.2, 2.2],
+            [1.3, 2.3, 1.4, 2.6, 1.1, 2.7, 1.1, 2.1],
+            [1.2, 2.2, 1.1, 2.7, 1.0, 2.6, 1.3, 2.3]]
 
 m, o = TimeSeriesHelper.estimate_hmm(h, N)
 
 matrix = TimeSeriesHelper.build_markov_transition(m, T)
 
-rt = TimeSeriesHelper.build_prices_real_time(o, T, P)
-
-da = TimeSeriesHelper.build_prices_day_ahead(o, T, P, 2)
-
-inflow = TimeSeriesHelper.build_inflow(o, T, P, N)
+rt, da, inflow = TimeSeriesHelper.build_scenarios(o, T, P, 5, 2, 2, 2)
