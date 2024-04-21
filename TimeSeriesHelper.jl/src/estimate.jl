@@ -11,9 +11,9 @@ function build_serial_history(history::History, T::Int, P::Int)::Vector{Vector{F
 end
 
 function estimate_hmm(history::Vector{Vector{Float64}}, number_states::Int)::Tuple{Matrix{Float64}, Vector{Distribution}}
-    dists = Vector{IsoNormal}(undef, number_states)
+    dists = Vector{MvNormal}(undef, number_states)
     for i in 1:number_states
-        dists[i] = MvNormal(history[i] * (-1)^i, I)
+        dists[i] = MvNormal(history[24*i], I) # TODO
     end
     hmm_guess = HMM(ones(number_states)/number_states, zeros(number_states,number_states) .+ 1/number_states, dists)
     hmm_est, _ = baum_welch(hmm_guess, history)

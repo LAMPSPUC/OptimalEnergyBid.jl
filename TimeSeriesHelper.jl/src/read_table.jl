@@ -1,4 +1,22 @@
 """
+    read_generation_csv(path::String)
+
+Returns a table.
+"""
+function read_generation_csv(path::String)
+    df = CSV.read(path, DataFrame)
+    values1 = unique(df[!, "datetime"])
+    values2 = names(df)[2:end]
+    matrix = zeros(length(values1), length(values2))
+
+    for i in 1:length(values1), j in 1:length(values2)
+        matrix[i, j] = df[i, j+1]
+    end
+
+    return values1, values2, matrix
+end
+
+"""
     read_pjm_csv(path::String,
         column1::String,
         column2::String,
@@ -28,7 +46,7 @@ end
 Returns a pivot table of da_hrl_lmps using UTC date as rows, node id as columns and price as values.
 """
 function read_da_hrl_lmps(path::String)
-    return read_pjm_csv(path, "datetime_beginning_utc", "pnode_id", "system_energy_price_da")
+    return read_pjm_csv(path, "datetime_beginning_utc", "pnode_name", "total_lmp_da")
 end
 
 """
@@ -37,7 +55,7 @@ end
     Returns a pivot table of rt_hrl_lmps using UTC date as rows, node id as columns and price as values.
 """
 function read_rt_hrl_lmps(path::String)
-    return read_pjm_csv(path, "datetime_beginning_utc", "pnode_id", "system_energy_price_rt")
+    return read_pjm_csv(path, "datetime_beginning_utc", "pnode_name", "total_lmp_rt")
 end
 
 
