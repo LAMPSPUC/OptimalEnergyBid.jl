@@ -18,7 +18,8 @@ function _evaluate_acceptance_real_time!(prb::Problem)::Nothing
             matrix = zeros(numbers.units, numbers.real_tume_steps)
             for i in 1:(numbers.units), k in 1:(numbers.real_tume_steps)
                 matrix[i, k] =
-                    data.prices_real_time_curve[t][i][k] <= random.prices_real_time[t][prb.data.unit_to_bus[i]][n]
+                    data.prices_real_time_curve[t][i][k] <=
+                    random.prices_real_time[t][prb.data.unit_to_bus[i]][n]
             end
             push!(temp, matrix)
         end

@@ -11,5 +11,4 @@ include("structs.jl")
 include("read_table.jl")
 include("estimate.jl")
 
-
 end # module TimeSeriesHelper

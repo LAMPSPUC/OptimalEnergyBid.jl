@@ -50,7 +50,8 @@ function _add_day_ahead_clear_objective!(
         add_to_expression!(
             sp[:objective],
             sum(
-                prb.random.prices_day_ahead[temp][n][prb.data.unit_to_bus[i]][markov_state] * (
+                prb.random.prices_day_ahead[temp][n][prb.data.unit_to_bus[i]][markov_state] *
+                (
                     sp[:day_ahead_clear][
                         i,
                         n + prb.numbers.periods_per_day - prb.numbers.period_of_day_ahead_clear,

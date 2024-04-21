@@ -10,7 +10,7 @@ function read_generation_csv(path::String)
     matrix = zeros(length(values1), length(values2))
 
     for i in 1:length(values1), j in 1:length(values2)
-        matrix[i, j] = df[i, j+1]
+        matrix[i, j] = df[i, j + 1]
     end
 
     return values1, values2, matrix
@@ -57,5 +57,3 @@ end
 function read_rt_hrl_lmps(path::String)
     return read_pjm_csv(path, "datetime_beginning_utc", "pnode_name", "total_lmp_rt")
 end
-
-
