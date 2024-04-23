@@ -46,7 +46,6 @@ function build_scenarios(
 )
     N = length(obs_distributions)
     D = T ÷ P
-
     inflow = Vector{Vector{Vector{Vector{Float64}}}}(undef, T)
     prices_day_ahead = Vector{Vector{Vector{Vector{Float64}}}}(undef, D)
     prices_real_time = Vector{Vector{Vector{Float64}}}(undef, T)
