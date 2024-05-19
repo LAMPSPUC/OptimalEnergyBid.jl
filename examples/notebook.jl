@@ -23,7 +23,7 @@ md"""
 - 2 units
 - 2 buses
 - 3 days
-- 2 jours per day
+- 2 hours per day
 - min storage is 0
 - max storage is 1
 - initial storage is 0.3 and 0.5
@@ -56,10 +56,10 @@ load("spillage.png")
 load("generation.png")
 
 # ╔═╡ 84f7962e-00b2-443c-b218-7d4e3f8f55b4
-load("day_ahead_bid_1_1_1.png")
+load("day_ahead_bid_unit 1_1_1.png")
 
 # ╔═╡ 9aae9053-7af3-44d7-bf27-76b14a0db7f5
-load("real_time_bid_1_1.png")
+load("real_time_bid_unit 1_1.png")
 
 # ╔═╡ e8b1ff03-9a79-4c28-8037-f0ab351468b7
 md"""
@@ -88,10 +88,10 @@ load("spillage.png")
 load("generation.png")
 
 # ╔═╡ 8391884a-f5e9-4f74-a6d6-231633b50d83
-load("day_ahead_bid_1_1_1.png")
+load("day_ahead_bid_unit 1_1_1.png")
 
 # ╔═╡ d2387568-6ace-4ee9-b9fb-79e711f69d37
-load("real_time_bid_1_1.png")
+load("real_time_bid_unit 1_1.png")
 
 # ╔═╡ b3f6833c-b9c7-490c-8785-173407261b54
 md"""
@@ -125,10 +125,10 @@ md"""
 """
 
 # ╔═╡ 1502015b-5663-47d4-99f8-ebae1b347ec1
-load("day_ahead_bid_1_2_1.png")
+load("day_ahead_bid_unit 1_2_1.png")
 
 # ╔═╡ 43cdaf9c-754c-4ea2-986e-16ea22cd7662
-load("real_time_bid_1_1.png")
+load("real_time_bid_unit 1_1.png")
 
 # ╔═╡ f330b280-f7dd-4e1e-b50f-b08b4beb6952
 md"""
@@ -169,10 +169,10 @@ load("spillage.png")
 load("generation.png")
 
 # ╔═╡ fc6b76fb-b565-453f-8da4-6256a056e05b
-load("day_ahead_bid_1_1_1.png")
+load("day_ahead_bid_unit 1_1_1.png")
 
 # ╔═╡ 267d6a5c-1ceb-459d-87e5-08dd5ea38c11
-load("real_time_bid_1_1.png")
+load("real_time_bid_unit 1_1.png")
 
 # ╔═╡ c5dc745c-ade3-4ce0-b8a8-ee90786f10dc
 md"""
@@ -214,43 +214,43 @@ load("spillage.png")
 load("generation.png")
 
 # ╔═╡ 5a543e95-e8c9-40a4-bde5-aa26ca0248e3
-load("day_ahead_bid_1_1_1.png")
+load("day_ahead_bid_unit 1_1_1.png")
 
 # ╔═╡ 0fca080e-833f-4bff-a012-0203d01fdd07
-load("real_time_bid_1_1.png")
+load("real_time_bid_unit 1_1.png")
 
 # ╔═╡ 807b2326-2854-41b7-a940-b62eb17c8c32
-load("real_time_bid_1_2.png")
+load("real_time_bid_unit 1_2.png")
 
 # ╔═╡ 621b4164-72c8-4abd-8b15-9112a9b54a21
-load("real_time_bid_1_3.png")
+load("real_time_bid_unit 1_3.png")
 
 # ╔═╡ cae1a069-a6ee-40ed-9700-ebd2e53c6f51
-load("real_time_bid_1_4.png")
+load("real_time_bid_unit 1_4.png")
 
 # ╔═╡ 4435d41b-edec-4558-9cf0-a97253d1e5cb
-load("real_time_bid_1_5.png")
+load("real_time_bid_unit 1_5.png")
 
 # ╔═╡ 2d3bd30b-ba40-4601-9e27-ee2b3532b797
-load("real_time_bid_1_6.png")
+load("real_time_bid_unit 1_6.png")
 
 # ╔═╡ 25bebda0-174a-4bf8-a902-136dca64f6e5
-load("real_time_bid_2_1.png")
+load("real_time_bid_unit 2_1.png")
 
 # ╔═╡ 3d5f5824-1d6a-453c-ab77-82a440ce9efc
-load("real_time_bid_2_2.png")
+load("real_time_bid_unit 2_2.png")
 
 # ╔═╡ a5ddc3a7-5bf4-481d-aac2-0ef94f7ff852
-load("real_time_bid_2_3.png")
+load("real_time_bid_unit 2_3.png")
 
 # ╔═╡ b349da40-66aa-418b-bcaf-bb6bf48f5c26
-load("real_time_bid_2_4.png")
+load("real_time_bid_unit 2_4.png")
 
 # ╔═╡ 9b86efb4-ae0a-430c-9fc9-b2965cf60998
-load("real_time_bid_2_5.png")
+load("real_time_bid_unit 2_5.png")
 
 # ╔═╡ bc96ce51-f393-40ed-b55e-bae217032c05
-load("real_time_bid_2_6.png")
+load("real_time_bid_unit 2_6.png")
 
 # ╔═╡ 2242fdbe-77f5-4d75-abc8-a21f7adfc324
 md"""
@@ -284,10 +284,10 @@ load("spillage.png")
 load("generation.png")
 
 # ╔═╡ 5e024476-ef59-4b4c-bf88-ae8ae52183a5
-load("day_ahead_bid_1_1_1.png")
+load("day_ahead_bid_unit 1_1_1.png")
 
 # ╔═╡ 282729ad-6faa-498b-8a3e-f6b461080a8c
-load("real_time_bid_1_1.png")
+load("real_time_bid_unit 1_1.png")
 
 # ╔═╡ 767e0d0f-552b-4761-a36b-0d3d9f0c9739
 md"""

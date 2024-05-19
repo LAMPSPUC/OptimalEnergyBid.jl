@@ -13,6 +13,7 @@
         "real_tume_steps": 2
     },
     "data": {
+        "names": ["unit 1", "unit 2"],
         "unit_to_bus": [1, 2],
         "volume_max": [1.0, 1.0],
         "volume_min": [0.0, 0.0],

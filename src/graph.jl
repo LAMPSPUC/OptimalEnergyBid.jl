@@ -29,7 +29,7 @@ function plot_day_ahead_bids(
             append!([0.0], offer),
             append!([prices[1]], prices);
             seriestype=:steppre,
-            title="Day ahead $(prb.data.names[i]) $n $d",
+            title="Day ahead $(prb.data.names[i]) hour: $n day: $d",
             label=prb.data.names[i],
         )
         plot!(; legend=:outerbottom)
@@ -53,7 +53,7 @@ function plot_day_ahead_clears(
         vectors = [day_ahead_clear[i, :, d] for i in 1:(prb.numbers.units)]
         plot(
             vectors;
-            title="Day Ahead Clear $(d)",
+            title="Day Ahead Clear day: $(d)",
             label=reshape(
                 reshape(prb.data.names, 1, prb.numbers.units), 1, prb.numbers.units
             ),
@@ -85,7 +85,7 @@ function plot_real_time_bids(
             append!([0.0], offer),
             append!([prices[1]], prices);
             seriestype=:steppre,
-            title="Real time $(prb.data.names[i]) $t",
+            title="Real time $(prb.data.names[i]) time: $t",
             label=prb.data.names[i],
         )
         plot!(; legend=:outerbottom)
