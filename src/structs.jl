@@ -9,11 +9,6 @@ Base.@kwdef mutable struct Options
     beta::Float64 = 0.0
 end
 
-"""Contains all flags, evaluated using options"""
-Base.@kwdef mutable struct Flags
-    generation_as_state::Bool = false
-end
-
 """Contains all random variables"""
 Base.@kwdef mutable struct Random
     prices_real_time::Vector{Vector{Vector{Float64}}} = [] # Prices of real time t,b,n
@@ -76,8 +71,15 @@ Base.@kwdef mutable struct Problem
     numbers::Numbers = Numbers()
     data::Data = Data()
     random::Random = Random()
-    flags::Flags = Flags()
     cache::Cache = Cache()
     output::Output = Output()
     model::Union{SDDP.PolicyGraph,Nothing} = nothing
+end
+
+"""Contains just elements used in the problem serialization the problem"""
+Base.@kwdef mutable struct ProblemSerialized
+    options::Options = Options()
+    numbers::Numbers = Numbers()
+    data::Data = Data()
+    random::Random = Random()
 end

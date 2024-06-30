@@ -75,10 +75,8 @@ end
 Write all the input data present in "prb" to "file".
 """
 function write_json(prb::Problem, file::String)::Nothing
-    prb_temp = _copy_only_input(prb)
-    string_data = JSON.json(prb_temp)
-    index = findfirst(",\"flags\":", string_data)[1]
-    string_data = string_data[1:(index - 1)] * "}"
+    prb_serialized = _copy_only_input(prb)
+    string_data = JSON.json(prb_serialized)
     open(file, "w") do f
         write(f, string_data)
     end
@@ -86,11 +84,11 @@ function write_json(prb::Problem, file::String)::Nothing
 end
 
 """Copy only the input"""
-function _copy_only_input(prb::Problem)::Problem
-    prb_temp = Problem()
-    prb_temp.options = prb.options
-    prb_temp.data = prb.data
-    prb_temp.numbers = prb.numbers
-    prb_temp.random = prb.random
-    return prb_temp
+function _copy_only_input(prb::Problem)::ProblemSerialized
+    prb_serialized = ProblemSerialized()
+    prb_serialized.options = prb.options
+    prb_serialized.data = prb.data
+    prb_serialized.numbers = prb.numbers
+    prb_serialized.random = prb.random
+    return prb_serialized
 end

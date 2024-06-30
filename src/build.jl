@@ -1,9 +1,7 @@
 """Build the model"""
-function build_model!(prb::Problem, validade::Bool=false)::Nothing
-    if validade
+function build_model!(prb::Problem, validate::Bool=false)::Nothing
+    if validate
         validate_problem!(prb)
-    else
-        _evaluate_flags!(prb)
     end
 
     _preprocess!(prb)
@@ -48,7 +46,6 @@ end
 function _build_subproblem!(sp::Model, prb::Problem, t::Int, markov_state::Int)::Nothing
     numbers = prb.numbers
     options = prb.options
-    flags = prb.flags
 
     _variable_volume!(sp, prb)
     _variable_inflow!(sp, prb)
@@ -60,7 +57,7 @@ function _build_subproblem!(sp::Model, prb::Problem, t::Int, markov_state::Int):
     _constraint_real_time_bid_bound!(sp, prb)
     _create_objective_expression!(sp)
 
-    if flags.generation_as_state
+    if _generation_as_state(prb)
         _variable_generation_state!(sp, prb)
         _constraint_volume_balance_state!(sp, prb)
         _constraint_real_time_accepted_state!(sp, prb, t, markov_state)
@@ -118,7 +115,6 @@ end
 
 """Validate the problem"""
 function validate_problem!(prb::Problem)::Nothing
-    _evaluate_flags!(prb)
     _validate_numbers(prb)
     _validate_data(prb)
     _validate_random(prb)
@@ -148,7 +144,6 @@ end
 function _validate_data(prb::Problem)::Nothing
     numbers = prb.numbers
     options = prb.options
-    flags = prb.flags
     data = prb.data
 
     @assert length(data.volume_max) >= numbers.units
@@ -184,7 +179,7 @@ function _validate_data(prb::Problem)::Nothing
         @assert length(data.ramp_down) >= numbers.units
     end
 
-    if flags.generation_as_state
+    if _generation_as_state(prb)
         @assert length(data.generation_initial) >= numbers.units
     end
 

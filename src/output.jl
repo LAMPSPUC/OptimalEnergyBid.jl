@@ -110,7 +110,7 @@ function _write_generation!(prb::Problem, simul::Vector{Vector{Dict{Symbol,Any}}
     generation = zeros(numbers.units, numbers.duration, S)
 
     for s in 1:S, t in 1:(numbers.duration)
-        if prb.flags.generation_as_state
+        if _generation_as_state(prb)
             for i in 1:(prb.numbers.units)
                 generation[i, t, s] = simul[s][t][:generation][i].out
             end

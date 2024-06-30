@@ -16,10 +16,9 @@ function set_parameter!(prb::Problem, type::Parameter.T, value::Any)::Nothing
     return nothing
 end
 
-"""Evaluate all flags"""
-function _evaluate_flags!(prb::Problem)::Nothing
-    prb.flags.generation_as_state = prb.options.use_ramp_up || prb.options.use_ramp_down
-    return nothing
+"""Is generation as state"""
+function _generation_as_state(prb::Problem)::Bool
+    return prb.options.use_ramp_up || prb.options.use_ramp_down
 end
 
 """Convert camelcase to snakecase"""
