@@ -41,19 +41,19 @@ function read_pjm_csv(path::String, column1::String, column2::String, column3::S
 end
 
 """
-    read_da_hrl_lmps(path::String)
+    read_pjm_da_lmps(path::String)
 
 Returns a pivot table of da_hrl_lmps using UTC date as rows, node id as columns and price as values.
 """
-function read_da_hrl_lmps(path::String)
+function read_pjm_da_lmps(path::String)
     return read_pjm_csv(path, "datetime_beginning_utc", "pnode_name", "total_lmp_da")
 end
 
 """
-    read_rt_hrl_lmps(path::String)
+    read_pjm_rt_lmps(path::String)
 
     Returns a pivot table of rt_hrl_lmps using UTC date as rows, node id as columns and price as values.
 """
-function read_rt_hrl_lmps(path::String)
+function read_pjm_rt_lmps(path::String)
     return read_pjm_csv(path, "datetime_beginning_utc", "pnode_name", "total_lmp_rt")
 end
