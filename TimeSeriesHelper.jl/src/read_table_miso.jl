@@ -34,7 +34,7 @@ end
 Returns a dictionary with keys being the node id and values being a vector of prices.
 """
 function read_miso_da_lmps(directory::String, start::Int, stop::Int)
-    return read_miso_csv(directory, "_da_lmp_final.csv", start, stop)
+    return read_miso_csv(directory, "_da_expost_lmp.csv", start, stop)
 end
 
 """
@@ -46,5 +46,5 @@ end
 Returns a dictionary with keys being the node id and values being a vector of prices.
 """
 function read_miso_rt_lmps(directory::String, start::Int, stop::Int)
-    return read_miso_csv(directory, "_da_expost_lmp.csv", start, stop)
+    return read_miso_csv(directory, "_rt_lmp_final.csv", start, stop)
 end
