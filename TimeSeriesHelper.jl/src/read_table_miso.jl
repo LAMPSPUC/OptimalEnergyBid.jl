@@ -1,3 +1,10 @@
+function _download_csv(url, filename)
+    response = HTTP.get(url)
+    open(filename, "w") do file
+        write(file, response.body)
+    end
+end
+
 """
     read_miso_csv(directory::String,
         file_pattern::String,
@@ -11,6 +18,11 @@ function read_miso_csv(directory::String, file_pattern::String, start::Int, stop
     dict = Dict{String, Vector{Float64}}()
     for i in start:stop
         file_path = joinpath(directory, string(i) * file_pattern);
+        if !isfile(file_path)
+            url = joinpath("https://docs.misoenergy.org/marketreports", string(i) * file_pattern)
+            task = @async _download_csv(url, file_path)
+            wait(task)
+        end
         df = CSV.read(file_path, DataFrame)[4:end,:]
         for row in eachrow(df)
             if (row[3] != "LMP") continue end

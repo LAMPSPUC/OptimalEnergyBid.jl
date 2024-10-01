@@ -3,10 +3,10 @@ using TimeSeriesHelper
 
 directory = "C:\\Users\\thiag\\Documents\\Data\\";
 start = 20240810;
-stop = 20240824;
+stop = 20240823;
 
 day_ahead = TimeSeriesHelper.read_miso_da_lmps(
-    directory, start, stop
+    directory, start, stop + 1
 )
 
 real_time = TimeSeriesHelper.read_miso_rt_lmps(

@@ -8,6 +8,7 @@ using CSV
 using DataFrames
 using Dates
 using JSON
+using HTTP
 
 include("structs.jl")
 include("read_table_pjm.jl")
