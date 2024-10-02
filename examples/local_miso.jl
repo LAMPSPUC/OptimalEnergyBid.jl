@@ -93,5 +93,5 @@ data.names = ["unit1", "unit2"]
 OptimalEnergyBid.set_parameter!(prb, OptimalEnergyBid.Parameter.Optimizer, HiGHS.Optimizer)
 
 OptimalEnergyBid.build_model!(prb, true)
-OptimalEnergyBid.train!(prb)
+OptimalEnergyBid.train!(prb; time_limit=10)
 OptimalEnergyBid.simulate!(prb)
