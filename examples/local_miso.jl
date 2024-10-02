@@ -1,5 +1,6 @@
 using OptimalEnergyBid
 using TimeSeriesHelper
+using HiGHS
 
 directory = "C:\\Users\\thiag\\Documents\\Data\\";
 start = 20240810;
@@ -17,31 +18,80 @@ wind = TimeSeriesHelper.read_open_meteo_json(
     directory, "wind_speed_10m", start, stop
 )
 
-wind3 = wind3[(end - 744):end, 4:5]
-solar3 = solar3[(end - 744):end, :]
-rt3 = rt3[:, 1:2]
-da3 = da3[:, 1:2]
+nodes = ["AECI", "AEP"]
 
-wind4 = vec(wind3)
-solar4 = vec(solar3)
-rt4 = vec(rt3)
-da4 = vec(da3)
+prices_real_time = Vector{Vector{Float64}}()
+for i in 1:(stop - start + 1) * 24
+    push!(prices_real_time, [])
+    for node in nodes
+        push!(prices_real_time[i], real_time[node][i])
+    end
+end
 
-windl, _ = size(wind3)
-solarl, _ = size(solar3)
-rtl, _ = size(rt3)
-dal, _ = size(da3)
+prices_day_ahead = Vector{Vector{Float64}}()
+for i in 1:(stop - start + 2) * 24
+    push!(prices_day_ahead, [])
+    for node in nodes
+        push!(prices_day_ahead[i], day_ahead[node][i])
+    end
+end
 
-wind5 = [wind4[i:windl:end] for i in 1:windl]
-solar5 = [solar4[i:solarl:end] for i in 1:solarl]
-rt5 = [rt4[i:rtl:end] for i in 1:rtl]
-da5 = [da4[i:dal:end] for i in 1:dal]
+inflow = Vector{Vector{Float64}}()
+for i in 1:(stop - start + 1) * 24
+    push!(inflow, [])
+    for key in keys(wind)
+        push!(inflow[i], wind[key][i])
+    end
+end
 
 history = TimeSeriesHelper.History()
-history.prices_real_time = rt5
-history.prices_day_ahead = da5
-history.inflow = wind5
+history.prices_real_time = prices_real_time
+history.prices_day_ahead = prices_day_ahead
+history.inflow = inflow
 
-h = TimeSeriesHelper.build_serial_history(history, 745, 24)
+h = TimeSeriesHelper.build_serial_history(history, 336, 24)
 
 m, o = TimeSeriesHelper.estimate_hmm(h, 5)
+
+matrix = TimeSeriesHelper.build_markov_transition(m, 48)
+
+rt, da, inflow = TimeSeriesHelper.build_scenarios(o, 48, 24, 3, 1, 2, 2)
+
+prb = OptimalEnergyBid.Problem()
+
+numbers = prb.numbers
+random = prb.random
+data = prb.data
+options = prb.options
+
+numbers.periods_per_day = 24
+numbers.first_period = 1
+numbers.units = 2
+numbers.buses = 2
+numbers.duration = 48
+numbers.real_time_steps = 2
+numbers.day_ahead_steps = 2
+numbers.period_of_day_ahead_bid = 12
+numbers.period_of_day_ahead_clear = 20
+# TODO
+numbers.days = 2
+
+random.prices_real_time = rt
+random.prices_day_ahead = da
+random.inflow = inflow
+random.inflow_probability = v = [[[1/3 for k in 1:3] for j in 1:5] for i in 1:48]
+random.markov_transitions = matrix
+
+data.unit_to_bus = [1, 2]
+data.volume_max = ones(2)
+data.volume_min = zeros(2)
+data.volume_initial = zeros(2)
+data.prices_real_time_curve = rt
+data.prices_day_ahead_curve = da
+data.names = ["unit1", "unit2"]
+
+OptimalEnergyBid.set_parameter!(prb, OptimalEnergyBid.Parameter.Optimizer, HiGHS.Optimizer)
+
+OptimalEnergyBid.build_model!(prb, true)
+OptimalEnergyBid.train!(prb)
+OptimalEnergyBid.simulate!(prb)
