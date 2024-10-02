@@ -10,7 +10,7 @@
         "period_of_day_ahead_clear": 2,
         "duration": 6,
         "day_ahead_steps": 2,
-        "real_tume_steps": 2
+        "real_time_steps": 2
     },
     "data": {
         "names": ["unit 1", "unit 2"],

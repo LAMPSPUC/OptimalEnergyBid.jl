@@ -41,7 +41,7 @@
                 "period_of_day_ahead_clear",
                 "duration",
                 "day_ahead_steps",
-                "real_tume_steps"
+                "real_time_steps"
             ],
             "properties": {
                 "periods_per_day": {
@@ -68,7 +68,7 @@
                 "day_ahead_steps": {
                     "type": "integer"
                 },
-                "real_tume_steps": {
+                "real_time_steps": {
                     "type": "integer"
                 }
             }

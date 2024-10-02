@@ -76,12 +76,12 @@ function _write_real_time_bid!(
 )::Nothing
     numbers = prb.numbers
     S = length(simul)
-    real_time_bid = zeros(numbers.real_tume_steps, numbers.units, numbers.duration, S)
+    real_time_bid = zeros(numbers.real_time_steps, numbers.units, numbers.duration, S)
 
     for s in 1:S,
         t in 1:(numbers.duration),
         i in 1:(numbers.units),
-        k in 1:(numbers.real_tume_steps)
+        k in 1:(numbers.real_time_steps)
 
         real_time_bid[k, i, t, s] = simul[s][t][:real_time_bid][k, i].out
     end

@@ -10,7 +10,7 @@
         "period_of_day_ahead_clear": 1,
         "duration": 1,
         "day_ahead_steps": 1,
-        "real_tume_steps": 1
+        "real_time_steps": 1
     },
     "data": {
         "unit_to_bus": [1],

@@ -10,7 +10,7 @@ numbers.first_period = 1
 numbers.units = 1
 numbers.buses = 1
 numbers.duration = 1
-numbers.real_tume_steps = 1
+numbers.real_time_steps = 1
 numbers.day_ahead_steps = 1
 numbers.period_of_day_ahead_bid = 1
 numbers.period_of_day_ahead_clear = 1
@@ -41,7 +41,7 @@ prb2 = OptimalEnergyBid.create_problem(joinpath(dirname(@__DIR__), "cases", "toy
 @test numbers.units == prb2.numbers.units
 @test numbers.buses == prb2.numbers.buses
 @test numbers.duration == prb2.numbers.duration
-@test numbers.real_tume_steps == prb2.numbers.real_tume_steps
+@test numbers.real_time_steps == prb2.numbers.real_time_steps
 @test numbers.day_ahead_steps == prb2.numbers.day_ahead_steps
 @test numbers.period_of_day_ahead_bid == prb2.numbers.period_of_day_ahead_bid
 @test numbers.period_of_day_ahead_clear == prb2.numbers.period_of_day_ahead_clear
@@ -68,7 +68,7 @@ mktempdir() do path
     @test numbers.first_period == prb3.numbers.first_period
     @test numbers.units == prb3.numbers.units
     @test numbers.duration == prb3.numbers.duration
-    @test numbers.real_tume_steps == prb3.numbers.real_tume_steps
+    @test numbers.real_time_steps == prb3.numbers.real_time_steps
     @test numbers.day_ahead_steps == prb3.numbers.day_ahead_steps
     @test numbers.period_of_day_ahead_bid == prb3.numbers.period_of_day_ahead_bid
     @test numbers.period_of_day_ahead_clear == prb3.numbers.period_of_day_ahead_clear
