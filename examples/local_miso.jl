@@ -69,8 +69,8 @@ numbers.first_period = 1
 numbers.units = 2
 numbers.buses = 2
 numbers.duration = 48
-numbers.real_time_steps = 2
-numbers.day_ahead_steps = 2
+numbers.real_time_steps = 5
+numbers.day_ahead_steps = 5
 numbers.period_of_day_ahead_bid = 12
 numbers.period_of_day_ahead_clear = 20
 # TODO
@@ -95,3 +95,4 @@ OptimalEnergyBid.set_parameter!(prb, OptimalEnergyBid.Parameter.Optimizer, HiGHS
 OptimalEnergyBid.build_model!(prb, true)
 OptimalEnergyBid.train!(prb; time_limit=10)
 OptimalEnergyBid.simulate!(prb)
+OptimalEnergyBid.plot_all(prb, 1, "")
