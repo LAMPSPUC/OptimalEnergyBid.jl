@@ -83,16 +83,34 @@ random.inflow_probability = v = [[[1/3 for k in 1:3] for j in 1:5] for i in 1:48
 random.markov_transitions = matrix
 
 data.unit_to_bus = [1, 2]
-data.volume_max = ones(2)
+data.volume_max = ones(2) * 50
 data.volume_min = zeros(2)
 data.volume_initial = zeros(2)
-data.prices_real_time_curve = rt
-data.prices_day_ahead_curve = da
+
+rt_sorted = deepcopy(rt)
+da_sorted = deepcopy(da)
+
+for t in 1:48
+    for i in 1:2
+        sort!(rt_sorted[t][i])
+    end
+end
+
+for d in 1:2
+    for j in 1:24
+        for i in 1:2
+            sort!(da_sorted[d][j][i])
+        end
+    end
+end
+
+data.prices_real_time_curve = rt_sorted
+data.prices_day_ahead_curve = da_sorted
 data.names = ["unit1", "unit2"]
 
 OptimalEnergyBid.set_parameter!(prb, OptimalEnergyBid.Parameter.Optimizer, HiGHS.Optimizer)
 
 OptimalEnergyBid.build_model!(prb, true)
-OptimalEnergyBid.train!(prb; time_limit=10)
+OptimalEnergyBid.train!(prb; time_limit=60)
 OptimalEnergyBid.simulate!(prb)
 OptimalEnergyBid.plot_all(prb, 1, "")
