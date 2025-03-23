@@ -15,17 +15,21 @@ end
 Returns a dictionary with keys being the node id and values being a vector of prices.
 """
 function read_miso_csv(directory::String, file_pattern::String, start::Int, stop::Int)
-    dict = Dict{String, Vector{Float64}}()
+    dict = Dict{String,Vector{Float64}}()
     for i in start:stop
-        file_path = joinpath(directory, string(i) * file_pattern);
+        file_path = joinpath(directory, string(i) * file_pattern)
         if !isfile(file_path)
-            url = joinpath("https://docs.misoenergy.org/marketreports", string(i) * file_pattern)
+            url = joinpath(
+                "https://docs.misoenergy.org/marketreports", string(i) * file_pattern
+            )
             task = @async _download_csv(url, file_path)
             wait(task)
         end
-        df = CSV.read(file_path, DataFrame)[4:end,:]
+        df = CSV.read(file_path, DataFrame)[4:end, :]
         for row in eachrow(df)
-            if (row[3] != "LMP") continue end
+            if (row[3] != "LMP")
+                continue
+            end
             vec = [parse(Float64, x) for x in values(row[4:27])]
             if !haskey(dict, row[1])
                 dict[row[1]] = vec

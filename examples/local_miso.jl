@@ -10,22 +10,16 @@ D = 48 # duration in hours
 S = 8 # number of scenarios
 P = 3 # number of inflow scenarios per scenarios
 
-day_ahead = TimeSeriesHelper.read_miso_da_lmps(
-    directory, start, stop + 1
-)
+day_ahead = TimeSeriesHelper.read_miso_da_lmps(directory, start, stop + 1)
 
-real_time = TimeSeriesHelper.read_miso_rt_lmps(
-    directory, start, stop
-)
+real_time = TimeSeriesHelper.read_miso_rt_lmps(directory, start, stop)
 
-wind = TimeSeriesHelper.read_open_meteo_json(
-    directory, "wind_speed_10m", start, stop
-)
+wind = TimeSeriesHelper.read_open_meteo_json(directory, "wind_speed_10m", start, stop)
 
 nodes = ["AECI", "AEP"]
 
 prices_real_time = Vector{Vector{Float64}}()
-for i in 1:(stop - start + 1) * T
+for i in 1:((stop - start + 1) * T)
     push!(prices_real_time, [])
     for node in nodes
         push!(prices_real_time[i], real_time[node][i])
@@ -33,7 +27,7 @@ for i in 1:(stop - start + 1) * T
 end
 
 prices_day_ahead = Vector{Vector{Float64}}()
-for i in 1:(stop - start + 2) * T
+for i in 1:((stop - start + 2) * T)
     push!(prices_day_ahead, [])
     for node in nodes
         push!(prices_day_ahead[i], day_ahead[node][i])
@@ -41,7 +35,7 @@ for i in 1:(stop - start + 2) * T
 end
 
 inflow = Vector{Vector{Float64}}()
-for i in 1:(stop - start + 1) * T
+for i in 1:((stop - start + 1) * T)
     push!(inflow, [])
     for key in keys(wind)
         push!(inflow[i], wind[key][i])
@@ -83,7 +77,7 @@ numbers.days = 2
 random.prices_real_time = rt
 random.prices_day_ahead = da
 random.inflow = inflow
-random.inflow_probability = v = [[[1/P for k in 1:P] for j in 1:S] for i in 1:D]
+random.inflow_probability = v = [[[1 / P for k in 1:P] for j in 1:S] for i in 1:D]
 random.markov_transitions = matrix
 
 data.unit_to_bus = [1, 2]

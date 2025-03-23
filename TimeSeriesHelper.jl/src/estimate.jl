@@ -35,7 +35,7 @@ function build_markov_transition(
     transition_matrix::Matrix{Float64}, T::Int
 )::Vector{Matrix{Float64}}
     transitions_matrix = Vector{Matrix{Float64}}(undef, T)
-    transitions_matrix[1] = sum(transition_matrix, dims=1) / size(transition_matrix, 1)
+    transitions_matrix[1] = sum(transition_matrix; dims=1) / size(transition_matrix, 1)
     for t in 2:T
         transitions_matrix[t] = transition_matrix
     end
