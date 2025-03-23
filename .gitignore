@@ -5,6 +5,7 @@ revise/
 *.log
 *.lp
 *.mps
+*.png
 *.ipynb
 *notebook-checkpoint
 .DS_Store

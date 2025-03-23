@@ -25,7 +25,7 @@ end
 function _variable_real_time_bid!(sp::Model, prb::Problem)::Nothing
     @variable(
         sp,
-        0.0 <= real_time_bid[1:(prb.numbers.real_tume_steps), 1:(prb.numbers.units)],
+        0.0 <= real_time_bid[1:(prb.numbers.real_time_steps), 1:(prb.numbers.units)],
         SDDP.State,
         initial_value = 0.0
     )

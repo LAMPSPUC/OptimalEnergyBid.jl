@@ -78,7 +78,7 @@ function plot_real_time_bids(
     for t in 1:(prb.numbers.duration), i in 1:(prb.numbers.units)
         prices = prb.data.prices_real_time_curve[t][i]
         offer = real_time_bid[:, i, t]
-        for k in 1:(prb.numbers.real_tume_steps - 1)
+        for k in 1:(prb.numbers.real_time_steps - 1)
             offer[k + 1] += offer[k]
         end
         plot(

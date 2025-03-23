@@ -35,7 +35,8 @@ function build_markov_transition(
     transition_matrix::Matrix{Float64}, T::Int
 )::Vector{Matrix{Float64}}
     transitions_matrix = Vector{Matrix{Float64}}(undef, T)
-    for t in 1:T
+    transitions_matrix[1] = sum(transition_matrix; dims=1) / size(transition_matrix, 1)
+    for t in 2:T
         transitions_matrix[t] = transition_matrix
     end
     return transitions_matrix
@@ -94,7 +95,8 @@ function build_scenarios(
             for w in 1:W
                 push!(temp[n], [])
                 for i in 1:I
-                    push!(temp[n][w], samples_inflow[t, n, w, i])
+                    # TODO abs
+                    push!(temp[n][w], abs(samples_inflow[t, n, w, i]))
                 end
             end
         end

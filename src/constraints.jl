@@ -93,7 +93,7 @@ function _constraint_real_time_bid_bound!(sp::Model, prb::Problem)::Nothing
         sp,
         real_time_bid_bound[i=1:(prb.numbers.units)],
         sp[:volume][i].out - prb.data.volume_min[i] >=
-            sum(sp[:real_time_bid][k, i].out for k in 1:(prb.numbers.real_tume_steps))
+            sum(sp[:real_time_bid][k, i].out for k in 1:(prb.numbers.real_time_steps))
     )
     return nothing
 end
@@ -104,7 +104,7 @@ function _constraint_ramp_up!(sp::Model, prb::Problem)::Nothing
         sp,
         ramp_up[i=1:(prb.numbers.units)],
         prb.data.ramp_up[i] >=
-            sum(sp[:real_time_bid][k, i].out for k in 1:(prb.numbers.real_tume_steps)) -
+            sum(sp[:real_time_bid][k, i].out for k in 1:(prb.numbers.real_time_steps)) -
         sp[:generation][i].out
     )
     return nothing
@@ -129,7 +129,7 @@ function _constraint_real_time_accepted!(
         sp,
         real_time_accepted[i=1:(prb.numbers.units)],
         sp[:generation][i] == sum(
-            sp[:real_time_bid][k, i].in for k in 1:(prb.numbers.real_tume_steps) if
+            sp[:real_time_bid][k, i].in for k in 1:(prb.numbers.real_time_steps) if
             prb.cache.acceptance_real_time[t][markov_state][i, k]
         )
     )
@@ -155,7 +155,7 @@ function _constraint_real_time_accepted_state!(
         sp,
         real_time_accepted_state[i=1:(prb.numbers.units)],
         sp[:generation][i].out == sum(
-            sp[:real_time_bid][k, i].in for k in 1:(prb.numbers.real_tume_steps) if
+            sp[:real_time_bid][k, i].in for k in 1:(prb.numbers.real_time_steps) if
             prb.cache.acceptance_real_time[t][markov_state][i, k]
         )
     )

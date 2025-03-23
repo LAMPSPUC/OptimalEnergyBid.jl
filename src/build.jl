@@ -134,7 +134,7 @@ function _validate_numbers(prb::Problem)::Nothing
     @assert 1 <= numbers.period_of_day_ahead_clear &&
         numbers.period_of_day_ahead_clear <= numbers.periods_per_day
     @assert 1 <= numbers.duration
-    @assert 1 <= numbers.real_tume_steps
+    @assert 1 <= numbers.real_time_steps
     @assert 1 <= numbers.day_ahead_steps
 
     return nothing
@@ -155,7 +155,7 @@ function _validate_data(prb::Problem)::Nothing
     for t in 1:(numbers.duration)
         @assert length(data.prices_real_time_curve[t]) >= numbers.units
         for i in 1:(numbers.units)
-            @assert length(data.prices_real_time_curve[t][i]) >= numbers.real_tume_steps
+            @assert length(data.prices_real_time_curve[t][i]) >= numbers.real_time_steps
         end
     end
 

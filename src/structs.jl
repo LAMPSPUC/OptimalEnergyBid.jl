@@ -28,7 +28,7 @@ Base.@kwdef mutable struct Numbers
     period_of_day_ahead_clear::Int = 0 # Periods of day ahead clear
     days::Int = 0 # Number of days 
     duration::Int = 0 # Number of periods of time in the horizon
-    real_tume_steps::Int = 0 # Number of prices in the real time curve
+    real_time_steps::Int = 0 # Number of prices in the real time curve
     day_ahead_steps::Int = 0 # Number of prices in the day ahead curve
 end
 

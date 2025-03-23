@@ -8,10 +8,10 @@ solar1, solar2, solar3 = TimeSeriesHelper.read_generation_csv(
     "C:\\Users\\thiag\\Documents\\Data\\solar_gen_cf_2022.csv"
 )
 
-rt1, rt2, rt3 = TimeSeriesHelper.read_rt_hrl_lmps(
+rt1, rt2, rt3 = TimeSeriesHelper.read_pjm_rt_lmps(
     "C:\\Users\\thiag\\Documents\\Data\\rt_hrl_lmps.csv"
 )
-da1, da2, da3 = TimeSeriesHelper.read_da_hrl_lmps(
+da1, da2, da3 = TimeSeriesHelper.read_pjm_da_lmps(
     "C:\\Users\\thiag\\Documents\\Data\\da_hrl_lmps.csv"
 )
 
