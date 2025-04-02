@@ -30,7 +30,7 @@ prices_real_time = Vector{Vector{Float64}}()
 for i in 1:size(real_time_filter[1])[1]
     push!(prices_real_time, [])
     for j in 1:length(nodes)
-        push!(prices_real_time[i], real_time_filter[j][i,:LMP])
+        push!(prices_real_time[i], real_time_filter[j][i, :LMP])
     end
 end
 
@@ -42,7 +42,7 @@ prices_day_ahead = Vector{Vector{Float64}}()
 for i in 1:size(day_ahead_filter[1])[1]
     push!(prices_day_ahead, [])
     for j in 1:length(nodes)
-        push!(prices_day_ahead[i], day_ahead_filter[j][i,:LMP])
+        push!(prices_day_ahead[i], day_ahead_filter[j][i, :LMP])
     end
 end
 
@@ -85,8 +85,6 @@ numbers.real_time_steps = S
 numbers.day_ahead_steps = S
 numbers.period_of_day_ahead_bid = 12
 numbers.period_of_day_ahead_clear = 20
-# TODO
-numbers.days = 2
 
 random.prices_real_time = rt
 random.prices_day_ahead = da

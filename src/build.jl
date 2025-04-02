@@ -1,5 +1,6 @@
 """Build the model"""
 function build_model!(prb::Problem, validate::Bool=false)::Nothing
+    prb.numbers.days = Int(ceil(prb.numbers.duration / prb.numbers.periods_per_day))
     if validate
         validate_problem!(prb)
     end

@@ -33,8 +33,6 @@ end
 """Reads size and indeces information"""
 function _read_numbers!(prb::Problem, dict::Dict)::Nothing
     prb.numbers = convertdict(Numbers, dict["numbers"])
-    prb.numbers.days = Int(ceil(prb.numbers.duration / prb.numbers.periods_per_day))
-
     return nothing
 end
 
