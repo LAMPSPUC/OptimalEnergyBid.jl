@@ -1,41 +1,55 @@
 using OptimalEnergyBid
 using TimeSeriesHelper
+using ElectricityMarketData
 using HiGHS
+using Dates
 
-directory = "C:\\Users\\thiag\\Documents\\Data\\";
-start = 20240810;
-stop = 20240823;
+start = DateTime(2024, 8, 10, 0, 0);
+stop = DateTime(2024, 8, 24, 0, 0);
+
 T = 24 # hours per day
 D = 48 # duration in hours
 S = 8 # number of scenarios
 P = 3 # number of inflow scenarios per scenarios
 
-day_ahead = TimeSeriesHelper.read_miso_da_lmps(directory, start, stop + 1)
-
-real_time = TimeSeriesHelper.read_miso_rt_lmps(directory, start, stop)
-
-wind = TimeSeriesHelper.read_open_meteo_json(directory, "wind_speed_10m", start, stop)
-
 nodes = ["AECI", "AEP"]
+coordinates = [("50", "10"), ("30", "40")]
 
+######################################################################################
+
+# prices
+market = ElectricityMarketData.MisoMarket()
+df_day_ahead = ElectricityMarketData.get_day_ahead_lmp(market, start, stop)
+df_real_time = ElectricityMarketData.get_real_time_lmp(market, start, stop)
+
+real_time_filter = [];
+for node in nodes
+    push!(real_time_filter, filter(row -> row.Node == node, df_real_time))
+end
 prices_real_time = Vector{Vector{Float64}}()
-for i in 1:((stop - start + 1) * T)
+for i in 1:size(real_time_filter[1])[1]
     push!(prices_real_time, [])
-    for node in nodes
-        push!(prices_real_time[i], real_time[node][i])
+    for j in 1:length(nodes)
+        push!(prices_real_time[i], real_time_filter[j][i,:LMP])
     end
 end
 
+day_ahead_filter = [];
+for node in nodes
+    push!(day_ahead_filter, filter(row -> row.Node == node, df_day_ahead))
+end
 prices_day_ahead = Vector{Vector{Float64}}()
-for i in 1:((stop - start + 2) * T)
+for i in 1:size(day_ahead_filter[1])[1]
     push!(prices_day_ahead, [])
-    for node in nodes
-        push!(prices_day_ahead[i], day_ahead[node][i])
+    for j in 1:length(nodes)
+        push!(prices_day_ahead[i], day_ahead_filter[j][i,:LMP])
     end
 end
 
+# inflow
+wind = TimeSeriesHelper.read_open_meteo_json("wind_speed_10m", start, stop, coordinates)
 inflow = Vector{Vector{Float64}}()
-for i in 1:((stop - start + 1) * T)
+for i in 1:(length(wind[coordinates[1]]))
     push!(inflow, [])
     for key in keys(wind)
         push!(inflow[i], wind[key][i])

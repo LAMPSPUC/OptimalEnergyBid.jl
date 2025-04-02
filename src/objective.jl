@@ -44,13 +44,13 @@ end
 function _add_day_ahead_clear_objective!(
     sp::Model, prb::Problem, t::Int, markov_state::Int
 )::Nothing
-    temp = div(t - 1, prb.numbers.periods_per_day) + 1
+    day = div(t - 1, prb.numbers.periods_per_day) + 1
 
-    if temp != prb.numbers.days
+    if day != prb.numbers.days
         add_to_expression!(
             sp[:objective],
             sum(
-                prb.random.prices_day_ahead[temp][n][prb.data.unit_to_bus[i]][markov_state] *
+                prb.random.prices_day_ahead[day][n][prb.data.unit_to_bus[i]][markov_state] *
                 (
                     sp[:day_ahead_clear][
                         i,

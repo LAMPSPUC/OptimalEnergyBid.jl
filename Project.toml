@@ -4,6 +4,7 @@ authors = ["Thiago Novaes <thiagonovaesb@poli.ufrj.br>"]
 version = "0.1.0"
 
 [deps]
+ElectricityMarketData = "b0cd3f9d-d3c7-4edf-bab9-a3123bf8ae8c"
 EnumX = "4e289a0a-7415-4d19-859d-a7e5c4648b56"
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 JSONSchema = "7d188eb4-7ad8-530c-ae41-71a32a6d4692"

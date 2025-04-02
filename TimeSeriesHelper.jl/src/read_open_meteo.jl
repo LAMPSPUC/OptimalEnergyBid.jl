@@ -1,37 +1,22 @@
 """
-    read_open_meteo_json(directory::String,
-        serie::String,
-        start::Int,
-        stop::Int
-        )
+    read_open_meteo_json(serie::String, start::DateTime, stop::DateTime, coordinates::Vector{Tuple{String, String}})
 
-Returns a dictionary with keys being the node id and values being a vector of wind.
+Returns a dictionary with keys being the coordinate and values being a time series.
 """
-function read_open_meteo_json(directory::String, serie::String, start::Int, stop::Int)
-    start_string = string(start)
-    stop_string = string(stop)
-    start_utc =
-        start_string[1:4] * "-" * start_string[5:6] * "-" * start_string[7:8] * "T00:00"
-    stop_utc = stop_string[1:4] * "-" * stop_string[5:6] * "-" * stop_string[7:8] * "T23:00"
+function read_open_meteo_json(serie::String, start::DateTime, stop::DateTime, coordinates::Vector{Tuple{String, String}})
 
-    dict = Dict{String,Vector{Float64}}()
-    for file_path in readdir(directory)
-        if endswith(file_path, ".json")
-            json_path = joinpath(directory, file_path)
-            json = JSON.parse(String(read(json_path)))
-            times = json["hourly"]["time"]
-            data = json["hourly"][serie]
-            vec = [
-                data[i] for
-                i in 1:length(times) if times[i] >= start_utc && times[i] <= stop_utc
-            ]
-            key = file_path[1:(end - 5)]
-            if !haskey(dict, key)
-                dict[key] = vec
-            else
-                append!(dict[key], vec)
-            end
-        end
+    start_string = Dates.format(start, "yyyy-mm-dd")
+    stop_string = Dates.format(stop, "yyyy-mm-dd")
+    dict = Dict{Tuple{String, String},Vector{Float64}}()
+    for coordinate in coordinates
+        latitude = coordinate[1]
+        longitude = coordinate[2]
+        url = "https://archive-api.open-meteo.com/v1/era5?latitude=" * latitude * "&longitude=" * longitude * "&start_date=" * start_string * "&end_date=" * stop_string * "&hourly=" * serie
+        json = JSON.parse(String(HTTP.get(url).body))
+        times = json["hourly"]["time"]
+        data = json["hourly"][serie]
+        vec = [data[i] for i in 1:length(times)]
+        dict[coordinate] = vec
     end
     return dict
 end
