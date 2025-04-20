@@ -13,7 +13,6 @@ numbers.real_time_steps = 2
 numbers.day_ahead_steps = 2
 numbers.period_of_day_ahead_bid = 1
 numbers.period_of_day_ahead_clear = 2
-numbers.days = 1
 
 random.markov_transitions = [[0.5 0.5 0.5], [0.5 0.5 0.5; 0.5 0.5 0.5]]
 random.prices_real_time = [[[5.0, 3.0, 7.0]], [[1.0, 3.0, 2.0]]]

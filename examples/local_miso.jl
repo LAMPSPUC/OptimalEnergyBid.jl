@@ -7,17 +7,19 @@ using Dates
 start = DateTime(2024, 8, 10, 0, 0);
 stop = DateTime(2024, 8, 24, 0, 0);
 
-T = 24 # hours per day
-D = 48 # duration in hours
+D = 24 # hours per day
+T = 336 # duration in hours
 S = 8 # number of scenarios
 P = 3 # number of inflow scenarios per scenarios
+U = 12 # day ahead bid hour
+V = 20 # day ahead clear hour
 
 nodes = ["AECI", "AEP"]
 coordinates = [("50", "10"), ("30", "40")]
 
 ######################################################################################
 
-# prices
+# prices real time
 market = ElectricityMarketData.MisoMarket()
 df_day_ahead = ElectricityMarketData.get_day_ahead_lmp(market, start, stop)
 df_real_time = ElectricityMarketData.get_real_time_lmp(market, start, stop)
@@ -34,6 +36,7 @@ for i in 1:size(real_time_filter[1])[1]
     end
 end
 
+# prices day ahead
 day_ahead_filter = [];
 for node in nodes
     push!(day_ahead_filter, filter(row -> row.Node == node, df_day_ahead))
@@ -61,13 +64,13 @@ history.prices_real_time = prices_real_time
 history.prices_day_ahead = prices_day_ahead
 history.inflow = inflow
 
-h = TimeSeriesHelper.build_serial_history(history, 336, T)
+h = TimeSeriesHelper.build_serial_history(history, T, D)
 
 m, o = TimeSeriesHelper.estimate_hmm(h, S)
 
-matrix = TimeSeriesHelper.build_markov_transition(m, D)
+matrix = TimeSeriesHelper.build_markov_transition(m, T)
 
-rt, da, inflow = TimeSeriesHelper.build_scenarios(o, D, T, P, 1, 2, 2)
+rt, da, inflow = TimeSeriesHelper.build_scenarios(o, T, D, P, 1, 2, 2)
 
 prb = OptimalEnergyBid.Problem()
 
@@ -76,38 +79,38 @@ random = prb.random
 data = prb.data
 options = prb.options
 
-numbers.periods_per_day = T
+numbers.periods_per_day = D
 numbers.first_period = 1
-numbers.units = 2
-numbers.buses = 2
-numbers.duration = D
+numbers.units = length(coordinates)
+numbers.buses = length(nodes)
+numbers.duration = T
 numbers.real_time_steps = S
 numbers.day_ahead_steps = S
-numbers.period_of_day_ahead_bid = 12
-numbers.period_of_day_ahead_clear = 20
+numbers.period_of_day_ahead_bid = U
+numbers.period_of_day_ahead_clear = V
 
 random.prices_real_time = rt
 random.prices_day_ahead = da
 random.inflow = inflow
-random.inflow_probability = v = [[[1 / P for k in 1:P] for j in 1:S] for i in 1:D]
+random.inflow_probability = v = [[[1 / P for k in 1:P] for j in 1:S] for i in 1:T]
 random.markov_transitions = matrix
 
 data.unit_to_bus = [1, 2]
-data.volume_max = ones(2) * 15
-data.volume_min = zeros(2)
-data.volume_initial = zeros(2)
+data.volume_max = ones(length(coordinates)) * 15
+data.volume_min = zeros(length(coordinates))
+data.volume_initial = zeros(length(coordinates))
 
 rt_sorted = deepcopy(rt)
 da_sorted = deepcopy(da)
 
-for t in 1:D
+for t in 1:T
     for i in 1:2
         sort!(rt_sorted[t][i])
     end
 end
 
 for d in 1:2
-    for j in 1:T
+    for j in 1:D
         for i in 1:2
             sort!(da_sorted[d][j][i])
         end
