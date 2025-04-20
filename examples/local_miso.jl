@@ -13,9 +13,14 @@ S = 8 # number of scenarios
 P = 3 # number of inflow scenarios per scenarios
 U = 12 # day ahead bid hour
 V = 20 # day ahead clear hour
+map = [1, 2]
+VMAX = 15
 
 nodes = ["AECI", "AEP"]
 coordinates = [("50", "10"), ("30", "40")]
+
+I = length(coordinates)
+K = length(nodes)
 
 ######################################################################################
 
@@ -31,7 +36,7 @@ end
 prices_real_time = Vector{Vector{Float64}}()
 for i in 1:size(real_time_filter[1])[1]
     push!(prices_real_time, [])
-    for j in 1:length(nodes)
+    for j in 1:K
         push!(prices_real_time[i], real_time_filter[j][i, :LMP])
     end
 end
@@ -44,7 +49,7 @@ end
 prices_day_ahead = Vector{Vector{Float64}}()
 for i in 1:size(day_ahead_filter[1])[1]
     push!(prices_day_ahead, [])
-    for j in 1:length(nodes)
+    for j in 1:K
         push!(prices_day_ahead[i], day_ahead_filter[j][i, :LMP])
     end
 end
@@ -70,7 +75,7 @@ m, o = TimeSeriesHelper.estimate_hmm(h, S)
 
 matrix = TimeSeriesHelper.build_markov_transition(m, T)
 
-rt, da, inflow = TimeSeriesHelper.build_scenarios(o, T, D, P, 1, 2, 2)
+rt, da, inflow = TimeSeriesHelper.build_scenarios(o, T, D, P, U, K, I)
 
 prb = OptimalEnergyBid.Problem()
 
@@ -81,8 +86,8 @@ options = prb.options
 
 numbers.periods_per_day = D
 numbers.first_period = 1
-numbers.units = length(coordinates)
-numbers.buses = length(nodes)
+numbers.units = I
+numbers.buses = K
 numbers.duration = T
 numbers.real_time_steps = S
 numbers.day_ahead_steps = S
@@ -95,23 +100,23 @@ random.inflow = inflow
 random.inflow_probability = v = [[[1 / P for k in 1:P] for j in 1:S] for i in 1:T]
 random.markov_transitions = matrix
 
-data.unit_to_bus = [1, 2]
-data.volume_max = ones(length(coordinates)) * 15
-data.volume_min = zeros(length(coordinates))
-data.volume_initial = zeros(length(coordinates))
+data.unit_to_bus = map
+data.volume_max = ones(I) * VMAX
+data.volume_min = zeros(I)
+data.volume_initial = zeros(I)
 
 rt_sorted = deepcopy(rt)
 da_sorted = deepcopy(da)
 
 for t in 1:T
-    for i in 1:2
+    for i in 1:I
         sort!(rt_sorted[t][i])
     end
 end
 
-for d in 1:2
+for d in 1:(T ÷ D)
     for j in 1:D
-        for i in 1:2
+        for i in 1:I
             sort!(da_sorted[d][j][i])
         end
     end

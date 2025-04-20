@@ -66,7 +66,7 @@ function build_scenarios(
         for b in 1:B
             push!(temp, [])
             for n in 1:N
-                push!(temp[b], sum(samples_real_time[t, n, b]))
+                push!(temp[b], samples_real_time[t, n, b])
             end
         end
         prices_real_time[t] = temp
@@ -95,7 +95,6 @@ function build_scenarios(
             for w in 1:W
                 push!(temp[n], [])
                 for i in 1:I
-                    # TODO abs
                     push!(temp[n][w], abs(samples_inflow[t, n, w, i]))
                 end
             end
