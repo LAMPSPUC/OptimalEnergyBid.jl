@@ -383,6 +383,21 @@ end
 # ╔═╡ b14421cd-f505-47f2-80d7-e10cd20cdf47
 load("volume.png")
 
+# ╔═╡ 080f2b2a-d91f-47d8-9890-180e24ee7659
+md"""
+## Convex combination case
+"""
+
+# ╔═╡ 4b89131a-8ba1-4d22-b560-576a4c3c9553
+begin
+    OptimalEnergyBid.set_parameter!(prb4, OptimalEnergyBid.Parameter.Lambda, 0.05)
+    OptimalEnergyBid.set_parameter!(prb4, OptimalEnergyBid.Parameter.Beta, 0.05)
+    OptimalEnergyBid.build_model!(prb4)
+    OptimalEnergyBid.train!(prb4)
+    OptimalEnergyBid.simulate!(prb4)
+    OptimalEnergyBid.plot_all(prb4, 1, "")
+end
+
 # ╔═╡ Cell order:
 # ╟─94c16ad4-7dbf-49cb-beda-f301ac7d8e53
 # ╟─af7a6e30-9723-11ee-18f6-2552c59ac981
@@ -451,3 +466,5 @@ load("volume.png")
 # ╟─9e6a02f0-8c2b-4fd8-b1a8-e15841cca1d3
 # ╟─153cddc0-e6c7-4019-b31c-bd2b3d697a6e
 # ╟─b14421cd-f505-47f2-80d7-e10cd20cdf47
+# ╟─080f2b2a-d91f-47d8-9890-180e24ee7659
+# ╟─4b89131a-8ba1-4d22-b560-576a4c3c9553
