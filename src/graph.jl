@@ -29,7 +29,7 @@ function plot_day_ahead_bids(
             append!([0.0], offer),
             append!([prices[1]], prices);
             seriestype=:steppre,
-            title="Day ahead $(prb.data.names[i]) hour: $n day: $d",
+            title="Day ahead bid hour: $n day: $d",
             label=prb.data.names[i],
         )
         plot!(; legend=:outerbottom)
@@ -85,7 +85,7 @@ function plot_real_time_bids(
             append!([0.0], offer),
             append!([prices[1]], prices);
             seriestype=:steppre,
-            title="Real time $(prb.data.names[i]) time: $t",
+            title="Real time bid time: $t",
             label=prb.data.names[i],
         )
         plot!(; legend=:outerbottom)
