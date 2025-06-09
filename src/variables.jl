@@ -80,10 +80,7 @@ end
 
 """Creates the generation as a control variable"""
 function _variable_generation!(sp::Model, prb::Problem)::Nothing
-    @variable(
-        sp,
-        0 <= generation[i=1:(prb.numbers.units)]
-    )
+    @variable(sp, 0 <= generation[i=1:(prb.numbers.units)])
     return nothing
 end
 

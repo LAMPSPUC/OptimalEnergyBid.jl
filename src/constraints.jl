@@ -89,11 +89,12 @@ function _constraint_add_day_ahead_clear!(
 end
 
 """Adds the real time offer bound constraint"""
-function _constraint_real_time_bid_bound!(sp::Model, prb::Problem, t::Int, markov_state::Int)::Nothing
-
+function _constraint_real_time_bid_bound!(
+    sp::Model, prb::Problem, t::Int, markov_state::Int
+)::Nothing
     bound = zeros(prb.numbers.units)
     for w in 1:length(prb.random.inflow[t][markov_state])
-        for i in 1:prb.numbers.units
+        for i in 1:(prb.numbers.units)
             bound[i] = max(bound[i], prb.random.inflow[t][markov_state][w][i])
         end
     end
@@ -101,7 +102,8 @@ function _constraint_real_time_bid_bound!(sp::Model, prb::Problem, t::Int, marko
     @constraint(
         sp,
         real_time_bid_bound[i=1:(prb.numbers.units)],
-        sp[:volume][i].out - prb.data.volume_min[i] + bound[i] >= sum(sp[:real_time_bid][k, i].out for k in 1:(prb.numbers.real_time_steps))
+        sp[:volume][i].out - prb.data.volume_min[i] + bound[i] >=
+            sum(sp[:real_time_bid][k, i].out for k in 1:(prb.numbers.real_time_steps))
     )
     return nothing
 end
