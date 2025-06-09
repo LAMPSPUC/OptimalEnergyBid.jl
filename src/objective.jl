@@ -1,6 +1,6 @@
 """Creates an empty objective"""
 function _create_objective_expression!(sp::Model)::Nothing
-    @expression(sp, objective, AffExpr(0.0))
+    @expression(sp, objective, -1E6 *sum(sp[:spillage]))
     return nothing
 end
 

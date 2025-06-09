@@ -37,12 +37,22 @@ end
 
 """Adds the bound day ahead bid constraint"""
 function _constraint_bound_day_ahead_bid!(sp::Model, prb::Problem)::Nothing
+
+    bound = zeros(prb.numbers.units)
+    for t in 1:prb.numbers.duration
+        for markov_state in 1:length(prb.random.inflow[t])
+            for w in 1:length(prb.random.inflow[t][markov_state])
+                for i in 1:(prb.numbers.units)
+                    bound[i] = max(bound[i], prb.random.inflow[t][markov_state][w][i])
+                end
+            end
+        end
+    end
+
     @constraint(
         sp,
         bound_day_ahead_bid[i=1:(prb.numbers.units), n=1:(prb.numbers.periods_per_day)],
-        #TODO
-        sum(sp[:day_ahead_bid][k, i, n].out for k in 1:(prb.numbers.day_ahead_steps)) <=
-            prb.data.volume_max[i]
+        sum(sp[:day_ahead_bid][k, i, n].out for k in 1:(prb.numbers.day_ahead_steps)) <= prb.data.volume_max[i]
     )
     return nothing
 end
