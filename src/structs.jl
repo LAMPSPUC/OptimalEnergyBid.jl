@@ -84,7 +84,7 @@ function JSON.lower(opt::Options)
         :use_day_ahead_bid_bound => opt.use_day_ahead_bid_bound,
         :penalty_ramp_down => opt.penalty_ramp_down,
         :lambda => opt.lambda,
-        :beta => opt.beta
+        :beta => opt.beta,
     )
 end
 
@@ -94,6 +94,6 @@ function JSON.lower(prb::Problem)
         :options => prb.options,
         :numbers => prb.numbers,
         :data => prb.data,
-        :random => prb.random
+        :random => prb.random,
     )
 end
