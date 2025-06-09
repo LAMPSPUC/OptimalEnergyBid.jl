@@ -55,9 +55,9 @@ function _read_random!(prb::Problem, dict::Dict)::Nothing
     for t in 1:(prb.numbers.duration)
         M = length(markov_transitions[t])
         N = length(markov_transitions[t][1])
-        temp = zeros(M, N)
-        for m in 1:(M), n in 1:(N)
-            temp[m, n] = markov_transitions[t][m][n]
+        temp = zeros(N, M)
+        for m in 1:M, n in 1:N
+            temp[n, m] = markov_transitions[t][m][n]
         end
         push!(prb.random.markov_transitions, temp)
     end
@@ -73,20 +73,9 @@ end
 Write all the input data present in "prb" to "file".
 """
 function write_json(prb::Problem, file::String)::Nothing
-    prb_serialized = _copy_only_input(prb)
-    string_data = JSON.json(prb_serialized)
+    string_data = JSON.json(prb)
     open(file, "w") do f
         write(f, string_data)
     end
     return nothing
-end
-
-"""Copy only the input"""
-function _copy_only_input(prb::Problem)::ProblemSerialized
-    prb_serialized = ProblemSerialized()
-    prb_serialized.options = prb.options
-    prb_serialized.data = prb.data
-    prb_serialized.numbers = prb.numbers
-    prb_serialized.random = prb.random
-    return prb_serialized
 end

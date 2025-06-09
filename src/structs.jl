@@ -76,10 +76,24 @@ Base.@kwdef mutable struct Problem
     model::Union{SDDP.PolicyGraph,Nothing} = nothing
 end
 
-"""Contains just elements used in the problem serialization the problem"""
-Base.@kwdef mutable struct ProblemSerialized
-    options::Options = Options()
-    numbers::Numbers = Numbers()
-    data::Data = Data()
-    random::Random = Random()
+"""JSON serialization of the options"""
+function JSON.lower(opt::Options)
+    return Dict(
+        :use_ramp_up => opt.use_ramp_up,
+        :use_ramp_down => opt.use_ramp_down,
+        :use_day_ahead_bid_bound => opt.use_day_ahead_bid_bound,
+        :penalty_ramp_down => opt.penalty_ramp_down,
+        :lambda => opt.lambda,
+        :beta => opt.beta
+    )
+end
+
+"""JSON serialization of the problem"""
+function JSON.lower(prb::Problem)
+    return Dict(
+        :options => prb.options,
+        :numbers => prb.numbers,
+        :data => prb.data,
+        :random => prb.random
+    )
 end
