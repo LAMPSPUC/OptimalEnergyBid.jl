@@ -5,8 +5,8 @@ random = prb.random
 data = prb.data
 
 numbers.periods_per_day = 2
-numbers.first_period = 2
 numbers.days = 1
+numbers.first_period = 2
 numbers.units = 1
 numbers.buses = 1
 numbers.duration = 2
