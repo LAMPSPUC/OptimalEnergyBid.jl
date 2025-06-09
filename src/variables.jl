@@ -65,9 +65,7 @@ end
 function _variable_generation_state!(sp::Model, prb::Problem)::Nothing
     @variable(
         sp,
-        prb.data.volume_min[i] <=
-            generation[i=1:(prb.numbers.units)] <=
-            prb.data.volume_max[i],
+        0 <= generation[i=1:(prb.numbers.units)],
         SDDP.State,
         initial_value = prb.data.generation_initial[i]
     )
@@ -84,9 +82,7 @@ end
 function _variable_generation!(sp::Model, prb::Problem)::Nothing
     @variable(
         sp,
-        prb.data.volume_min[i] <=
-            generation[i=1:(prb.numbers.units)] <=
-            prb.data.volume_max[i]
+        0 <= generation[i=1:(prb.numbers.units)]
     )
     return nothing
 end
