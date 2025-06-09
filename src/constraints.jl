@@ -92,10 +92,10 @@ end
 function _constraint_real_time_bid_bound!(
     sp::Model, prb::Problem, t::Int, markov_state::Int
 )::Nothing
-    bound = zeros(prb.numbers.units)
+    bound = zeros(prb.numbers.units) .+ Inf
     for w in 1:length(prb.random.inflow[t][markov_state])
         for i in 1:(prb.numbers.units)
-            bound[i] = max(bound[i], prb.random.inflow[t][markov_state][w][i])
+            bound[i] = min(bound[i], prb.random.inflow[t][markov_state][w][i])
         end
     end
 
