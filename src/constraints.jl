@@ -101,11 +101,17 @@ end
 """Adds the real time offer bound constraint"""
 function _constraint_real_time_bid_bound!(
     sp::Model, prb::Problem, t::Int)::Nothing
-    bound = zeros(prb.numbers.units) .+ Inf
-    for markov_state in 1:length(prb.random.inflow[t])
-        for w in 1:length(prb.random.inflow[t][markov_state])
-            for i in 1:(prb.numbers.units)
-                bound[i] = min(bound[i], prb.random.inflow[t][markov_state][w][i])
+    
+    bound = zeros(prb.numbers.units)
+
+    if t != prb.numbers.duration
+        bound = bound .+ Inf
+        t += 1
+        for markov_state in 1:length(prb.random.inflow[t])
+            for w in 1:length(prb.random.inflow[t][markov_state])
+                for i in 1:(prb.numbers.units)
+                    bound[i] = min(bound[i], prb.random.inflow[t][markov_state][w][i])
+                end
             end
         end
     end
@@ -114,7 +120,7 @@ function _constraint_real_time_bid_bound!(
         sp,
         real_time_bid_bound[i=1:(prb.numbers.units)],
         sp[:volume][i].out - prb.data.volume_min[i] + bound[i] >=
-            sum(sp[:real_time_bid][k, i].out for k in 1:(prb.numbers.real_time_steps))
+            1.01 * sum(sp[:real_time_bid][k, i].out for k in 1:(prb.numbers.real_time_steps))
     )
     return nothing
 end
