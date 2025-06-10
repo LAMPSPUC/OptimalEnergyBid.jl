@@ -52,7 +52,7 @@ function _constraint_bound_day_ahead_bid!(sp::Model, prb::Problem)::Nothing
     @constraint(
         sp,
         bound_day_ahead_bid[i=1:(prb.numbers.units), n=1:(prb.numbers.periods_per_day)],
-        sum(sp[:day_ahead_bid][k, i, n].out for k in 1:(prb.numbers.day_ahead_steps)) <= prb.data.volume_max[i]
+        sum(sp[:day_ahead_bid][k, i, n].out for k in 1:(prb.numbers.day_ahead_steps)) <= prb.data.volume_max[i] + bound[i]
     )
     return nothing
 end
