@@ -63,7 +63,7 @@ function _build_subproblem!(sp::Model, prb::Problem, t::Int, markov_state::Int):
     _variable_day_ahead_bid!(sp, prb)
     _variable_day_ahead_clear!(sp, prb)
     _constraint_inflow!(sp, prb, t, markov_state)
-    _constraint_real_time_bid_bound!(sp, prb)
+    _constraint_real_time_bid_bound!(sp, prb, t)
     _create_objective_expression!(sp)
 
     if _generation_as_state(prb)
