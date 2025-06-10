@@ -90,7 +90,7 @@ function _build_subproblem!(sp::Model, prb::Problem, t::Int, markov_state::Int):
 
     if !_is_offer_day_ahead(numbers, t)
         _constraint_copy_day_ahead_bid!(sp, prb)
-    elseif options.use_day_ahead_bid_bound 
+    elseif options.use_day_ahead_bid_bound
         _constraint_bound_day_ahead_bid!(sp, prb)
     end
 

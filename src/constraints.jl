@@ -37,9 +37,8 @@ end
 
 """Adds the bound day ahead bid constraint"""
 function _constraint_bound_day_ahead_bid!(sp::Model, prb::Problem)::Nothing
-
     bound = zeros(prb.numbers.units)
-    for t in 1:prb.numbers.duration
+    for t in 1:(prb.numbers.duration)
         for markov_state in 1:length(prb.random.inflow[t])
             for w in 1:length(prb.random.inflow[t][markov_state])
                 for i in 1:(prb.numbers.units)
@@ -52,7 +51,8 @@ function _constraint_bound_day_ahead_bid!(sp::Model, prb::Problem)::Nothing
     @constraint(
         sp,
         bound_day_ahead_bid[i=1:(prb.numbers.units), n=1:(prb.numbers.periods_per_day)],
-        sum(sp[:day_ahead_bid][k, i, n].out for k in 1:(prb.numbers.day_ahead_steps)) <= prb.data.volume_max[i] + bound[i]
+        sum(sp[:day_ahead_bid][k, i, n].out for k in 1:(prb.numbers.day_ahead_steps)) <=
+            prb.data.volume_max[i] + bound[i]
     )
     return nothing
 end
@@ -99,9 +99,7 @@ function _constraint_add_day_ahead_clear!(
 end
 
 """Adds the real time offer bound constraint"""
-function _constraint_real_time_bid_bound!(
-    sp::Model, prb::Problem, t::Int)::Nothing
-    
+function _constraint_real_time_bid_bound!(sp::Model, prb::Problem, t::Int)::Nothing
     bound = zeros(prb.numbers.units)
 
     if t != prb.numbers.duration
