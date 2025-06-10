@@ -32,15 +32,23 @@ function _evaluate_upper_bound(prb::Problem)::Float64
     numbers = prb.numbers
     random = prb.random
     data = prb.data
-
-    temp = zeros(numbers.buses)
+    price = 0
     for t in 1:(numbers.duration), b in 1:(numbers.buses)
-        temp[b] = max(temp[b], maximum(random.prices_real_time[t][b]))
+        price = max(price, maximum(random.prices_real_time[t][b]))
     end
     for d in 1:(numbers.days), j in 1:(numbers.periods_per_day), b in 1:(numbers.buses)
-        temp[b] = max(temp[b], maximum(random.prices_day_ahead[d][j][b]))
+        price = max(price, maximum(random.prices_day_ahead[d][j][b]))
     end
-    return JuMP.LinearAlgebra.dot(temp, data.volume_max) * numbers.duration
+
+    inflow = 0
+    for t in 1:(numbers.duration)
+        for n in 1:(numbers.units)
+            for w in 1:length(random.inflow[t][n])
+                inflow = max(inflow, maximum(random.inflow[t][n][w]))
+            end
+        end
+    end
+    return (price * inflow * numbers.duration + max(data.volume_max...)) * numbers.units
 end
 
 """Creates the subproblem"""
