@@ -127,6 +127,7 @@ data.prices_day_ahead_curve = da_sorted;
 data.names = ["unit1", "unit2", "unit3"];
 
 OptimalEnergyBid.set_parameter!(prb, OptimalEnergyBid.Parameter.Optimizer, HiGHS.Optimizer);
+OptimalEnergyBid.set_parameter!(prb, OptimalEnergyBid.Parameter.Lambda, 0.0);
 
 OptimalEnergyBid.build_model!(prb, false);
 OptimalEnergyBid.train!(prb; time_limit=300);

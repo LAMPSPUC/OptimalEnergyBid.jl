@@ -14,7 +14,7 @@ P = 2; # number of inflow scenarios per scenarios
 U = 12; # day ahead bid hour
 V = 17; # day ahead clear hour
 map = [1, 2, 3];
-VMAX = 0;
+VMAX = 30;
 
 nodes = ["NIPS.NIPS", "CIN.DEI.AZ", "CIN.GIBSON.5"];
 coordinates = [("41.525275", "-87.113273"), ("40.925566", "-86.246378"), ("38.498330", "-87.445701")];

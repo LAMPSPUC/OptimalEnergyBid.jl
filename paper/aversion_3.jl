@@ -14,7 +14,7 @@ P = 2; # number of inflow scenarios per scenarios
 U = 12; # day ahead bid hour
 V = 17; # day ahead clear hour
 map = [1, 2, 3];
-VMAX = 0;
+VMAX = 30;
 
 nodes = ["NIPS.NIPS", "CIN.DEI.AZ", "CIN.GIBSON.5"];
 coordinates = [("41.525275", "-87.113273"), ("40.925566", "-86.246378"), ("38.498330", "-87.445701")];
@@ -127,6 +127,8 @@ data.prices_day_ahead_curve = da_sorted;
 data.names = ["unit1", "unit2", "unit3"];
 
 OptimalEnergyBid.set_parameter!(prb, OptimalEnergyBid.Parameter.Optimizer, HiGHS.Optimizer);
+OptimalEnergyBid.set_parameter!(prb, OptimalEnergyBid.Parameter.Lambda, 0.05);
+OptimalEnergyBid.set_parameter!(prb, OptimalEnergyBid.Parameter.Beta, 0.05);
 
 OptimalEnergyBid.build_model!(prb, false);
 OptimalEnergyBid.train!(prb; time_limit=300);
